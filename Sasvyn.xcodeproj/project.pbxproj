@@ -29,9 +29,25 @@
 		1854B968301BE27200F2E614 /* SasvynUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SasvynUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1854B988301C744200F2E614 /* Exceptions for "Sasvyn" folder in "Sasvyn" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				iOS/iOSAuthKit,
+				iOS/iOSMainKit,
+				macOS/macOSAuthKit,
+				Modules/AuthKit,
+			);
+			target = 1854B950301BE27000F2E614 /* Sasvyn */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1854B953301BE27000F2E614 /* Sasvyn */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1854B988301C744200F2E614 /* Exceptions for "Sasvyn" folder in "Sasvyn" target */,
+			);
 			path = Sasvyn;
 			sourceTree = "<group>";
 		};

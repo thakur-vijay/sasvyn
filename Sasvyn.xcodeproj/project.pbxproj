@@ -6,6 +6,11 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1854B98E301C79D000F2E614 /* iOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 1854B98D301C79D000F2E614 /* iOSMainKit */; };
+		1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1854B9BD301CA27700F2E614 /* macOSMainKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		1854B95F301BE27200F2E614 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -33,10 +38,22 @@
 		1854B988301C744200F2E614 /* Exceptions for "Sasvyn" folder in "Sasvyn" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Info.plist,
+				iOS/iOSAboutKit,
 				iOS/iOSAuthKit,
+				iOS/iOSHomeKit,
+				iOS/iOSLibraryKit,
 				iOS/iOSMainKit,
+				iOS/iOSPortfolioKit,
+				iOS/iOSProjectKit,
+				iOS/iOSSettingsKit,
+				iOS/iOSSkillsKit,
 				macOS/macOSAuthKit,
+				macOS/macOSMainKit,
 				Modules/AuthKit,
+				Modules/SVDesignSystem,
+				Modules/SVPortfolioKit,
+				Modules/SVRemoteImage,
 			);
 			target = 1854B950301BE27000F2E614 /* Sasvyn */;
 		};
@@ -67,6 +84,8 @@
 		1854B94E301BE27000F2E614 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */,
+				1854B98E301C79D000F2E614 /* iOSMainKit in Frameworks */,
 			);
 		};
 		1854B95B301BE27200F2E614 /* Frameworks */ = {
@@ -88,6 +107,7 @@
 				1854B953301BE27000F2E614 /* Sasvyn */,
 				1854B961301BE27200F2E614 /* SasvynTests */,
 				1854B96B301BE27200F2E614 /* SasvynUITests */,
+				1854B98C301C79D000F2E614 /* Frameworks */,
 				1854B952301BE27000F2E614 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -100,6 +120,13 @@
 				1854B968301BE27200F2E614 /* SasvynUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1854B98C301C79D000F2E614 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +146,10 @@
 				1854B953301BE27000F2E614 /* Sasvyn */,
 			);
 			name = Sasvyn;
+			packageProductDependencies = (
+				1854B98D301C79D000F2E614 /* iOSMainKit */,
+				1854B9BD301CA27700F2E614 /* macOSMainKit */,
+			);
 			productName = Sasvyn;
 			productReference = 1854B951301BE27000F2E614 /* Sasvyn.app */;
 			productType = "com.apple.product-type.application";
@@ -388,6 +419,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sasvyn/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -398,10 +430,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vijaythakur.Sasvyn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -432,6 +464,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sasvyn/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -442,10 +475,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vijaythakur.Sasvyn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -601,6 +634,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1854B98D301C79D000F2E614 /* iOSMainKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSMainKit;
+		};
+		1854B9BD301CA27700F2E614 /* macOSMainKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = macOSMainKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1854B949301BE27000F2E614 /* Project object */;
 	validationLevel = 1;

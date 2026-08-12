@@ -1,0 +1,33 @@
+//
+//  LibraryDestination.swift
+//  iOSLibraryKit
+//
+//  Created by Vijay Thakur on 11/08/26.
+//
+
+import Foundation
+
+public enum LibraryDestination: String, Hashable {
+    case experience = "Experience"
+    case education = "Education"
+    case skills = "Skills"
+    case languages = "Languages"
+    case certifications = "Certifications"
+    case about = "About"
+    case socialLinks = "Social Links"
+    case resume = "Resume"
+    
+    var symbol: String {
+        switch self {
+        case .experience: "briefcase.fill"
+        case .education: "graduationcap.fill"
+        case .skills: "wrench.and.screwdriver.fill"
+        case .languages: "character.bubble.fill"
+        case .certifications: "checkmark.seal.fill"
+        case .about: "person.text.rectangle.fill"
+        case .socialLinks: "link"
+        case .resume: "doc.text.fill"
+        }
+    }
+    
+}

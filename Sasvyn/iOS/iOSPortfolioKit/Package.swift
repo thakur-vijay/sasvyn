@@ -4,13 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "iOSMainKit",
+    name: "iOSPortfolioKit",
     platforms: [.iOS(.v18)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "iOSMainKit",
-            targets: ["iOSMainKit"]
+            name: "iOSPortfolioKit",
+            targets: ["iOSPortfolioKit"]
         ),
     ],
     dependencies: [
@@ -18,33 +18,27 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.26.0"
         ),
-        .package(path: "../iOSHomeKit"),
-        .package(path: "../iOSProjectKit"),
-        .package(path: "../iOSLibraryKit"),
-        .package(path: "../iOSSettingsKit"),
+        .package(path: "../../Modules/SVRemoteImage")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "iOSMainKit",
+            name: "iOSPortfolioKit",
             dependencies: [
                 .product(
                     name: "ComposableArchitecture",
                     package: "swift-composable-architecture"
                 ),
-                .product(name: "iOSHomeKit", package: "iOSHomeKit"),
-                .product(name: "iOSProjectKit", package: "iOSProjectKit"),
-                .product(name: "iOSLibraryKit", package: "iOSLibraryKit"),
-                .product(name: "iOSSettingsKit", package: "iOSSettingsKit"),
+                .product(name: "SVRemoteImage", package: "SVRemoteImage")
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],
         ),
         .testTarget(
-            name: "iOSMainKitTests",
-            dependencies: ["iOSMainKit"],
+            name: "iOSPortfolioKitTests",
+            dependencies: ["iOSPortfolioKit"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],

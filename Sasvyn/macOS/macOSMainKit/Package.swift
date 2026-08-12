@@ -4,13 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "iOSMainKit",
-    platforms: [.iOS(.v18)],
+    name: "macOSMainKit",
+    platforms: [.macOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "iOSMainKit",
-            targets: ["iOSMainKit"]
+            name: "macOSMainKit",
+            targets: ["macOSMainKit"]
         ),
     ],
     dependencies: [
@@ -18,33 +18,25 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.26.0"
         ),
-        .package(path: "../iOSHomeKit"),
-        .package(path: "../iOSProjectKit"),
-        .package(path: "../iOSLibraryKit"),
-        .package(path: "../iOSSettingsKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "iOSMainKit",
+            name: "macOSMainKit",
             dependencies: [
                 .product(
                     name: "ComposableArchitecture",
                     package: "swift-composable-architecture"
-                ),
-                .product(name: "iOSHomeKit", package: "iOSHomeKit"),
-                .product(name: "iOSProjectKit", package: "iOSProjectKit"),
-                .product(name: "iOSLibraryKit", package: "iOSLibraryKit"),
-                .product(name: "iOSSettingsKit", package: "iOSSettingsKit"),
+                )
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],
         ),
         .testTarget(
-            name: "iOSMainKitTests",
-            dependencies: ["iOSMainKit"],
+            name: "macOSMainKitTests",
+            dependencies: ["macOSMainKit"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],

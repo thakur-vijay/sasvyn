@@ -5,118 +5,58 @@
 //  Created by Vijay Thakur on 11/08/26.
 //
 
-import Nuke
-import NukeUI
 import SwiftUI
 
-public struct SVRemoteImage<S: Shape, Placeholder: View>: View {
+public struct SVRemoteImage<S: Shape, Placeholder: View & Sendable>: View {
 
     private let url: URL?
-
     private let size: CGSize
-
+    private let contentMode: ContentMode
     private let shape: S
-
     private let placeholder: Placeholder
 
-    @Environment(\.displayScale)
+    @Environment(\.displayScale) private var displayScale
 
-    private var displayScale
-
-    public init(
-
+    nonisolated public init(
         url: URL?,
-
         size: CGSize,
-
+        contentMode: ContentMode,
         shape: S,
-
         @ViewBuilder placeholder: () -> Placeholder
-
     ) {
-
         self.url = url
-
         self.size = size
-
         self.shape = shape
-
+        self.contentMode = contentMode
         self.placeholder = placeholder()
-
     }
 
-    public init(
-
+    nonisolated public init(
         url: URL?,
-
         side: CGFloat,
-
+        contentMode: ContentMode,
         shape: S,
-
         @ViewBuilder placeholder: () -> Placeholder
-
     ) {
-
         self.init(
-
             url: url,
-
             size: .init(width: side, height: side),
-
+            contentMode: contentMode,
             shape: shape,
-
             placeholder: placeholder
-
         )
-
     }
 
     public var body: some View {
-
-        LazyImage(
-
-            request: ImageRequest(
-
-                url: url,
-
-                processors: [
-
-                    ImageProcessors.Resize(
-
-                        size: size.scaled(by: displayScale),
-
-                        contentMode: .aspectFill
-
-                    )
-
-                ]
-
-            )
-
-        ) { state in
-
-            if let image = state.image {
-
-                image
-
-                    .resizable()
-
-                    .scaledToFill()
-
-            } else {
-
-                placeholder
-
-            }
-
+        AsyncImage(url: url) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: contentMode)
+        } placeholder: {
+            placeholder
         }
-
         .frame(width: size.width, height: size.height)
-
-        .clipped()
-
         .clipShape(shape)
-
     }
 
 }
@@ -126,25 +66,29 @@ public extension SVRemoteImage where Placeholder == Color {
     init(
         url: URL?,
         size: CGSize,
-        shape: S
+        contentMode: ContentMode = .fill,
+        shape: S,
     ) {
         self.init(
             url: url,
             size: size,
+            contentMode: contentMode,
             shape: shape
         ) {
             Color.secondary.opacity(0.2)
         }
     }
 
-    init(
+   nonisolated init(
         url: URL?,
         side: CGFloat,
+        contentMode: ContentMode = .fill,
         shape: S
     ) {
         self.init(
             url: url,
             side: side,
+            contentMode: contentMode,
             shape: shape
         ) {
             Color.secondary.opacity(0.2)

@@ -9,28 +9,28 @@ import SwiftUI
 #if os(macOS)
 import macOSMainKit
 #elseif os(iOS)
-import iOSMainKit
+import iOSRootKit
 #endif
 import ComposableArchitecture
+import SVDIInfra
 
 @main
 struct SasvynApp: App {
+    private let appDIContainer = SVAppDIContainer()
     var body: some Scene {
         WindowGroup {
-            #if os(macOS)
+#if os(macOS)
             macOSMainView(store: .init(initialState: macOSMainFeature.State(), reducer: {
                 macOSMainFeature()
             }))
-            #elseif os(iOS)
-            iOSMainView(store: .init(initialState: iOSMainFeature.State(), reducer: {
-                iOSMainFeature()
-            }))
-            .preferredColorScheme(.dark)
-            #endif
+#elseif os(iOS)
+            appDIContainer.rootDIContainer.makeView()
+                .preferredColorScheme(.dark)
+#endif
         }
         .defaultSize(.init(width: 1200, height: 800))
         .windowResizability(.contentMinSize)
-
+        
     }
 }
 

@@ -15,7 +15,7 @@ public enum LibraryDestination: String, Hashable {
     case certifications = "Certifications"
     case about = "About"
     case socialLinks = "Social Links"
-    case resume = "Resume"
+    case documents = "Documents"
     
     var symbol: String {
         switch self {
@@ -26,7 +26,7 @@ public enum LibraryDestination: String, Hashable {
         case .certifications: "checkmark.seal.fill"
         case .about: "person.text.rectangle.fill"
         case .socialLinks: "link"
-        case .resume: "doc.text.fill"
+        case .documents: "doc.text.fill"
         }
     }
     

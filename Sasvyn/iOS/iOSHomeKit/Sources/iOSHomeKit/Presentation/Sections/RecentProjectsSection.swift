@@ -24,7 +24,9 @@ internal struct RecentProjectsSection: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 ForEach(1...10, id: \.self){ _ in
-                    ProjectCard {
+                    ProjectCard(project: .init()) {
+                        
+                    } onDelete: {
                         
                     }
                 }

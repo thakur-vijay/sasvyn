@@ -1,5 +1,5 @@
 {
-  "originHash" : "1e8827f2e893b14ed623168d399e643b23896036d474a9e2addbca7b2f762f11",
+  "originHash" : "e0c6abb0550a2df12582143272b5e343156e5bdd1395150fccb929e8ffec697b",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -11,12 +11,12 @@
       }
     },
     {
-      "identity" : "nuke",
+      "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke.git",
+      "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "63a8fcbd6621340a2410bc3e9575ac97058615f4",
-        "version" : "13.0.6"
+        "revision" : "b83108d10f42680d78f23fe4d4d80fc88dab3212",
+        "version" : "7.11.1"
       }
     },
     {

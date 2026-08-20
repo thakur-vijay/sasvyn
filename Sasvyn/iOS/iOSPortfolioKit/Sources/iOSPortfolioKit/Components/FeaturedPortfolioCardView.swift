@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SVRemoteImage
+import SVDesignSystem
 
 public struct FeaturedPortfolioCardView: View {
     
@@ -47,18 +48,18 @@ public struct FeaturedPortfolioCardView: View {
                     endPoint: .bottom
                 )
                 .overlay(alignment: .bottom) {
-                    VStack {
+                    VStack(spacing: SVSpacing.cardContent){
                         Spacer()
-                        HStack(spacing: 6){
+                        HStack(spacing: SVSpacing.xSmall){
                             Circle()
                                 .fill(.green.secondary)
                                 .frame(width: 10, height: 10)
                             Text("Live")
-                                .font(.headline)
+                                .font(SVFont.headline)
                                 .fontWeight(.semibold)
                         }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
+                        .padding(.horizontal, SVSpacing.medium)
+                        .padding(.vertical, SVSpacing.small)
                         .background(.black, in: .capsule)
                         .overlay {
                             Capsule()
@@ -66,14 +67,14 @@ public struct FeaturedPortfolioCardView: View {
                         }
                         
                         Text("Sasvyn Portfolio")
-                            .font(.largeTitle.bold())
+                            .font(SVFont.largeTitle.bold())
                             .lineLimit(1)
                             .italic()
                         Text("Published on 12 August 2026")
-                            .font(.subheadline)
+                            .font(SVFont.subheadline)
                             .foregroundStyle(Color(.systemGray2))
                         
-                        HStack(spacing: 12){
+                        HStack(spacing: SVSpacing.medium){
                             Button {
                                 // Open published portfolio
                             } label: {
@@ -104,7 +105,7 @@ public struct FeaturedPortfolioCardView: View {
                         }
 
                     }
-                    .padding()
+                    .padding(SVSpacing.card)
                 }
             }
             .scaleEffect(

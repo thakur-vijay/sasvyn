@@ -6,12 +6,17 @@
 //
 
 import ComposableArchitecture
+import SVProjectKit
 
 @Reducer
 public struct iOSProjectsFeature {
     
+    @Dependency(\.projectsClient)
+    private var client
+    
     @ObservableState
     public struct State: Equatable {
+        public var projects: [Project] = []
         public var path = StackState<Path.State>()
         public init(){
             
@@ -21,7 +26,11 @@ public struct iOSProjectsFeature {
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
         case path(StackActionOf<Path>)
-        case projectTapped
+        case onTask
+        case projectsLoaded([Project])
+        case projectTapped(Project)
+        case createProjectTapped
+        case deleteProjectTapped(Project)
     }
     
     public init(){
@@ -37,13 +46,40 @@ public struct iOSProjectsFeature {
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .projectTapped:
-                state.path.append(.detail(iOSProjectDetailFeature.State()))
+            case .onTask:
+                return .run {[client] send in
+                    do {
+                        let projects = try await client.fetch()
+                        await send(.projectsLoaded(projects))
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .projectsLoaded(let projects):
+                state.projects = projects
+                return .none
+            case .projectTapped(let project):
+                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .view, project: project)))
+                return .none
+            case .createProjectTapped:
+                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .create)))
                 return .none
             case .binding(_):
                 return .none
+            case .path(.element(_, action: .detail(.delegate(.projectUpdated(let project))))):
+                state.path.removeLast()
+                if let index = state.projects.firstIndex(where: { $0.id == project.id}){
+                    state.projects[index] = project
+                }else {
+                    state.projects.insert(project, at: 0)
+                }
+                return .none
             case .path(_):
                 return .none
+            case .deleteProjectTapped(let project):
+                return .run {[client] send in
+                    try await client.delete(project.id)
+                }
             }
         }
         .forEach(\.path, action: \.path)

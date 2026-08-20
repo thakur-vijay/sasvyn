@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SVDesignSystem
+import SVSkillsKit
 
 public struct iOSAddSkillsSheet: View {
     @Bindable var store: StoreOf<iOSAddSkillsFeature>
@@ -24,18 +25,17 @@ public struct iOSAddSkillsSheet: View {
                 SkillsView()
             }
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("", systemImage: "checkmark") {
                         store.send(.closeTapped)
                     }
                 }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") {
-                        store.send(.addAllSkillsTapped)
-                    }
-                }
             }
+            .categoryPicker(
+                isPresented: $store.isSkillCategoryPickerPresented,
+                title: "Select Skill Category",
+                categories: SkillCategory.allCases,
+                selection: $store.skillCategory) {}
         }
     }
     
@@ -45,9 +45,12 @@ public struct iOSAddSkillsSheet: View {
             VStack(spacing: 12) {
                 HStack(spacing: 12) {
                     TextField("", text: $store.skillName, prompt: Text("Enter skill name"))
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                     Button("Add") {
                         store.send(.addSkillTapped)
                     }
+                    .disabledWithOpacity(store.skillName.isEmptyString)
                 }
                 
                 if !store.skillNames.isEmpty {
@@ -77,18 +80,22 @@ public struct iOSAddSkillsSheet: View {
     @ViewBuilder
     func CategoryPicker() -> some View {
         Section{
-            Picker("Category", selection: $store.skillCategory) {
-                ForEach(SkillCategory.allCases) { category in
-                    Text(category.title)
-                        .tag(category)
+            Button {
+                store.isSkillCategoryPickerPresented.toggle()
+            } label: {
+                LabeledContent("Category") {
+                    Text(store.skillCategory?.title ?? "")
                 }
             }
+            .tint(.primary)
         } header: {
             Text("Select Category")
         } footer: {
             Button("Add"){
                 store.send(.addSkillsTapped)
             }
+            .frame(maxWidth: .infinity)
+            .buttonStyle(.borderedProminent)
         }
     }
     
@@ -109,10 +116,6 @@ public struct iOSAddSkillsSheet: View {
                             .foregroundStyle(.secondary)
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button("", systemImage: "pencil") {
-                            
-                        }
-                        
                         Button("", systemImage: "trash") {
                             store.send(.deleteSkillTapped(skill))
                         }

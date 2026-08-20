@@ -7,29 +7,34 @@
 
 import SwiftUI
 import SVRemoteImage
+import SVProjectKit
 
 public struct ProjectCard: View {
+    private let project: Project
     private let onTap: ()->()
-    public init(onTap: @escaping ()->()){
+    private let onDelete: ()->()
+    public init(project: Project, onTap: @escaping ()->(), onDelete: @escaping ()->()){
+        self.project = project
         self.onTap = onTap
+        self.onDelete = onDelete
     }
     
     @Environment(\.colorScheme) private var colorScheme
     public var body: some View {
         HStack(spacing: 12){
             SVRemoteImage(
-                url: .init(string: "https://is1-ssl.mzstatic.com/image/thumb/Video221/v4/af/d5/53/afd553a2-196d-f6ef-ddac-dfc12cbcb788/1e89e771bf7935ff7ecef7c34d1440e0_Preview_Image_Intermediate_nonvideo_sdr_448319311_2726657810.png/632x632bb.webp"),
-                size: .init(width: 90, height: 90),
-                shape: .rect(cornerRadius: 5)
+                url: project.icon,
+                size: .init(width: 100, height: 100),
+                shape: .rect(cornerRadius: 24)
             )
             
             VStack(alignment: .leading, spacing: 3) {
-                Text("6 AUGUST 2026")
+                Text(project.category?.title ?? "")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color(.systemGray))
-                Text("MyTuur City Tour Guide")
-                Text("MyTuur is a location-based city tour guide app that helps users discover places and plan optimized routes around a city. It uses Mapbox for maps/navigation and supports offline data, caching, and multilingual experiences.")
+                Text(project.name)
+                Text(project.overview)
                     .font(.caption)
                     .foregroundStyle(Color(.systemGray2))
                     .lineLimit(2)
@@ -43,9 +48,7 @@ public struct ProjectCard: View {
                 
                 Button("View", systemImage: "eye", action: onTap)
                 
-                Button("Delete", systemImage: "trash", role: .destructive){
-                    
-                }
+                Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.subheadline)
@@ -64,24 +67,4 @@ public struct ProjectCard: View {
         .onTapGesture(perform: onTap)
     }
     
-}
-
-public struct ChipView: View {
-    let status: String
-    let tint: Color
-    
-    public init(status: String, tint: Color) {
-        self.status = status
-        self.tint = tint
-    }
-    
-    public var body: some View {
-        Text(status)
-            .font(.footnote)
-            .fontWeight(.medium)
-            .foregroundStyle(tint)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 5)
-            .background(tint.tertiary, in: .capsule)
-    }
 }

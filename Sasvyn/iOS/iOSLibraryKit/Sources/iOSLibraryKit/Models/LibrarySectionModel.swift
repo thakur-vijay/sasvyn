@@ -20,8 +20,7 @@ internal struct LibrarySectionModel: Identifiable{
                 .experience,
                 .education,
                 .skills,
-                .certifications,
-                
+                .documents
             ]
         ),
         .init(
@@ -32,13 +31,6 @@ internal struct LibrarySectionModel: Identifiable{
                 .languages,
                 .socialLinks,
                 
-            ]
-        ),
-        .init(
-            id: 3,
-            title: "Documents",
-            rows: [
-                .resume
             ]
         )
     ]

@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import iOSSkillsKit
 import iOSAboutKit
+import iOSDocumentsKit
 
 @Reducer
 public struct iOSLibraryFeature {
@@ -31,6 +32,7 @@ public struct iOSLibraryFeature {
     public enum Path {
         case skills(iOSSkillsFeature)
         case about(iOSAboutFeature)
+        case documents(iOSDocumentsFeature)
     }
     
     public init(){
@@ -45,6 +47,7 @@ public struct iOSLibraryFeature {
                 switch destination {
                 case .skills: state.path.append(.skills(iOSSkillsFeature.State()))
                 case .about: state.path.append(.about(iOSAboutFeature.State()))
+                case .documents: state.path.append(.documents(iOSDocumentsFeature.State()))
                 default: break
                 }
                 return .none

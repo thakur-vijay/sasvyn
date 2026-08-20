@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1854B98E301C79D000F2E614 /* iOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 1854B98D301C79D000F2E614 /* iOSMainKit */; };
 		1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1854B9BD301CA27700F2E614 /* macOSMainKit */; };
+		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
+		18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18C382A6303083BC008F2B81 /* iOSRootKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,19 +42,28 @@
 				Info.plist,
 				iOS/iOSAboutKit,
 				iOS/iOSAuthKit,
+				iOS/iOSDocumentsKit,
 				iOS/iOSHomeKit,
 				iOS/iOSLibraryKit,
 				iOS/iOSMainKit,
 				iOS/iOSPortfolioKit,
 				iOS/iOSProjectKit,
+				iOS/iOSRootKit,
 				iOS/iOSSettingsKit,
 				iOS/iOSSkillsKit,
 				macOS/macOSAuthKit,
 				macOS/macOSMainKit,
 				Modules/AuthKit,
+				Modules/SVAboutKit,
+				Modules/SVDatabaseKit,
 				Modules/SVDesignSystem,
+				Modules/SVDIInfra,
+				Modules/SVDocumentKit,
+				Modules/SVFoundation,
 				Modules/SVPortfolioKit,
+				Modules/SVProjectKit,
 				Modules/SVRemoteImage,
+				Modules/SVSkillsKit,
 			);
 			target = 1854B950301BE27000F2E614 /* Sasvyn */;
 		};
@@ -84,8 +94,9 @@
 		1854B94E301BE27000F2E614 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */,
 				1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */,
-				1854B98E301C79D000F2E614 /* iOSMainKit in Frameworks */,
+				18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */,
 			);
 		};
 		1854B95B301BE27200F2E614 /* Frameworks */ = {
@@ -147,8 +158,9 @@
 			);
 			name = Sasvyn;
 			packageProductDependencies = (
-				1854B98D301C79D000F2E614 /* iOSMainKit */,
 				1854B9BD301CA27700F2E614 /* macOSMainKit */,
+				18C382A6303083BC008F2B81 /* iOSRootKit */,
+				18A7808E3033006E007DA2CF /* SVDIInfra */,
 			);
 			productName = Sasvyn;
 			productReference = 1854B951301BE27000F2E614 /* Sasvyn.app */;
@@ -411,6 +423,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9BQY66D558;
@@ -426,27 +439,28 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.vijaythakur.Sasvyn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thakurvijay.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Debug;
@@ -456,6 +470,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9BQY66D558;
@@ -471,27 +486,28 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.vijaythakur.Sasvyn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thakurvijay.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Release;
@@ -636,13 +652,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1854B98D301C79D000F2E614 /* iOSMainKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = iOSMainKit;
-		};
 		1854B9BD301CA27700F2E614 /* macOSMainKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = macOSMainKit;
+		};
+		18A7808E3033006E007DA2CF /* SVDIInfra */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SVDIInfra;
+		};
+		18C382A6303083BC008F2B81 /* iOSRootKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSRootKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

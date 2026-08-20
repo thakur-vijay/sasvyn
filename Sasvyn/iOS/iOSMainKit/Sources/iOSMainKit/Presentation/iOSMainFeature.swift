@@ -16,7 +16,7 @@ public struct iOSMainFeature {
     
     @ObservableState
     public struct State: Equatable {
-        public var selectedTab: TabModel = .home
+        public var selectedTab: TabModel = .projects
         public var home = iOSHomeFeature.State()
         public var projects = iOSProjectsFeature.State()
         public var library = iOSLibraryFeature.State()
@@ -34,6 +34,11 @@ public struct iOSMainFeature {
         case library(iOSLibraryFeature.Action)
         case settings(iOSSettingsFeature.Action)
         
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case logoutSucceeded
+        }
     }
     
     public init(){
@@ -58,7 +63,20 @@ public struct iOSMainFeature {
         }
         
         Reduce { state, action in
-            return .none
+            switch action {
+            case .settings(.delegate(.logoutSucceeded)):
+                return .send(.delegate(.logoutSucceeded))
+            case .binding(_):
+                return .none
+            case .projects(_):
+                return .none
+            case .library(_):
+                return .none
+            case .settings(.signoutTapped):
+                return .none
+            case .delegate(_):
+                return .none
+            }
         }
     }
 }

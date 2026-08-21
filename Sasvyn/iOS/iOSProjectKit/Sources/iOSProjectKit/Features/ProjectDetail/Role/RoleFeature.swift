@@ -13,17 +13,17 @@ public struct RoleFeature {
     
     @ObservableState
     public struct State: Equatable {
-        public var role: String
+        public var role: String = ""
         public var mode: ProjectMode
-        public init(mode: ProjectMode, role: String){
+        public init(mode: ProjectMode){
             self.mode = mode
-            self.role = role
         }
     }
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
         case modeChanged(ProjectMode)
+        case setData(_ role: String)
     }
     
     public init(){}
@@ -36,6 +36,9 @@ public struct RoleFeature {
                 state.mode = mode
                 return .none
             case .binding(_):
+                return .none
+            case .setData(let role):
+                state.role = role
                 return .none
             }
         }

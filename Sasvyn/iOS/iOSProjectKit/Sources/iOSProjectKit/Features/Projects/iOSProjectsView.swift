@@ -39,7 +39,7 @@ public struct iOSProjectsView: View {
                     )
                 }
             }
-            .searchable(text: .constant(""), placement: .toolbar, prompt: Text("Search projects..."))
+            .searchable(text: $store.search, placement: .toolbar, prompt: Text("Search projects..."))
             .navigationTitle("Projects")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -47,6 +47,9 @@ public struct iOSProjectsView: View {
                         store.send(.createProjectTapped)
                     }
                 }
+            }
+            .onChange(of: store.search) { oldValue, newValue in
+                store.send(.onTask)
             }
             
         } destination: { store in

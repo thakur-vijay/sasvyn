@@ -9,19 +9,19 @@
 import Foundation
 import SVDatabaseKit
 
-struct SkillRecord: Codable, SVFetchableRecord, SVPersistableRecord{
+public struct SkillRecord: Codable, Sendable, SVFetchableRecord, SVPersistableRecord{
     
-    static let databaseTableName: String = "skills"
+    public static let databaseTableName: String = "skills"
 
-    let id: String
+    public let id: String
 
-    let skill: String
+    public let skill: String
     
-    let category: String
+    public let category: String
         
-    let createdAt: Date
+    public let createdAt: Date
     
-    let updatedAt: Date
+    public let updatedAt: Date
     
     enum CodingKeys: String, CodingKey {
 
@@ -32,12 +32,26 @@ struct SkillRecord: Codable, SVFetchableRecord, SVPersistableRecord{
            case updatedAt = "updated_at"
 
        }
+    
+    public init(id: String, skill: String, category: String, createdAt: Date, updatedAt: Date) {
+        self.id = id
+        self.skill = skill
+        self.category = category
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
 
+}
+
+public extension SkillRecord {
+    nonisolated enum ColumnNames {
+        static public let id = SVColumnName("id")
+    }
 }
 
 extension SkillRecord {
     
-    nonisolated  enum Columns {
+    nonisolated  public enum Columns {
 
         static let id = SVColumn("id")
 

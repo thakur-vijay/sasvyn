@@ -20,7 +20,8 @@ enum ProjectRecordMapper {
             name: record.name,
             category: .init(rawValue: record.category),
             tagline: record.tagline,
-            overview: record.overview
+            overview: record.overview,
+            role: record.role
         )
     }
 }

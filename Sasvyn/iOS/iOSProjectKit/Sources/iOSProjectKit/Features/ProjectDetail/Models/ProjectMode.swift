@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ProjectMode: Sendable{
+public enum ProjectMode: Sendable, Hashable{
     case create
     case edit
     case view

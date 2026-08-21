@@ -25,17 +25,16 @@ final class SkillsLocalDataSource: @unchecked Sendable{
 
     func create(skills: [Skill]) async throws {
         try await database.write { db in
-            let records = skills.map {
-                SkillRecord(
-                    id: $0.id,
-                    skill: $0.skill,
-                    category: $0.category.rawValue,
+            for skill in skills {
+                let record = SkillRecord(
+                    id: skill.id,
+                    skill: skill.skill,
+                    category: skill.category.rawValue,
                     createdAt: Date(),
                     updatedAt: Date()
                 )
+                try db.insert(record)
             }
-
-            try db.insert(records)
         }
     }
     

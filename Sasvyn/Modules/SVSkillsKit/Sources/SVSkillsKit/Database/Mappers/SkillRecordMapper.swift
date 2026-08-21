@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum SkillRecordMapper {
+public enum SkillRecordMapper {
 
-   nonisolated static func map(_ record: SkillRecord) -> Skill? {
+   public nonisolated static func map(_ record: SkillRecord) -> Skill? {
 
        guard let category = SkillCategory(rawValue: record.category) else {
 

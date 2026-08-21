@@ -16,30 +16,17 @@ public struct AppInfoFeature {
     
     @ObservableState
     public struct State: Equatable {
-        public let projectID: String
-        public var name: String
-        public var tagline: String
-        public var category: AppCategory?
-        public var appIconURL: URL?
+        public var name: String = ""
+        public var tagline: String = ""
+        public var category: AppCategory? = nil
+        public var appIconURL: URL? = nil
         public var mode: ProjectMode
         
         var selectedAppIcon: PhotosPickerItem?
         var isAppCategoryPickerPresented: Bool = false
     
-        public init(
-            mode: ProjectMode,
-            projectID: String,
-            name: String,
-            tagline: String,
-            category: AppCategory?,
-            appIconURL: URL?
-        ){
-            self.projectID = projectID
+        public init(mode: ProjectMode){
             self.mode = mode
-            self.name = name
-            self.tagline = tagline
-            self.category = category
-            self.appIconURL = appIconURL
         }
     }
     
@@ -48,6 +35,12 @@ public struct AppInfoFeature {
         case modeChanged(ProjectMode)
         case selectedAppIconChanged(PhotosPickerItem?)
         case appIconValidationResult(URL?)
+        case setData(
+            _ name: String,
+            _ tagline: String,
+            _ category: AppCategory?,
+            _ appIconURL: URL?
+        )
     }
     
     public init(){
@@ -68,13 +61,18 @@ public struct AppInfoFeature {
                     state.appIconURL = nil
                     return .none
                 }
-                let projectID = state.projectID
                 return .run { send in
-                    let validatedItem = await AppIconValidator.validate(item, projectID: projectID)
+                    let validatedItem = await AppIconValidator.validate(item)
                     await send(.appIconValidationResult(validatedItem))
                 }
             case .appIconValidationResult(let item):
                 state.appIconURL = item
+                return .none
+            case .setData(let name, let tagline, let category, let appIconURL):
+                state.name = name
+                state.tagline = tagline
+                state.category = category
+                state.appIconURL = appIconURL
                 return .none
             }
         }
@@ -86,7 +84,6 @@ enum AppIconValidator {
 
     static func validate(
         _ item: PhotosPickerItem,
-        projectID: String
     ) async -> URL? {
 
         do {

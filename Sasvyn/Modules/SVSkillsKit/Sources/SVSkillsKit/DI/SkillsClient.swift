@@ -46,8 +46,6 @@ extension SkillsClient: DependencyKey {
     } add: { skills in
         fatalError("Unimplemented")
     }
-
-    
 }
 
 extension SkillsClient: TestDependencyKey {

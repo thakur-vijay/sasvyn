@@ -9,8 +9,10 @@ import Foundation
 
 public protocol ProjectsRepository: Sendable {
     
-    func fetch()async throws -> [Project]
+    func fetch(search: String)async throws -> [Project]
     func add(project: Project) async throws
     func update(project: Project) async throws
     func delete(id: String) async throws
+    func fetch(id: String) async throws->Project?
+    func removeSkill(id: String, from projectID: String) async throws
 }

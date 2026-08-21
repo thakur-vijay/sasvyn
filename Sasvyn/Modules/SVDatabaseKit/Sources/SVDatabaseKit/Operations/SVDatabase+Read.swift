@@ -115,5 +115,20 @@ public extension SVDatabase {
 
         return try request.fetchOne(db)
     }
+    
+    func fetch<Record: FetchableRecord>(
+        _ record: Record.Type,
+        sql: String,
+        arguments: [SVDatabaseValue] = []
+    ) throws -> [Record] {
+        
+        try Record.fetchAll(
+            db,
+            sql: sql,
+            arguments: StatementArguments(
+                arguments.map(\.databaseValue)
+            )
+        )
+    }
 }
 

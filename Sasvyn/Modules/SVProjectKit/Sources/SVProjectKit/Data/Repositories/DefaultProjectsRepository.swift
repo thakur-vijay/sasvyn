@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SVSkillsKit
 
 public final class DefaultProjectsRepository: ProjectsRepository {
 
@@ -15,19 +16,11 @@ public final class DefaultProjectsRepository: ProjectsRepository {
         self.dataSource = dataSource
     }
     
-    public func fetch() async throws -> [Project] {
-        let allProjects = try await dataSource.fetch()
+    public func fetch(search: String) async throws -> [Project] {
+        let allProjects = try await dataSource.fetch(search: search)
         let directory = try ProjectStorage.projectsDirectory()
 
         return allProjects.compactMap {
-            let url = directory.appending(path: $0.iconPath)
-
-            print("ICON URL:", url)
-            print(
-                "ICON EXISTS:",
-                FileManager.default.fileExists(atPath: url.path)
-            )
-
             return ProjectRecordMapper.map(
                 $0,
                 projectsDirectory: directory
@@ -45,5 +38,18 @@ public final class DefaultProjectsRepository: ProjectsRepository {
     
     public func delete(id: String) async throws {
         try await dataSource.delete(id: id)
+    }
+
+    public func fetch(id: String) async throws -> Project? {
+        let (projectRecord, skillsRecord) = try await dataSource.fetch(id: id)
+        let directory = try ProjectStorage.projectsDirectory()
+        var project = ProjectRecordMapper.map(projectRecord, projectsDirectory: directory)
+        let skills = skillsRecord.compactMap { SkillRecordMapper.map($0) }
+        project?.techStack = skills
+        return project
+    }
+    
+    public func removeSkill(id: String, from projectID: String) async throws {
+        try await dataSource.removeSkill(skillID: id, fromProject: projectID)
     }
 }

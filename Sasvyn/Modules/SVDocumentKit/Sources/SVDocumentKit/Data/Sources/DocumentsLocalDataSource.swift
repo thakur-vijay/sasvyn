@@ -50,6 +50,16 @@ final class DocumentsLocalDataSource: @unchecked Sendable{
     
     func delete(id: String) async throws {
         try await database.write { db in
+            guard let document = try db.fetchOne(
+                DocumentRecord.self,
+                filters: [.equals(
+                    DocumentRecord.ColumnNames.id,
+                    .text(id)
+                )]
+            ) else {
+                throw DocumentsError.securityScopedResourceAccessFailed
+            }
+            try DocumentStorage.removeItem(path: document.path)
             try db.delete(DocumentRecord.self, key: id)
         }
     }

@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import SVProjectKit
+import Foundation
 
 @Reducer
 public struct iOSProjectsFeature {
@@ -16,6 +17,7 @@ public struct iOSProjectsFeature {
     
     @ObservableState
     public struct State: Equatable {
+        public var search: String = ""
         public var projects: [Project] = []
         public var path = StackState<Path.State>()
         public init(){
@@ -47,9 +49,10 @@ public struct iOSProjectsFeature {
         Reduce { state, action in
             switch action {
             case .onTask:
+                let search = state.search
                 return .run {[client] send in
                     do {
-                        let projects = try await client.fetch()
+                        let projects = try await client.fetch(search)
                         await send(.projectsLoaded(projects))
                     }catch {
                         print(error.localizedDescription)
@@ -59,10 +62,10 @@ public struct iOSProjectsFeature {
                 state.projects = projects
                 return .none
             case .projectTapped(let project):
-                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .view, project: project)))
+                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .view, id: project.id)))
                 return .none
             case .createProjectTapped:
-                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .create)))
+                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .create, id: UUID().uuidString)))
                 return .none
             case .binding(_):
                 return .none

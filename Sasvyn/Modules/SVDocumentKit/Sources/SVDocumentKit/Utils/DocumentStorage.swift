@@ -42,4 +42,16 @@ public enum DocumentStorage {
             in: documentsDirectory()
         )
     }
+    
+    public static func removeItem(path: String) throws {
+        let itemURL = try DocumentStorage.documentURL(for: path)
+        print(String(describing: self), "Deleting document", itemURL)
+        if FileManager.default.fileExists(
+            atPath: itemURL.path
+        ) {
+            try FileManager.default.removeItem(
+                at: itemURL
+            )
+        }
+    }
 }

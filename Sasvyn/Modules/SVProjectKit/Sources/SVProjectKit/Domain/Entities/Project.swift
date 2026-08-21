@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SVSkillsKit
 
 public struct Project: Identifiable, Hashable, Sendable{
     public let id: String
@@ -15,6 +16,7 @@ public struct Project: Identifiable, Hashable, Sendable{
     public var tagline: String
     public var overview: String
     public var role: String
+    public var techStack: [Skill]
     
     public init(
         id: String = UUID().uuidString,
@@ -23,7 +25,8 @@ public struct Project: Identifiable, Hashable, Sendable{
         category: AppCategory? = nil,
         tagline: String = "",
         overview: String = "",
-        role: String = ""
+        role: String = "",
+        techStack: [Skill] = []
     ) {
         self.id = id
         self.icon = icon
@@ -32,6 +35,7 @@ public struct Project: Identifiable, Hashable, Sendable{
         self.tagline = tagline
         self.overview = overview
         self.role = role
+        self.techStack = techStack
     }
     
 }

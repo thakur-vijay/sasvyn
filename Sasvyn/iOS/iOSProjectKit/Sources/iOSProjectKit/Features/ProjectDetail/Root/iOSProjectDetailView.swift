@@ -77,6 +77,9 @@ public struct iOSProjectDetailView: View {
                 }
             }
         }
+        .task {
+            await store.send(.onTask).finish()
+        }
     }
     
     private var appDescription: some View {

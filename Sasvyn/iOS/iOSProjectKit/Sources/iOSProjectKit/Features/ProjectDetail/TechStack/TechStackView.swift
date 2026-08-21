@@ -8,9 +8,10 @@
 import SwiftUI
 import ComposableArchitecture
 import SVDesignSystem
+import iOSSkillsKit
 
 internal struct TechStackView: View {
-    let store: StoreOf<TechStackFeature>
+    @Bindable var store: StoreOf<TechStackFeature>
     
     init(store: StoreOf<TechStackFeature>) {
         self.store = store
@@ -19,19 +20,35 @@ internal struct TechStackView: View {
     var body: some View {
         SVSection(title: "Tech Stack") {
             ChipLayoutUI(alignment: .leading, spacing: 8) {
-                ForEach(["SwiftUI", "MVVM", "StoreKit", "Socket.IO", "Firebase"], id: \.self) { tech in
-                    Text(tech)
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Color(.systemGray6), in: .capsule)
+                ForEach(store.techStack) { stack in
+                    SVChip(
+                        model: .init(id: stack.id, text: stack.skill),
+                        isSelected: false) {
+                            
+                        }
                         .contextMenu(isEnabled: store.mode.isEditable, shape: .capsule) {
                             Button("Delete", systemImage: "trash") {
-                                
+                                store.send(.deleteStackTapped(stack))
                             }
                         }
                 }
+                
+                if store.mode.isEditable {
+                    SVChip(
+                        model: .init(
+                            id: "add",
+                            text: "+ Add Stack"
+                        ),
+                        isSelected: false) {
+                            store.send(.addStackTapped)
+                        }
+                }
+            }
+        }
+        .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
+            switch store.case {
+            case .skillsPicker(let store):
+                iOSSkillPicker(store: store)
             }
         }
     }

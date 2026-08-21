@@ -10,53 +10,17 @@ import ComposableArchitecture
 import SVDesignSystem
 import SVSkillsKit
 
-public extension View {
-
-    func skillsPicker(
-        isPresented: Binding<Bool>,
-        selection: Binding<[Skill]>
-    ) -> some View {
-        self.sheet(isPresented: isPresented) {
-            iOSSkillPicker(
-                store: Store(
-                    initialState: .init(
-                        selectedSkillIDs: Set(
-                            selection.wrappedValue.map(\.id)
-                        )
-                    )
-                ) {
-                    iOSSkillsPickerFeature()
-                },
-                onCancel: {
-                    isPresented.wrappedValue = false
-                },
-                onDone: { skills in
-                    selection.wrappedValue = skills
-                    isPresented.wrappedValue = false
-                }
-            )
-        }
-    }
-}
-
-internal struct iOSSkillPicker: View {
+public struct iOSSkillPicker: View {
 
     @Bindable var store: StoreOf<iOSSkillsPickerFeature>
-
-    let onCancel: () -> Void
-    let onDone: ([Skill]) -> Void
-
-    init(
+    
+    public init(
         store: StoreOf<iOSSkillsPickerFeature>,
-        onCancel: @escaping () -> Void,
-        onDone: @escaping ([Skill]) -> Void
     ) {
         self.store = store
-        self.onCancel = onCancel
-        self.onDone = onDone
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 20) {
@@ -90,13 +54,13 @@ internal struct iOSSkillPicker: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("", systemImage: "xmark") {
-                        onCancel()
+                        store.send(.cancelTapped)
                     }
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("", systemImage: "checkmark") {
-                        onDone(store.selectedSkills)
+                        store.send(.saveTapped)
                     }
                 }
             }

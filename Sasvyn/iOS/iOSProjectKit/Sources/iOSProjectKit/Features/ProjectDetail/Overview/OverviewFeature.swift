@@ -13,20 +13,17 @@ public struct OverviewFeature {
     
     @ObservableState
     public struct State: Equatable {
-        public var overview: String
+        public var overview: String = ""
         public var mode: ProjectMode
-        public init(
-            mode: ProjectMode,
-            overview: String
-        ){
+        public init(mode: ProjectMode){
             self.mode = mode
-            self.overview = overview
         }
     }
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
         case modeChanged(ProjectMode)
+        case setData(_ overview: String)
     }
     
     public init(){}
@@ -39,6 +36,9 @@ public struct OverviewFeature {
                 state.mode = mode
                 return .none
             case .binding(_):
+                return .none
+            case .setData(let overview):
+                state.overview = overview
                 return .none
             }
         }

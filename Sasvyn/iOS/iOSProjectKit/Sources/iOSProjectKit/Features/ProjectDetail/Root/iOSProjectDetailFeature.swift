@@ -17,22 +17,12 @@ public struct iOSProjectDetailFeature {
     @ObservableState
     public struct State: Equatable {
         public var mode: ProjectMode
-        public init(mode: ProjectMode, project: Project = .init()){
-            self.project = project
+        public init(mode: ProjectMode, id: String){
+            self.project = .init(id: id)
             self.mode = mode
-            self.appInfo = .init(
-                mode: mode,
-                projectID: project.id,
-                name: project.name,
-                tagline: project.tagline,
-                category: project.category,
-                appIconURL: project.icon
-            )
-            self.overview = .init(
-                mode: mode,
-                overview: project.overview
-            )
-            self.role = .init(mode: mode, role: project.role)
+            self.appInfo = .init(mode: mode)
+            self.overview = .init(mode: mode)
+            self.role = .init(mode: mode)
             self.techStack = .init(mode: mode)
             self.screenshots = .init(mode: mode)
         }
@@ -48,6 +38,8 @@ public struct iOSProjectDetailFeature {
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
+        case onTask
+        case projectLoaded(Project)
         case editModeTapped
         case cancelEditTapped
         case saveTapped
@@ -88,9 +80,29 @@ public struct iOSProjectDetailFeature {
         }
         Reduce { state, action in
             switch action {
+            case .onTask:
+                let projectID = state.project.id
+                return .run { [client] send in
+                    do {
+                        guard let project = try await client.fetchProject(projectID) else {
+                            return
+                        }
+                        await send(.projectLoaded(project))
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .projectLoaded(let project):
+                state.project = project
+                return .merge(
+                    .send(.appInfo(.setData(project.name, project.tagline, project.category, project.icon))),
+                    .send(.overview(.setData(project.overview))),
+                    .send(.role(.setData(project.role))),
+                    .send(.techStack(.setData(project.techStack)))
+                )
             case .binding(_):
                 return .none
-            case .appInfo, .overview, .role, .techStack, .screenshots:
+            case .appInfo, .overview, .role, .screenshots:
                 return .none
             case .editModeTapped:
                 state.mode = state.mode == .view ? .edit : .view
@@ -109,6 +121,8 @@ public struct iOSProjectDetailFeature {
             case .saveTapped:
                 state.appInfo.update(into: &state.project)
                 state.overview.update(into: &state.project)
+                state.role.update(into: &state.project)
+                state.techStack.update(into: &state.project)
                 let project = state.project
                 let mode = state.mode
                 return .run {[client] send in
@@ -131,6 +145,8 @@ public struct iOSProjectDetailFeature {
                 }
             case .delegate(_):
                 return .none
+            case .techStack(_):
+                return .none
             }
         }
     }
@@ -138,6 +154,6 @@ public struct iOSProjectDetailFeature {
 
 internal extension iOSProjectDetailFeature.State {
     var isProjectReadyToAdd: Bool {
-        return appInfo.isDetailsReady && overview.isDetailsReady
+        return appInfo.isDetailsReady && overview.isDetailsReady && role.isDetailsReady && techStack.isDetailsReady
     }
 }

@@ -31,3 +31,4 @@ public extension SVDatabase {
         try execute(sql: sql, arguments: arguments)
     }
 }
+

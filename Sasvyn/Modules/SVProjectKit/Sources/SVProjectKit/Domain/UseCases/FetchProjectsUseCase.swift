@@ -14,7 +14,7 @@ public struct FetchProjectsUseCase: Sendable {
         self.repository = repository
     }
     
-    func execute()async throws->[Project] {
-        try await repository.fetch()
+    func execute(search: String)async throws->[Project] {
+        try await repository.fetch(search: search)
     }
 }

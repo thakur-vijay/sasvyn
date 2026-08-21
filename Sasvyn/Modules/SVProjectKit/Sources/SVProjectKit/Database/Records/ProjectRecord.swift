@@ -25,13 +25,15 @@ struct ProjectRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     
     let overview: String
     
+    let role: String
+        
     let createdAt: Date
     
     let updatedAt: Date
     
     enum CodingKeys: String, CodingKey {
         
-        case id, name, category, tagline, overview
+        case id, name, category, tagline, overview, role
         case iconPath = "icon_path"
         case createdAt = "created_at"
         
@@ -49,6 +51,7 @@ extension ProjectRecord {
         static let category = SVColumnName("category")
         static let tagline = SVColumnName("tagline")
         static let overview = SVColumnName("overview")
+        static let role = SVColumnName("role")
         static let createdAt = SVColumnName("created_at")
         static let updatedAt = SVColumnName("updated_at")
     }
@@ -69,6 +72,8 @@ extension ProjectRecord {
         static let tagline = SVColumn("tagline")
         
         static let overview = SVColumn("overview")
+        
+        static let role = SVColumn("role")
         
         static let createdAt = SVColumn("created_at")
         

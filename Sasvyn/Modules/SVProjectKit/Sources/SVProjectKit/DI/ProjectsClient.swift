@@ -10,7 +10,10 @@ import Foundation
 
 public struct ProjectsClient: Sendable{
     public var fetch:
-        @Sendable () async throws -> [Project]
+    @Sendable (_ search: String) async throws -> [Project]
+    
+    public var fetchProject:
+    @Sendable (_ id: String) async throws -> Project?
 
     public var delete:
     @Sendable (_ id: String) async throws -> Void
@@ -20,25 +23,34 @@ public struct ProjectsClient: Sendable{
     
     public var update:
     @Sendable (_ project: Project) async throws -> Void
+    
+    public var removeSkill:
+    @Sendable (_ id: String, _ projectId: String) async throws -> Void
 }
 
 extension ProjectsClient {
 
     static func live(
         fetchProjectsUseCase: FetchProjectsUseCase,
+        fetchProjectUseCase: FetchProjectUseCase,
         addProjectUseCase: AddProjectUseCase,
         updateProjectUseCase: UpdateProjectUseCase,
         deleteProjectUseCase: DeleteProjectUseCase,
+        removeSkillFromProjectUseCase: RemoveSkillFromProjectUseCase,
     ) -> Self {
 
-        Self {
-            try await fetchProjectsUseCase.execute()
+        Self { search in
+            try await fetchProjectsUseCase.execute(search: search)
+        } fetchProject: { id in
+            try await fetchProjectUseCase.execute(id: id)
         } delete: { id in
             try await deleteProjectUseCase.execute(id: id)
         } add: { project in
             try await addProjectUseCase.execute(project: project)
         } update: { project in
             try await updateProjectUseCase.execute(project: project)
+        } removeSkill: { id, projectId in
+            try await removeSkillFromProjectUseCase.execute(id: id, from: projectId)
         }
 
     }
@@ -46,13 +58,17 @@ extension ProjectsClient {
 
 extension ProjectsClient: DependencyKey {
 
-    public static let liveValue = Self {
+    public static let liveValue = Self { search in
+        fatalError("Unimplemented")
+    } fetchProject: { id in
         fatalError("Unimplemented")
     } delete: { id in
         fatalError("Unimplemented")
     } add: { project in
         fatalError("Unimplemented")
     } update: { project in
+        fatalError("Unimplemented")
+    } removeSkill: { id, projectId in
         fatalError("Unimplemented")
     }
     
@@ -60,13 +76,17 @@ extension ProjectsClient: DependencyKey {
 
 extension ProjectsClient: TestDependencyKey {
 
-    public static let testValue = Self {
+    public static let testValue = Self { search in
         return []
+    } fetchProject: { id in
+        return nil
     } delete: { id in
         
     } add: { project in
         
     } update: { project in
+        
+    } removeSkill: { id, projectId in
         
     }
 }

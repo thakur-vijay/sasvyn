@@ -44,6 +44,7 @@ struct DocumentRecord: Codable, SVFetchableRecord, SVPersistableRecord{
 extension DocumentRecord {
     nonisolated enum ColumnNames {
         static let category = SVColumnName("category")
+        static let id = SVColumnName("id")
         static let createdAt = SVColumnName("created_at")
     }
 }

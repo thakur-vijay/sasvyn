@@ -69,6 +69,12 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                 skillIDs: project.techStack.map { $0.id },
                 db: db
             )
+            
+            try self?.setScreenshots(
+                projectID: project.id,
+                screenshots: project.screenshots,
+                db: db
+            )
         }
     }
     
@@ -243,6 +249,30 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             try db.delete(
                 ProjectRecord.self,
                 key: id
+            )
+        }
+    }
+    
+    private func setScreenshots(projectID: String, screenshots: [ProjectScreenshot], db: SVDatabase) throws {
+        try db.execute(
+            sql: "DELETE FROM project_screenshots WHERE project_id = ?",
+            arguments: [.text(projectID)]
+        )
+
+        for screenshot in screenshots {
+            var screenshotPath: String = ""
+            if let screenshotURL = screenshot.url {
+                screenshotPath = try ProjectStorage.relativePath(for: screenshotURL)
+            }
+            try db.insert(
+                ProjectScreenshotRecord(
+                    id: screenshot.id,
+                    path: screenshotPath,
+                    projectId: projectID,
+                    order: screenshot.order,
+                    createdAt: .now,
+                    updatedAt: .now
+                )
             )
         }
     }

@@ -7,30 +7,38 @@
 
 import SwiftUI
 
-public struct SVSection<Content: View>: View {
+public struct SVSection<Content: View, Trailing: View>: View {
     private let title: String
     private let footer: String?
     private let content: Content
+    private let trailing: Trailing
     private let titleHorizontalPadding: CGFloat
     
     public init(
         title: String,
         titleHorizontalPadding: CGFloat = 0,
         footer: String? = nil,
-        @ViewBuilder content: @escaping ()-> Content
+        @ViewBuilder content: @escaping ()-> Content,
+        @ViewBuilder trailing: @escaping ()-> Trailing,
     ) {
         self.title = title
         self.titleHorizontalPadding = titleHorizontalPadding
         self.footer = footer
         self.content = content()
+        self.trailing = trailing()
     }
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.heavy)
-                .padding(.horizontal, titleHorizontalPadding)
+            HStack {
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.heavy)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                trailing
+            }
+            .padding(.horizontal, titleHorizontalPadding)
+
             content
             if let footer, !footer.isEmpty{
                 Text(footer)
@@ -38,5 +46,23 @@ public struct SVSection<Content: View>: View {
                     .foregroundStyle(.gray)
             }
         }
+    }
+}
+
+public extension SVSection where Trailing == EmptyView {
+    
+    init(
+        title: String,
+        titleHorizontalPadding: CGFloat = 0,
+        footer: String? = nil,
+        @ViewBuilder content: @escaping ()-> Content,
+    ) {
+        self.init(
+            title: title,
+            titleHorizontalPadding: titleHorizontalPadding,
+            footer: footer,
+            content: content) {
+                EmptyView()
+            }
     }
 }

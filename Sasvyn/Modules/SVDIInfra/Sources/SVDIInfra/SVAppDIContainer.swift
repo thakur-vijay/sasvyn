@@ -9,6 +9,7 @@ import Foundation
 import SVSkillsKit
 import SVDocumentKit
 import SVProjectKit
+import SVMockupKit
 
 public final class SVAppDIContainer {
     
@@ -31,11 +32,16 @@ public final class SVAppDIContainer {
         ProjectsDIContainer(database: databaseContainer.appDatabase)
     }()
     
+    lazy var mockupsDIContainer: MockupsDIContainer = {
+        MockupsDIContainer(database: databaseContainer.appDatabase)
+    }()
+    
     public lazy var rootDIContainer: RootDIContainer = {
         RootDIContainer(
             skillsDIContainer: skillsDIContainer,
             documentsDIContainer: documentsDIContainer,
-            projectsDIContainer: projectsDIContainer
+            projectsDIContainer: projectsDIContainer,
+            mockupsDIContainer: mockupsDIContainer
         )
     }()
 }

@@ -50,4 +50,11 @@ public final class SVTableBuilder {
             column: table.column(name, .blob)
         )
     }
+    
+    @discardableResult
+    public func double(_ name: String) -> SVColumnBuilder {
+        SVColumnBuilder(
+            column: table.column(name, .double)
+        )
+    }
 }

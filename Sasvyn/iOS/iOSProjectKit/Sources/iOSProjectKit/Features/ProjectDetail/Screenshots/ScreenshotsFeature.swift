@@ -27,17 +27,28 @@ public struct ScreenshotsFeature {
                 ProjectScreenshot(order: index)
             }
         }
+        
+        
+        @Presents
+        var destination: Destination.State?
     }
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
+        case destination(PresentationAction<Destination.Action>)
         case modeChanged(ProjectMode)
         case screenshotTapped(ProjectScreenshot)
         case updateScreenshots
         case screenshotProcessed(UUID, URL)
+        case reorderTapped
     }
     
     public init(){}
+    
+    @Reducer
+    public enum Destination {
+        case screenshotsReorder(ScreenshotsReorderFeature)
+    }
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -48,16 +59,13 @@ public struct ScreenshotsFeature {
                 return .none
             case .binding(_):
                 return .none
-            case .screenshotTapped(let screenshot):
+            case .screenshotTapped:
                 state.isPhotosPickerPresented.toggle()
                 return .none
             case .updateScreenshots:
                 let selectedImages = state.selectedImages
                 state.selectedImages.removeAll()
-                let availableScreenshots = state.screenshots
-                    .filter { $0.imageURL == nil }
-                    .prefix(selectedImages.count)
-
+                
                 let targets = zip(
                     selectedImages,
                     state.screenshots
@@ -102,8 +110,14 @@ public struct ScreenshotsFeature {
                 state.screenshots[index].imageURL = url
 
                 return .none
+            case .reorderTapped:
+                state.destination = .screenshotsReorder(.init())
+                return .none
+            case .destination(_):
+                return .none
             }
         }
+        .ifLet(\.$destination, action: \.destination)
     }
 }
 
@@ -178,3 +192,5 @@ enum ScreenshotSaver {
 enum ScreenshotError: Error {
     case invalidImage
 }
+
+extension ScreenshotsFeature.Destination.State: Equatable {}

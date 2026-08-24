@@ -14,7 +14,8 @@ public enum ProjectsDatabaseModule: DatabaseModule {
         on migrator: DatabaseMigrator
     ) {
         migrator.add(CreateProjectsMigration())
-        migrator.add(AddRoleToProjectsMigration())
+//        migrator.add(AddRoleToProjectsMigration())
         migrator.add(CreateProjectSkillsMigration())
+        migrator.add(CreateProjectScreenshotsMigration())
     }
 }

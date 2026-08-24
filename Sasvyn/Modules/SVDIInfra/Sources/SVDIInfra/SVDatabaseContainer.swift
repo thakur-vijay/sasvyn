@@ -9,6 +9,7 @@ import SVDatabaseKit
 import SVSkillsKit
 import SVDocumentKit
 import SVProjectKit
+import SVMockupKit
 
 public final class SVDatabaseContainer {
     
@@ -18,6 +19,7 @@ public final class SVDatabaseContainer {
             migrator.register(SkillsDatabaseModule.self)
             migrator.register(DocumentsDatabaseModule.self)
             migrator.register(ProjectsDatabaseModule.self)
+            migrator.register(MockupsDatabaseModule.self)
 
             let database = try AppDatabase(
                 migrator: migrator

@@ -22,7 +22,7 @@ struct ScreenshotsView: View {
     
     var body: some View {
         SVSection(title: "Preview", titleHorizontalPadding: SVSpacing.screenHorizontal) {
-            let screenshotWidth = screenSize.width * 0.6
+            let screenshotWidth = screenSize.width * 0.68
             let screenshotHeight = screenshotWidth * 19.5 / 9
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 12) {
@@ -46,11 +46,21 @@ struct ScreenshotsView: View {
             .scrollIndicators(.hidden)
             .scrollClipDisabled()
             .scrollTargetBehavior(.viewAligned)
+        } trailing: {
+            Button("Reorder"){
+                store.send(.reorderTapped)
+            }
         }
         .photosPicker(isPresented: $store.isPhotosPickerPresented, selection: $store.selectedImages, maxSelectionCount: store.screenshots.filter { $0.imageURL == nil }.count)
         .onChange(of: store.isPhotosPickerPresented) { oldValue, newValue in
             if !newValue && !store.selectedImages.isEmpty {
                 store.send(.updateScreenshots)
+            }
+        }
+        .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
+            switch store.case {
+            case .screenshotsReorder(let store):
+                ScreenshotsReorderView(store: store)
             }
         }
     }

@@ -28,7 +28,7 @@ internal struct AppInfoView: View {
                 ZStack(alignment: .topTrailing) {
                     SVRemoteImage(
                         url: appIconURL,
-                        side: 100,
+                        size: .init(width: 100, height: 100),
                         shape: .rect(
                             cornerRadius: 24,
                             style: .continuous

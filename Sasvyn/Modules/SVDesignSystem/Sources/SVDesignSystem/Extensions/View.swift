@@ -23,6 +23,7 @@ public extension View {
                 .glassEffect(.clear.interactive(isInteractive), in: shape)
         } else {
            self
+                .background(.ultraThinMaterial, in: shape)
         }
     }
 }

@@ -12,20 +12,24 @@ import SVSkillsKit
 import iOSRootKit
 import SVDocumentKit
 import SVProjectKit
+import SVMockupKit
 
 @available(iOS 17.0, *)
 public final class RootDIContainer {
     private let skillsDIContainer: SkillsDIContainer
     private let documentsDIContainer: DocumentsDIContainer
     private let projectsDIContainer: ProjectsDIContainer
+    private let mockupsDIContainer: MockupsDIContainer
     public init(
         skillsDIContainer: SkillsDIContainer,
         documentsDIContainer: DocumentsDIContainer,
-        projectsDIContainer: ProjectsDIContainer
+        projectsDIContainer: ProjectsDIContainer,
+        mockupsDIContainer: MockupsDIContainer
     ) {
         self.skillsDIContainer = skillsDIContainer
         self.documentsDIContainer = documentsDIContainer
         self.projectsDIContainer = projectsDIContainer
+        self.mockupsDIContainer = mockupsDIContainer
     }
     
     @MainActor
@@ -35,6 +39,7 @@ public final class RootDIContainer {
         self.skillsDIContainer.register(&$0)
         self.documentsDIContainer.register(&$0)
         self.projectsDIContainer.register(&$0)
+        self.mockupsDIContainer.register(&$0)
     }
 
     @MainActor public func makeView() -> some View {

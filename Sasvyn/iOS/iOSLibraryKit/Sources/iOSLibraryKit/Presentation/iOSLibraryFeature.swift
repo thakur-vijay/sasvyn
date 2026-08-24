@@ -9,6 +9,7 @@ import ComposableArchitecture
 import iOSSkillsKit
 import iOSAboutKit
 import iOSDocumentsKit
+import iOSMockupKit
 
 @Reducer
 public struct iOSLibraryFeature {
@@ -33,6 +34,7 @@ public struct iOSLibraryFeature {
         case skills(iOSSkillsFeature)
         case about(iOSAboutFeature)
         case documents(iOSDocumentsFeature)
+        case mockups(iOSMockupsFeature)
     }
     
     public init(){
@@ -48,6 +50,7 @@ public struct iOSLibraryFeature {
                 case .skills: state.path.append(.skills(iOSSkillsFeature.State()))
                 case .about: state.path.append(.about(iOSAboutFeature.State()))
                 case .documents: state.path.append(.documents(iOSDocumentsFeature.State()))
+                case .mockups: state.path.append(.mockups(.init()))
                 default: break
                 }
                 return .none

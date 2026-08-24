@@ -25,7 +25,7 @@ public struct iOSSettingsView: View {
                         url: .init(
                             string: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
                         ),
-                        side: 120,
+                        size: .init(width: 120, height: 120),
                         shape: .circle
                     )
                     Text("Vijay Thakur")

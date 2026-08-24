@@ -20,7 +20,8 @@ internal struct LibrarySectionModel: Identifiable{
                 .experience,
                 .education,
                 .skills,
-                .documents
+                .documents,
+                .mockups
             ]
         ),
         .init(

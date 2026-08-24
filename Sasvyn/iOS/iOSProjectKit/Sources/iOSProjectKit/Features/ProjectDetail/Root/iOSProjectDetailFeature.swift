@@ -33,7 +33,7 @@ public struct iOSProjectDetailFeature {
         var role: RoleFeature.State
         var techStack: TechStackFeature.State
         var screenshots: ScreenshotsFeature.State
-        
+   
     }
     
     public enum Action: BindableAction{

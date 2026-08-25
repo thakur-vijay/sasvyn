@@ -99,7 +99,8 @@ public struct iOSProjectDetailFeature {
                     .send(.appInfo(.setData(project.name, project.tagline, project.category, project.icon))),
                     .send(.overview(.setData(project.overview))),
                     .send(.role(.setData(project.role))),
-                    .send(.techStack(.setData(project.techStack)))
+                    .send(.techStack(.setData(project.techStack))),
+                    .send(.screenshots(.setData(project.screenshots))),
                 )
             case .binding(_):
                 return .none
@@ -120,6 +121,7 @@ public struct iOSProjectDetailFeature {
             case .cancelEditTapped:
                 return .none
             case .saveTapped:
+                guard state.isProjectReadyToAdd else { return .none }
                 state.appInfo.update(into: &state.project)
                 state.overview.update(into: &state.project)
                 state.role.update(into: &state.project)

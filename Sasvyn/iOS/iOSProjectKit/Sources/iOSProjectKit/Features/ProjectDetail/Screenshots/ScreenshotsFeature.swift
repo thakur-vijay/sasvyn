@@ -36,6 +36,7 @@ public struct ScreenshotsFeature {
         case screenshotTapped(ProjectScreenshot)
         case reorderTapped
         case addPreviewsTapped
+        case setData(_ screenshots: [ProjectScreenshot])
     }
     
     public init(){}
@@ -137,6 +138,9 @@ public struct ScreenshotsFeature {
                         maxSelection: ProjectConfiguration.screenshotsLimit
                     )
                 )
+                return .none
+            case .setData(let screenshots):
+                state.screenshots = screenshots
                 return .none
             }
         }

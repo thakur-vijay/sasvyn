@@ -62,6 +62,7 @@ public struct iOSProjectDetailView: View {
                         store.send(.saveTapped)
                     }
                     .tint(store.isProjectReadyToAdd ? .blue : .gray.opacity(0.3))
+                    .disabledWithOpacity(!store.isProjectReadyToAdd)
                     
                     if store.mode != .create{
                         Button("", systemImage: "xmark") {

@@ -244,7 +244,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                 updatedAt: row.projectUpdatedAt
             )
 
-            let decoder = JSONDecoder()
+            let decoder = SVJSONDecoder.make()
 
             let skills = try decoder.decode(
                 [SkillRecord].self,
@@ -353,5 +353,21 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                 )
             )
         }
+    }
+}
+
+public enum SVJSONDecoder {
+    
+    public static func make() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        
+        return decoder
     }
 }

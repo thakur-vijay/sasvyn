@@ -81,6 +81,7 @@ public struct iOSProjectDetailFeature {
         Reduce { state, action in
             switch action {
             case .onTask:
+                guard state.mode != .create else { return .none }
                 let projectID = state.project.id
                 return .run { [client] send in
                     do {
@@ -123,6 +124,7 @@ public struct iOSProjectDetailFeature {
                 state.overview.update(into: &state.project)
                 state.role.update(into: &state.project)
                 state.techStack.update(into: &state.project)
+                state.screenshots.update(into: &state.project)
                 let project = state.project
                 let mode = state.mode
                 return .run {[client] send in
@@ -154,6 +156,8 @@ public struct iOSProjectDetailFeature {
 
 internal extension iOSProjectDetailFeature.State {
     var isProjectReadyToAdd: Bool {
-        return appInfo.isDetailsReady && overview.isDetailsReady && role.isDetailsReady && techStack.isDetailsReady
+        return (
+            appInfo.isDetailsReady && overview.isDetailsReady && role.isDetailsReady && techStack.isDetailsReady && screenshots.isDetailsReady
+        )
     }
 }

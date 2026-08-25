@@ -7,6 +7,8 @@
 
 import SwiftUI
 import ComposableArchitecture
+import SVRemoteImage
+import SVProjectKit
 
 enum GridType: String {
     case two = "square.grid.2x2.fill"
@@ -34,69 +36,82 @@ public struct ScreenshotsReorderView: View {
         self.store = store
     }
     
-    @State private var draggingItem: ProjectScreenshot?
+    @State private var draggingItem: ProjectScreenshot.ID?
     
     @State private var screenshotSize: CGSize = .zero
     @State private var gridType: GridType = .two
+    @State private var scrollPhase: ScrollPhase = .idle
     
     @Namespace
     private var animation
     
     public var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(spacing: 10), count: gridType.count), spacing: 10) {
-                    ForEach(store.screenshots) { screenshot in
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(.pink.gradient)
-                            .aspectRatio(428.0 / 926.0, contentMode: .fill)
-                            .onGeometryChange(for: CGSize.self, of: { proxy in
-                                return proxy.size
-                            }, action: { newValue in
-                                screenshotSize = newValue
-                            })
-                            .matchedGeometryEffect(id: screenshot.id, in: animation)
-                            .opacity(draggingItem?.id == screenshot.id ? 0 : 1)
-                            .draggable(screenshot) {
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                    .fill(.pink.gradient)
-                                    .frame(width: screenshotSize.width, height: screenshotSize.height)
+            GeometryReader{
+                let screenSize = $0.size
+                ScrollView {
+                    LazyVGrid(columns: Array(repeating: GridItem(spacing: 2), count: gridType.count), spacing: 2) {
+                        ForEach(store.screenshots) { screenshot in
+                            let width = (screenSize.width - 20) / CGFloat(gridType.count)
+                            let height = width / screenshot.aspectRatio
+                            SVRemoteImage(
+                                url: screenshot.imageURL,
+                                size: .init(width: width, height: height),
+                                contentMode: .fit,
+                                shape: .rect,
+                                cache: .disabled
+                            )
+                            .draggable(screenshot.id){
+                                Rectangle()
+                                    .fill(.clear)
+                                    .frame(width: 1, height: 1)
                                     .onAppear {
-                                        draggingItem = screenshot
+                                        draggingItem = screenshot.id
                                     }
                             }
-                            .dropDestination(for: ProjectScreenshot.self) { items, location in
+                            .dropDestination(for: ProjectScreenshot.ID.self) { items, location in
+                                self.draggingItem = nil
                                 return false
                             } isTargeted: { status in
-                                guard let draggingItem, status, draggingItem.id != screenshot.id else { return }
-                                guard let sourceIndex = store.screenshots.firstIndex(where: { $0.id == draggingItem.id }) else { return }
+                                guard let draggingItem, status, draggingItem != screenshot.id else { return }
+                                guard let sourceIndex = store.screenshots.firstIndex(where: { $0.id == draggingItem }) else { return }
                                 guard let destinationIndex = store.screenshots.firstIndex(where: { $0.id == screenshot.id })
                                 else { return }
-                                
-                                withAnimation(.bouncy) {
+
+                                _ = withAnimation(.bouncy) {
                                     store.send(.reorder(sourceIndex, destinationIndex))
                                 }
                             }
-
+                        }
                     }
+                    .padding(10)
                 }
-                .padding(20)
+                .onScrollPhaseChange { old, new in
+                    self.scrollPhase = new
+                }
             }
             .navigationTitle("Edit Screenshots")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("", systemImage: "xmark"){
+                        store.send(.closeTapped)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("", systemImage: gridType.next.rawValue){
-                        switch gridType {
-                        case .two: gridType = .three
-                        case .three: gridType = .two
+                        if self.scrollPhase == .idle {
+                            switch gridType {
+                            case .two: gridType = .three
+                            case .three: gridType = .two
+                            }
                         }
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("", systemImage: "checkmark"){
-                        
+                        store.send(.checkTapped)
                     }
                 }
             }

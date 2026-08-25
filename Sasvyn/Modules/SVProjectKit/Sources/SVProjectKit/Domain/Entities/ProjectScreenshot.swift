@@ -7,14 +7,21 @@
 
 import Foundation
 
-public struct ProjectScreenshot: Identifiable, Hashable, Sendable {
+public struct ProjectScreenshot: Identifiable, Codable, Hashable, Sendable{
     public let id: String
-    public let url: URL?
-    public let order: Int
-    
-    public init(id: String, url: URL?, order: Int) {
+    public var mockupID: String
+    public var device: String
+    public var imageURL: URL?
+    public var aspectRatio: CGFloat
+    public var order: Int
+
+    public init(id: String, mockupID: String, device: String, imageURL: URL?, aspectRatio: CGFloat, order: Int) {
         self.id = id
-        self.url = url
+        self.mockupID = mockupID
+        self.device = device
+        self.imageURL = imageURL
+        self.aspectRatio = aspectRatio
         self.order = order
     }
+
 }

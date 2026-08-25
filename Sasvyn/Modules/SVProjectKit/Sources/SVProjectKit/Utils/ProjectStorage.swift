@@ -89,4 +89,26 @@ public enum ProjectStorage {
             in: projectsDirectory()
         )
     }
+    
+   public static func copyScreenshot(
+        from sourceURL: URL,
+        projectID: String
+    ) throws -> URL {
+        let screenshotsDirectory = try self.screenshotsDirectory(projectID: projectID)
+
+        try FileManager.default.createDirectory(
+            at: screenshotsDirectory,
+            withIntermediateDirectories: true
+        )
+
+        let destinationURL = screenshotsDirectory
+            .appendingPathComponent(sourceURL.lastPathComponent)
+
+        try FileManager.default.copyItem(
+            at: sourceURL,
+            to: destinationURL
+        )
+
+        return destinationURL
+    }
 }

@@ -123,7 +123,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
         }
     }
     
-    struct ProjectSkillRow: FetchableRecord, Decodable {
+    struct ProjectDetailRow: FetchableRecord, Decodable {
 
         let projectID: String
         let projectIconPath: String
@@ -135,11 +135,8 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
         let projectCreatedAt: Date
         let projectUpdatedAt: Date
 
-        let skillID: String?
-        let skill: String?
-        let skillCategory: String?
-        let skillCreatedAt: Date?
-        let skillUpdatedAt: Date?
+        let skillsJSON: String
+        let screenshotsJSON: String
 
         enum CodingKeys: String, CodingKey {
             case projectID = "project_id"
@@ -152,19 +149,23 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             case projectCreatedAt = "project_created_at"
             case projectUpdatedAt = "project_updated_at"
 
-            case skillID = "skill_id"
-            case skill = "skill"
-            case skillCategory = "skill_category"
-            case skillCreatedAt = "skill_created_at"
-            case skillUpdatedAt = "skill_updated_at"
+            case skillsJSON = "skills_json"
+            case screenshotsJSON = "screenshots_json"
         }
     }
+    
 
-    func fetch(id: String) async throws -> (ProjectRecord, [SkillRecord]) {
+    func fetch(
+        id: String
+    ) async throws -> (
+        ProjectRecord,
+        [SkillRecord],
+        [ProjectScreenshotRecord]
+    ) {
         try await database.read { db in
 
-            let rows = try db.fetch(
-                ProjectSkillRow.self,
+            let row = try db.fetchOne(
+                ProjectDetailRow.self,
                 sql: """
                 SELECT
                     p.id AS project_id,
@@ -177,59 +178,89 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                     p.created_at AS project_created_at,
                     p.updated_at AS project_updated_at,
 
-                    s.id AS skill_id,
-                    s.skill AS skill,
-                    s.category AS skill_category,
-                    s.created_at AS skill_created_at,
-                    s.updated_at AS skill_updated_at
+                    COALESCE(
+                        (
+                            SELECT json_group_array(
+                                json_object(
+                                    'id', s.id,
+                                    'skill', s.skill,
+                                    'category', s.category,
+                                    'created_at', s.created_at,
+                                    'updated_at', s.updated_at
+                                )
+                            )
+                            FROM project_skills ps
+                            INNER JOIN skills s
+                                ON s.id = ps.skill_id
+                            WHERE ps.project_id = p.id
+                        ),
+                        '[]'
+                    ) AS skills_json,
+
+                    COALESCE(
+                        (
+                            SELECT json_group_array(
+                                json_object(
+                                    'id', ps.id,
+                                    'path', ps.path,
+                                    'project_id', ps.project_id,
+                                    'order', ps."order",
+                                    'mockup_id', ps.mockup_id,
+                                    'device', ps.device,
+                                    'aspect_ratio', ps.aspect_ratio,
+                                    'created_at', ps.created_at,
+                                    'updated_at', ps.updated_at
+                                )
+                            )
+                            FROM (
+                                SELECT *
+                                FROM project_screenshots
+                                WHERE project_id = p.id
+                                ORDER BY "order" ASC
+                            ) ps
+                        ),
+                        '[]'
+                    ) AS screenshots_json
 
                 FROM projects p
-                LEFT JOIN project_skills ps
-                    ON ps.project_id = p.id
-                LEFT JOIN skills s
-                    ON s.id = ps.skill_id
                 WHERE p.id = ?
                 """,
                 arguments: [.text(id)]
             )
 
-            guard let first = rows.first else {
+            guard let row else {
                 throw DatabaseError.recordNotFound
             }
 
             let project = ProjectRecord(
-                id: first.projectID,
-                iconPath: first.projectIconPath,
-                name: first.projectName,
-                category: first.projectCategory,
-                tagline: first.projectTagline,
-                overview: first.projectOverview,
-                role: first.projectRole,
-                createdAt: first.projectCreatedAt,
-                updatedAt: first.projectUpdatedAt
+                id: row.projectID,
+                iconPath: row.projectIconPath,
+                name: row.projectName,
+                category: row.projectCategory,
+                tagline: row.projectTagline,
+                overview: row.projectOverview,
+                role: row.projectRole,
+                createdAt: row.projectCreatedAt,
+                updatedAt: row.projectUpdatedAt
             )
 
-            let skills = rows.compactMap { row -> SkillRecord? in
-                guard
-                    let id = row.skillID,
-                    let skill = row.skill,
-                    let category = row.skillCategory,
-                    let createdAt = row.skillCreatedAt,
-                    let updatedAt = row.skillUpdatedAt
-                else {
-                    return nil
-                }
+            let decoder = JSONDecoder()
 
-                return SkillRecord(
-                    id: id,
-                    skill: skill,
-                    category: category,
-                    createdAt: createdAt,
-                    updatedAt: updatedAt
-                )
-            }
+            let skills = try decoder.decode(
+                [SkillRecord].self,
+                from: Data(row.skillsJSON.utf8)
+            )
 
-            return (project, skills)
+            let screenshots = try decoder.decode(
+                [ProjectScreenshotRecord].self,
+                from: Data(row.screenshotsJSON.utf8)
+            )
+
+            return (
+                project,
+                skills,
+                screenshots
+            )
         }
     }
     
@@ -253,23 +284,30 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
         }
     }
     
-    private func setScreenshots(projectID: String, screenshots: [ProjectScreenshot], db: SVDatabase) throws {
-        try db.execute(
-            sql: "DELETE FROM project_screenshots WHERE project_id = ?",
-            arguments: [.text(projectID)]
-        )
-
+    private func setScreenshots(
+        projectID: String,
+        screenshots: [ProjectScreenshot],
+        db: SVDatabase
+    ) throws {
         for screenshot in screenshots {
-            var screenshotPath: String = ""
-            if let screenshotURL = screenshot.url {
-                screenshotPath = try ProjectStorage.relativePath(for: screenshotURL)
+            guard let sourceURL = screenshot.imageURL else {
+                continue
             }
+
+            let destinationURL = try ProjectStorage.copyScreenshot(
+                from: sourceURL,
+                projectID: projectID
+            )
+
             try db.insert(
                 ProjectScreenshotRecord(
                     id: screenshot.id,
-                    path: screenshotPath,
+                    path: try ProjectStorage.relativePath(for: destinationURL),
                     projectId: projectID,
                     order: screenshot.order,
+                    mockupID: screenshot.mockupID,
+                    device: screenshot.device,
+                    aspectRatio: screenshot.aspectRatio,
                     createdAt: .now,
                     updatedAt: .now
                 )

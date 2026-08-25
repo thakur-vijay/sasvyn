@@ -16,7 +16,10 @@ enum ProjectScreenshotRecordMapper {
         let screenshotURL = projectsDirectory.appending(path: record.path)
         return ProjectScreenshot(
             id: record.id,
-            url: screenshotURL,
+            mockupID: record.mockupID,
+            device: record.device,
+            imageURL: screenshotURL,
+            aspectRatio: record.aspectRatio,
             order: record.order
         )
     }

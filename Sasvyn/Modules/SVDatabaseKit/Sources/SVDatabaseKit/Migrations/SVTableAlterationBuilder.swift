@@ -49,4 +49,11 @@ public final class SVTableAlterationBuilder {
             column: table.add(column: name, .blob)
         )
     }
+    
+    @discardableResult
+    public func double(_ name: String) -> SVColumnAlterationBuilder {
+        SVColumnAlterationBuilder(
+            column: table.add(column: name, .double)
+        )
+    }
 }

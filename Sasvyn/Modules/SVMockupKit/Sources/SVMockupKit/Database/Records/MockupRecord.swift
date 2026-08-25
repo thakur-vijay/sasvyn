@@ -23,13 +23,15 @@ struct MockupRecord: Codable, SVFetchableRecord, SVPersistableRecord{
         
     let fileSize: Int64
     
+    let device: String
+    
     let createdAt: Date
     
     let updatedAt: Date
     
     enum CodingKeys: String, CodingKey {
         
-        case id, path
+        case id, path, device
         
         case fileSize = "file_size"
         
@@ -63,6 +65,8 @@ extension MockupRecord {
         static let thumbnailPath = SVColumn("thumbnail_path")
                         
         static let fileSize = SVColumn("file_size")
+        
+        static let device = SVColumn("device")
         
         static let aspectRatio = SVColumn("aspect_ratio")
         

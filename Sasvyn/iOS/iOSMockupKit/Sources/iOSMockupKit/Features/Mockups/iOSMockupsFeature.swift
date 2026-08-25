@@ -17,22 +17,61 @@ public struct iOSMockupsFeature {
     @ObservableState
     public struct State: Equatable {
         public var mockups: [MockupImage] = []
-        public init(){
-            
+        public var mode: MockupsPresentationMode
+        public var isSingleSelection: Bool
+        public init(
+            mode: MockupsPresentationMode,
+            selectedMockupIds: Set<String> = .init(),
+            maxSelection: Int? = 0
+        ){
+            self.mode = mode
+            self.selectedMockupIds = selectedMockupIds
+            self.maxSelection = maxSelection
+            self.isSingleSelection = false
+        }
+        
+        public init(
+            mode: MockupsPresentationMode,
+            selection: String?,
+        ){
+            self.selection = selection
+            self.mode = mode
+            self.selectedMockupIds = []
+            self.maxSelection = nil
+            self.isSingleSelection = true
         }
         
         @Presents
         public var destination: Destination.State?
+        
+        var selectedMockupIds: Set<String>
+        var maxSelection: Int?
+        var selection: String?
+        
+        var selectedMockups: [MockupImage] {
+            mockups
+                .filter { selectedMockupIds.contains($0.id) }
+        }
     }
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
         case addTapped
+        case checkTapped
+        case closeTapped
         case onTask
         case mockupsReady([MockupImage])
         case deleteTapped(MockupImage)
+        case mockupTapped(MockupImage)
         case mockupDeleted(MockupImage)
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case close
+            case selection([MockupImage])
+            case select(MockupImage?)
+        }
     }
     
     public init(){
@@ -86,6 +125,29 @@ public struct iOSMockupsFeature {
             case .mockupDeleted(let mockup):
                 state.mockups.removeAll { $0.id == mockup.id }
                 return .none
+            case .checkTapped:
+                return .send(.delegate(.selection(state.selectedMockups)))
+            case .delegate(_):
+                return .none
+            case .closeTapped:
+                return .send(.delegate(.close))
+            case .mockupTapped(let mockup):
+                if state.isSingleSelection {
+                    if state.selection == mockup.id {
+                        state.selection = nil
+                        return .none
+                    }else {
+                        return .send(.delegate(.select(mockup)))
+                    }
+                }else {
+                    if state.selectedMockupIds.contains(mockup.id){
+                        state.selectedMockupIds.remove(mockup.id)
+                    }else {
+                        state.selectedMockupIds.insert(mockup.id)
+                    }
+                    return .none
+                }
+             
             }
         }
         .ifLet(\.$destination, action: \.destination)

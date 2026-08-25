@@ -12,6 +12,7 @@ public struct MockupModel: Identifiable, Hashable, Sendable {
     public let url: URL?
     public let thumbnail: URL?
     public let size: Int64
+    public let device: String
     public let aspectRatio: Double
     public let createdAt: Date
     public let updatedAt: Date
@@ -21,6 +22,7 @@ public struct MockupModel: Identifiable, Hashable, Sendable {
         url: URL?,
         thumbnail: URL?,
         size: Int64,
+        device: String,
         aspectRatio: Double,
         createdAt: Date,
         updatedAt: Date
@@ -29,6 +31,7 @@ public struct MockupModel: Identifiable, Hashable, Sendable {
         self.url = url
         self.thumbnail = thumbnail
         self.size = size
+        self.device = device
         self.aspectRatio = aspectRatio
         self.createdAt = createdAt
         self.updatedAt = updatedAt

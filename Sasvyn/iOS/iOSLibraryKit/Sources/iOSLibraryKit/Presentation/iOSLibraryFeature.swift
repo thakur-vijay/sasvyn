@@ -50,7 +50,7 @@ public struct iOSLibraryFeature {
                 case .skills: state.path.append(.skills(iOSSkillsFeature.State()))
                 case .about: state.path.append(.about(iOSAboutFeature.State()))
                 case .documents: state.path.append(.documents(iOSDocumentsFeature.State()))
-                case .mockups: state.path.append(.mockups(.init()))
+                case .mockups: state.path.append(.mockups(.init(mode: .full)))
                 default: break
                 }
                 return .none

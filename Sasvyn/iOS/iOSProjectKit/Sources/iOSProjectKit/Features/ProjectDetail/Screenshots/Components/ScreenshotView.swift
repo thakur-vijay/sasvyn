@@ -7,35 +7,18 @@
 
 import SwiftUI
 import SVRemoteImage
+import SVProjectKit
 
 struct ScreenshotView: View {
     let screenshot: ProjectScreenshot
     let size: CGSize
     var body: some View {
         let cornerRadius: CGFloat = 20
-        if let url = screenshot.imageURL {
-            SVRemoteImage(
-                url: url,
-                size: size,
-                shape: .rect(cornerRadius: cornerRadius, style: .continuous)
-            )
-        }else {
-            ZStack {
-                Rectangle()
-                    .fill(.fill)
-
-                VStack(spacing: 8) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.largeTitle.bold())
-
-                    Text("Add")
-                        .font(.caption.weight(.medium))
-                }
-                .foregroundStyle(.secondary)
-            }
-            .frame(width: size.width, height: size.height)
-            .deviceCornerClip()
-        }
+        SVRemoteImage(
+            url: screenshot.imageURL,
+            size: size,
+            shape: .rect(cornerRadius: cornerRadius, style: .continuous)
+        )
     }
 }
 

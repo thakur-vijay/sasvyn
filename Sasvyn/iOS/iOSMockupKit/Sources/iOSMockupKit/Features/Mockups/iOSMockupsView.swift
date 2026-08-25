@@ -8,14 +8,41 @@
 import SwiftUI
 import ComposableArchitecture
 import SVRemoteImage
+import SVMockupKit
+import SVDesignSystem
+
+extension View {
+    @ViewBuilder
+    func optionalContextMenu<M, P>(
+        _ isEnabled: Bool,
+        @ContentBuilder menuItems: () -> M,
+        @ContentBuilder preview: () -> P
+    ) -> some View where M : View, P : View {
+        if isEnabled {
+            self
+                .contextMenu(menuItems: menuItems, preview: preview)
+        }else {
+            self
+        }
+    }
+    
+    @ViewBuilder
+    func isASheet(_ isEnabled: Bool)-> some View {
+        if isEnabled {
+            NavigationStack {
+                self
+            }
+        }else {
+            self
+        }
+    }
+}
 
 public struct iOSMockupsView: View {
-    let mode: MockupsPresentationMode
     @Bindable var store: StoreOf<iOSMockupsFeature>
     
-    public init(store: StoreOf<iOSMockupsFeature>, mode: MockupsPresentationMode = .full) {
+    public init(store: StoreOf<iOSMockupsFeature>) {
         self.store = store
-        self.mode = mode
     }
     
     @AppStorage("imageContentMode") private var imageContentMode: ImageContentMode = .fill
@@ -25,17 +52,36 @@ public struct iOSMockupsView: View {
         ScrollView {
             LazyVGrid(columns: Array(repeating: GridItem(spacing: 1, alignment: .top), count: 4), spacing: 1) {
                 ForEach(store.mockups) { mockup in
+                    let isUserInteractionDisabled = (store.maxSelection == store.selectedMockupIds.count) && (!store.selectedMockupIds.contains(mockup.id))
                     GeometryReader {
                         SVRemoteImage(url: mockup.thumbnail, size: $0.size, shape: .rect)
                     }
                     .aspectRatio(imageContentMode == .fit ? mockup.aspectRatio : 1, contentMode: .fit)
-                    .matchedGeometryEffect(id: mockup.id, in: animation)
-                    .contextMenu {
-                        Button("Save to Photos", systemImage: "photo") {
-                            
+                    .overlay(alignment: .bottomTrailing){
+                        if store.selectedMockupIds.contains(mockup.id) || (store.selection == mockup.id){
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.white, .blue)
+                                .padding(12)
                         }
-                        Button("Delete", systemImage: "trash", role: .destructive) {
-                            store.send(.deleteTapped(mockup))
+                    }
+                    .matchedGeometryEffect(id: mockup.id, in: animation)
+                    .contentShape(.rect)
+                    .onTapGesture {
+                        store.send(.mockupTapped(mockup))
+                    }
+                    .contextMenu{
+                        if store.mode != .picker {
+                            Button("Save to Photos", systemImage: "photo") {
+                                
+                            }
+                            Button("Delete", systemImage: "trash", role: .destructive) {
+                                store.send(.deleteTapped(mockup))
+                            }
+                        }else {
+                            Button("Select", systemImage: "checkmark.circle") {
+                                
+                            }
                         }
                     } preview: {
                         SVRemoteImage(
@@ -46,6 +92,7 @@ public struct iOSMockupsView: View {
                             cache: .disabled
                         )
                     }
+                    .disabledWithOpacity(isUserInteractionDisabled)
                 }
             }
             .padding(imageContentMode.padding)
@@ -63,27 +110,34 @@ public struct iOSMockupsView: View {
         .navigationTitle("Mockups")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if mode == .picker{
+            if store.mode == .picker{
                 ToolbarItem(placement: .topBarLeading) {
                     Button("", systemImage: "xmark") {
-                        store.send(.addTapped)
+                        store.send(.closeTapped)
                     }
                 }
             }
             
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
                 Button("", systemImage: "plus") {
                     store.send(.addTapped)
                 }
-            }
-            
-            ToolbarItem(placement: .topBarTrailing) {
+                
                 Button("", systemImage: "rectangle.expand.vertical") {
                     if imageContentMode == .fit {
                         imageContentMode = .fill
                     }else {
                         imageContentMode = .fit
                     }
+                }
+            }
+            
+            if store.mode == .picker && !store.isSingleSelection{
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("", systemImage: "checkmark") {
+                        store.send(.checkTapped)
+                    }
+                    .disabledWithOpacity(store.selectedMockupIds.isEmpty)
                 }
             }
         }
@@ -93,8 +147,10 @@ public struct iOSMockupsView: View {
                 iOSCreateMockupView(store: store)
             }
         }
+        .isASheet(store.mode == .picker)
         .task {
             await store.send(.onTask).finish()
         }
     }
+    
 }

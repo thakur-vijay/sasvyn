@@ -35,18 +35,26 @@ public struct MockupPreview: View {
 
     public var body: some View {
         Group {
-            if let deviceImage = selectedDevice.uiImage {
-                content(deviceImage: deviceImage)
-                    .aspectRatio(
-                        deviceImage.size.width / deviceImage.size.height,
-                        contentMode: .fit
-                    )
+            if let deviceImage = selectedDevice.uiImage{
+                content(
+                    deviceImage: deviceImage,
+                    screenImage: selectedDevice.screenUIImage,
+                    screenRadius: selectedDevice.screenRadius
+                )
+                .aspectRatio(
+                    deviceImage.size.width / deviceImage.size.height,
+                    contentMode: .fit
+                )
             }
         }
     }
 
     @ViewBuilder
-    private func content(deviceImage: UIImage) -> some View {
+    private func content(
+        deviceImage: UIImage,
+        screenImage: UIImage?,
+        screenRadius: CGFloat?
+    ) -> some View {
 
         switch renderMode {
 
@@ -55,6 +63,8 @@ public struct MockupPreview: View {
             GeometryReader { proxy in
                 mockupContent(
                     deviceImage: deviceImage,
+                    screenImage: screenImage,
+                    screenRadius: screenRadius,
                     canvasSize: proxy.size,
                     pixelScale: displayScale
                 )
@@ -64,6 +74,8 @@ public struct MockupPreview: View {
 
             mockupContent(
                 deviceImage: deviceImage,
+                screenImage: screenImage,
+                screenRadius: screenRadius,
                 canvasSize: size,
                 pixelScale: 1
             )
@@ -77,6 +89,8 @@ public struct MockupPreview: View {
     @ViewBuilder
     private func mockupContent(
         deviceImage: UIImage,
+        screenImage: UIImage?,
+        screenRadius: CGFloat?,
         canvasSize: CGSize,
         pixelScale: CGFloat
     ) -> some View {
@@ -116,9 +130,27 @@ public struct MockupPreview: View {
                         height: targetSize.height
                     )
                     .background(Color(.secondarySystemBackground))
-                    .clipped()
+                    .clipShape(.rect(cornerRadius: screenRadius ?? 0, style: .continuous))
+                    .optionalMask(screenImage != nil){
+                        if let screenImage{
+                            Image(uiImage: screenImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(
+                                    width: targetSize.width,
+                                    height: targetSize.height
+                                )
+                        }
+                    }
+            }else {
+                Image(uiImage: deviceImage)
+                    .resizable()
+                    .scaledToFit()
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        action()
+                    }
             }
-
             Image(uiImage: deviceImage)
                 .resizable()
                 .scaledToFit()
@@ -257,6 +289,18 @@ fileprivate extension View {
             self.scaledToFit()
         case .fill:
             self.scaledToFill()
+        }
+    }
+    
+    @ViewBuilder
+    func optionalMask<Content: View>(_ isActive: Bool, @ContentBuilder mask: @escaping ()-> Content)-> some View {
+        if isActive {
+            self
+                .mask {
+                    mask()
+                }
+        }else {
+            self
         }
     }
 }

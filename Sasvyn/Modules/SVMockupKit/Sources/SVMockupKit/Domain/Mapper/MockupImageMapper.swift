@@ -14,6 +14,7 @@ public enum MockupImageMapper {
     ) -> MockupImage{
         return MockupImage(
             id: model.id,
+            device: model.device,
             url: model.url,
             thumbnail: model.thumbnail,
             aspectRatio: model.aspectRatio

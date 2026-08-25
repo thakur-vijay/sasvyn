@@ -14,6 +14,8 @@ public struct Device: Identifiable, Hashable, Sendable {
     public let variant: String
     public let finish: String
     public let assetName: String
+    public let screen: String
+    public let screenRadius: CGFloat?
     public let screenSize: CGSize
     
     public init(
@@ -22,6 +24,8 @@ public struct Device: Identifiable, Hashable, Sendable {
         variant: String,
         finish: String,
         assetName: String,
+        screen: String = "",
+        screenRadius: CGFloat? = nil,
         screenSize: CGSize
     ) {
         self.id = id
@@ -29,11 +33,17 @@ public struct Device: Identifiable, Hashable, Sendable {
         self.variant = variant
         self.finish = finish
         self.assetName = assetName
+        self.screen = screen
+        self.screenRadius = screenRadius
         self.screenSize = screenSize
     }
     
     public var uiImage: UIImage? {
         .init(named: assetName, in: .module, with: .none)
+    }
+    
+    public var screenUIImage: UIImage? {
+        .init(named: screen, in: .module, with: .none)
     }
 }
 
@@ -46,6 +56,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Black",
             assetName: "iPhone 17 - Black - Portrait",
+            screen: "iPhone 17 - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -54,6 +65,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Lavender",
             assetName: "iPhone 17 - Lavender - Portrait",
+            screen: "iPhone 17 - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -62,6 +74,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Mist Blue",
             assetName: "iPhone 17 - Mist Blue - Portrait",
+            screen: "iPhone 17 - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -70,6 +83,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Sage",
             assetName: "iPhone 17 - Sage - Portrait",
+            screen: "iPhone 17 - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -78,6 +92,7 @@ public enum Devices {
             variant: "Standard",
             finish: "White",
             assetName: "iPhone 17 - White - Portrait",
+            screen: "iPhone 17 - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
 
@@ -87,6 +102,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Cosmic Orange",
             assetName: "iPhone 17 Pro - Cosmic Orange - Portrait",
+            screen: "iPhone 17 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -95,6 +111,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Deep Blue",
             assetName: "iPhone 17 Pro - Deep Blue - Portrait",
+            screen: "iPhone 17 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -103,6 +120,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Silver",
             assetName: "iPhone 17 Pro - Silver - Portrait",
+            screen: "iPhone 17 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
 
@@ -112,6 +130,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Cosmic Orange",
             assetName: "iPhone 17 Pro Max - Cosmic Orange - Portrait",
+            screen: "iPhone 17 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -120,6 +139,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Deep Blue",
             assetName: "iPhone 17 Pro Max - Deep Blue - Portrait",
+            screen: "iPhone 17 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -128,6 +148,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Silver",
             assetName: "iPhone 17 Pro Max - Silver - Portrait",
+            screen: "iPhone 17 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -136,6 +157,7 @@ public enum Devices {
             variant: "Air",
             finish: "Cloud White",
             assetName: "iPhone Air - Cloud White - Portrait",
+            screen: "iPhone Air - Screen",
             screenSize: .init(width: 1260, height: 2736)
         ),
         Device(
@@ -144,6 +166,7 @@ public enum Devices {
             variant: "Air",
             finish: "Light Gold",
             assetName: "iPhone Air - Light Gold - Portrait",
+            screen: "iPhone Air - Screen",
             screenSize: .init(width: 1260, height: 2736)
         ),
         Device(
@@ -152,6 +175,7 @@ public enum Devices {
             variant: "Air",
             finish: "Sky Blue",
             assetName: "iPhone Air - Sky Blue - Portrait",
+            screen: "iPhone Air - Screen",
             screenSize: .init(width: 1260, height: 2736)
         ),
         Device(
@@ -160,6 +184,7 @@ public enum Devices {
             variant: "Air",
             finish: "Space Black",
             assetName: "iPhone Air - Space Black - Portrait",
+            screen: "iPhone Air - Screen",
             screenSize: .init(width: 1260, height: 2736)
         ),
         Device(
@@ -168,6 +193,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Black",
             assetName: "iPhone 16 - Black - Portrait",
+            screen: "iPhone 16 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -176,6 +202,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Pink",
             assetName: "iPhone 16 - Pink - Portrait",
+            screen: "iPhone 16 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -184,6 +211,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Teal",
             assetName: "iPhone 16 - Teal - Portrait",
+            screen: "iPhone 16 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -192,6 +220,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Ultramarine",
             assetName: "iPhone 16 - Ultramarine - Portrait",
+            screen: "iPhone 16 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -200,6 +229,7 @@ public enum Devices {
             variant: "Standard",
             finish: "White",
             assetName: "iPhone 16 - White - Portrait",
+            screen: "iPhone 16 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
 
@@ -209,6 +239,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Black",
             assetName: "iPhone 16 Plus - Black - Portrait",
+            screen: "iPhone 16 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -217,6 +248,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Pink",
             assetName: "iPhone 16 Plus - Pink - Portrait",
+            screen: "iPhone 16 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -225,6 +257,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Teal",
             assetName: "iPhone 16 Plus - Teal - Portrait",
+            screen: "iPhone 16 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -233,6 +266,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Ultramarine",
             assetName: "iPhone 16 Plus - Ultramarine - Portrait",
+            screen: "iPhone 16 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -241,6 +275,7 @@ public enum Devices {
             variant: "Plus",
             finish: "White",
             assetName: "iPhone 16 Plus - White - Portrait",
+            screen: "iPhone 16 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
 
@@ -250,6 +285,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Black Titanium",
             assetName: "iPhone 16 Pro - Black Titanium - Portrait",
+            screen: "iPhone 16 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -258,6 +294,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Desert Titanium",
             assetName: "iPhone 16 Pro - Desert Titanium - Portrait",
+            screen: "iPhone 16 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -266,6 +303,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Natural Titanium",
             assetName: "iPhone 16 Pro - Natural Titanium - Portrait",
+            screen: "iPhone 16 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
         Device(
@@ -274,6 +312,7 @@ public enum Devices {
             variant: "Pro",
             finish: "White Titanium",
             assetName: "iPhone 16 Pro - White Titanium - Portrait",
+            screen: "iPhone 16 Pro - Screen",
             screenSize: .init(width: 1206, height: 2622)
         ),
 
@@ -283,6 +322,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Black Titanium",
             assetName: "iPhone 16 Pro Max - Black Titanium - Portrait",
+            screen: "iPhone 16 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -291,6 +331,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Desert Titanium",
             assetName: "iPhone 16 Pro Max - Desert Titanium - Portrait",
+            screen: "iPhone 16 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -299,6 +340,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Natural Titanium",
             assetName: "iPhone 16 Pro Max - Natural Titanium - Portrait",
+            screen: "iPhone 16 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -307,6 +349,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "White Titanium",
             assetName: "iPhone 16 Pro Max - White Titanium - Portrait",
+            screen: "iPhone 16 Pro Max - Screen",
             screenSize: .init(width: 1320, height: 2868)
         ),
         Device(
@@ -315,6 +358,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Black",
             assetName: "iPhone 15 - Black - Portrait",
+            screen: "iPhone 15 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -323,6 +367,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Blue",
             assetName: "iPhone 15 - Blue - Portrait",
+            screen: "iPhone 15 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -331,6 +376,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Green",
             assetName: "iPhone 15 - Green - Portrait",
+            screen: "iPhone 15 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -339,6 +385,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Pink",
             assetName: "iPhone 15 - Pink - Portrait",
+            screen: "iPhone 15 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -347,6 +394,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Yellow",
             assetName: "iPhone 15 - Yellow - Portrait",
+            screen: "iPhone 15 - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
 
@@ -356,6 +404,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Black",
             assetName: "iPhone 15 Plus - Black - Portrait",
+            screen: "iPhone 15 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -364,6 +413,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Blue",
             assetName: "iPhone 15 Plus - Blue - Portrait",
+            screen: "iPhone 15 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -372,6 +422,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Green",
             assetName: "iPhone 15 Plus - Green - Portrait",
+            screen: "iPhone 15 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -380,6 +431,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Pink",
             assetName: "iPhone 15 Plus - Pink - Portrait",
+            screen: "iPhone 15 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -388,6 +440,7 @@ public enum Devices {
             variant: "Plus",
             finish: "Yellow",
             assetName: "iPhone 15 Plus - Yellow - Portrait",
+            screen: "iPhone 15 Plus - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
 
@@ -397,6 +450,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Black Titanium",
             assetName: "iPhone 15 Pro - Black Titanium - Portrait",
+            screen: "iPhone 15 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -405,6 +459,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Blue Titanium",
             assetName: "iPhone 15 Pro - Blue Titanium - Portrait",
+            screen: "iPhone 15 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -413,6 +468,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Natural Titanium",
             assetName: "iPhone 15 Pro - Natural Titanium - Portrait",
+            screen: "iPhone 15 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -421,6 +477,7 @@ public enum Devices {
             variant: "Pro",
             finish: "White Titanium",
             assetName: "iPhone 15 Pro - White Titanium - Portrait",
+            screen: "iPhone 15 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
 
@@ -430,6 +487,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Black Titanium",
             assetName: "iPhone 15 Pro Max - Black Titanium - Portrait",
+            screen: "iPhone 15 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -438,6 +496,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Blue Titanium",
             assetName: "iPhone 15 Pro Max - Blue Titanium - Portrait",
+            screen: "iPhone 15 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -446,6 +505,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Natural Titanium",
             assetName: "iPhone 15 Pro Max - Natural Titanium - Portrait",
+            screen: "iPhone 15 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -454,6 +514,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "White Titanium",
             assetName: "iPhone 15 Pro Max - White Titanium - Portrait",
+            screen: "iPhone 15 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -462,6 +523,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Blue",
             assetName: "iPhone 14 - Blue - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
         Device(
@@ -470,6 +532,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Midnight",
             assetName: "iPhone 14 - Midnight - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
         Device(
@@ -478,6 +541,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Purple",
             assetName: "iPhone 14 - Purple - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
         Device(
@@ -486,6 +550,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Red",
             assetName: "iPhone 14 - Red - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
         Device(
@@ -494,6 +559,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Starlight",
             assetName: "iPhone 14 - Starlight - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
 
@@ -503,6 +569,8 @@ public enum Devices {
             variant: "Plus",
             finish: "Blue",
             assetName: "iPhone 14 Plus - Blue - Portrait",
+            screen: "",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -511,6 +579,8 @@ public enum Devices {
             variant: "Plus",
             finish: "Midnight",
             assetName: "iPhone 14 Plus - Midnight - Portrait",
+            screen: "",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -519,6 +589,8 @@ public enum Devices {
             variant: "Plus",
             finish: "Purple",
             assetName: "iPhone 14 Plus - Purple - Portrait",
+            screen: "",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -527,6 +599,8 @@ public enum Devices {
             variant: "Plus",
             finish: "Red",
             assetName: "iPhone 14 Plus - Red - Portrait",
+            screen: "",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -535,6 +609,8 @@ public enum Devices {
             variant: "Plus",
             finish: "Starlight",
             assetName: "iPhone 14 Plus - Starlight - Portrait",
+            screen: "",
+            screenRadius: 5050,
             screenSize: .init(width: 1284, height: 2778)
         ),
 
@@ -544,6 +620,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Deep Purple",
             assetName: "iPhone 14 Pro - Deep Purple - Portrait",
+            screen: "iPhone 14 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -552,6 +629,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Gold",
             assetName: "iPhone 14 Pro - Gold - Portrait",
+            screen: "iPhone 14 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -559,7 +637,8 @@ public enum Devices {
             generation: "iPhone 14",
             variant: "Pro",
             finish: "Silver",
-            assetName: "iPhone 14 Pro - Silver - Portrait",
+            assetName: "iPhone 14 Pro - Silver screen- Portrait",
+            screen: "iPhone 14 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
         Device(
@@ -568,6 +647,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Space Black",
             assetName: "iPhone 14 Pro - Space Black - Portrait",
+            screen: "iPhone 14 Pro - Screen",
             screenSize: .init(width: 1179, height: 2556)
         ),
 
@@ -577,6 +657,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Deep Purple",
             assetName: "iPhone 14 Pro Max - Deep Purple - Portrait",
+            screen: "iPhone 14 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -585,6 +666,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Gold",
             assetName: "iPhone 14 Pro Max - Gold - Portrait",
+            screen: "iPhone 14 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -593,6 +675,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Silver",
             assetName: "iPhone 14 Pro Max - Silver - Portrait",
+            screen: "iPhone 14 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -601,6 +684,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Space Black",
             assetName: "iPhone 14 Pro Max - Space Black - Portrait",
+            screen: "iPhone 14 Pro Max - Screen",
             screenSize: .init(width: 1290, height: 2796)
         ),
         Device(
@@ -609,6 +693,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Midnight",
             assetName: "iPhone 13 - Midnight",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
         Device(
@@ -617,6 +702,7 @@ public enum Devices {
             variant: "Standard",
             finish: "Starlight",
             assetName: "iPhone 13 - Starlight",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
 
@@ -626,6 +712,7 @@ public enum Devices {
             variant: "Mini",
             finish: "Midnight",
             assetName: "iPhone 13 mini - Midnight",
+            screen: "",
             screenSize: .init(width: 1080, height: 2340)
         ),
         Device(
@@ -634,6 +721,7 @@ public enum Devices {
             variant: "Mini",
             finish: "Starlight",
             assetName: "iPhone 13 mini - Starlight",
+            screen: "",
             screenSize: .init(width: 1080, height: 2340)
         ),
 
@@ -643,6 +731,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Graphite",
             assetName: "iPhone 13 Pro - Graphite - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
         Device(
@@ -651,6 +740,7 @@ public enum Devices {
             variant: "Pro",
             finish: "Silver",
             assetName: "iPhone 13 Pro - Silver - Portrait",
+            screen: "",
             screenSize: .init(width: 1170, height: 2532)
         ),
 
@@ -660,6 +750,8 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Graphite",
             assetName: "iPhone 13 Pro Max - Graphite - Portrait",
+            screen: "",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -668,6 +760,8 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Silver",
             assetName: "iPhone 13 Pro Max - Silver - Portrait",
+            screen: "",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -700,6 +794,7 @@ public enum Devices {
             variant: "Pro Max",
             finish: "Silver",
             assetName: "iPhone 12 Pro Max - Silver - Portrait",
+            screenRadius: 50,
             screenSize: .init(width: 1284, height: 2778)
         ),
         Device(
@@ -760,5 +855,3 @@ private extension Sequence where Element: Hashable {
         }
     }
 }
-
-//https://devimages-cdn.apple.com/design/resources/download/Bezel-iPhone-16.dmg

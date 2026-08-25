@@ -18,6 +18,7 @@ struct CreateMockupsMigration: DatabaseMigration {
             table.text("thumbnail_path").notNull()
             table.double("aspect_ratio").notNull()
             table.integer("file_size").notNull()
+            table.text("device").notNull()
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
         }

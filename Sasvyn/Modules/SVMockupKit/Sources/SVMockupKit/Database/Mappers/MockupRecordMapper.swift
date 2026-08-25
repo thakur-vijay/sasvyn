@@ -23,6 +23,7 @@ enum MockupRecordMapper {
             url: url,
             thumbnail: thumbnail,
             size: record.fileSize,
+            device: record.device,
             aspectRatio: record.aspectRatio,
             createdAt: record.createdAt,
             updatedAt: record.updatedAt

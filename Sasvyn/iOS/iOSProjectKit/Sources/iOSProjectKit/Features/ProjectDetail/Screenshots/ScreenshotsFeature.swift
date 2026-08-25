@@ -6,10 +6,10 @@
 //
 
 import ComposableArchitecture
-import _PhotosUI_SwiftUI
-import ImageIO
-import UniformTypeIdentifiers
-
+import SVMockupKit
+import iOSMockupKit
+import Foundation
+import SVProjectKit
 
 @Reducer
 public struct ScreenshotsFeature {
@@ -17,15 +17,11 @@ public struct ScreenshotsFeature {
     @ObservableState
     public struct State: Equatable {
         public var mode: ProjectMode
-        public var screenshots: [ProjectScreenshot]
-        public var isPhotosPickerPresented: Bool = false
-        public var selectedImages: [PhotosPickerItem] = []
-
+        public var screenshots: [ProjectScreenshot] = []
+        public var selectedScreenshotID: String?
+        
         public init(mode: ProjectMode) {
             self.mode = mode
-            self.screenshots = (1...20).map { index in
-                ProjectScreenshot(order: index)
-            }
         }
         
         
@@ -38,9 +34,8 @@ public struct ScreenshotsFeature {
         case destination(PresentationAction<Destination.Action>)
         case modeChanged(ProjectMode)
         case screenshotTapped(ProjectScreenshot)
-        case updateScreenshots
-        case screenshotProcessed(UUID, URL)
         case reorderTapped
+        case addPreviewsTapped
     }
     
     public init(){}
@@ -48,72 +43,100 @@ public struct ScreenshotsFeature {
     @Reducer
     public enum Destination {
         case screenshotsReorder(ScreenshotsReorderFeature)
+        case mockupsPicker(iOSMockupsFeature)
     }
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
-        Reduce { state, action in
+        Reduce {
+            state,
+            action in
             switch action {
             case .modeChanged(let mode):
                 state.mode = mode
                 return .none
             case .binding(_):
                 return .none
-            case .screenshotTapped:
-                state.isPhotosPickerPresented.toggle()
-                return .none
-            case .updateScreenshots:
-                let selectedImages = state.selectedImages
-                state.selectedImages.removeAll()
-                
-                let targets = zip(
-                    selectedImages,
-                    state.screenshots
-                        .filter { $0.imageURL == nil }
-                        .prefix(selectedImages.count)
-                        .map(\.id)
-                )
-
-                return .run { send in
-                    await withTaskGroup(of: Void.self) { group in
-                        for (item, screenshotID) in targets {
-                            group.addTask {
-                                do {
-                                    guard let data = try await item.loadTransferable(
-                                        type: Data.self
-                                    ) else {
-                                        return
-                                    }
-
-                                    let url = try ScreenshotSaver.saveScreenshot(data)
-
-                                    await send(
-                                        .screenshotProcessed(
-                                            screenshotID,
-                                            url
-                                        )
-                                    )
-                                } catch {
-                                    // handle error
-                                }
-                            }
-                        }
-                    }
+            case .screenshotTapped(let screenshot):
+                if state.mode == .view {
+                    //open viewer
+                }else {
+                    state.selectedScreenshotID = screenshot.id
+                    state.destination = .mockupsPicker(
+                        .init(
+                            mode: .picker,
+                            selection: screenshot.mockupID
+                        )
+                    )
                 }
-            case .screenshotProcessed(let id, let url):
-                guard let index = state.screenshots.firstIndex(where: {
-                    $0.id == id
-                }) else {
-                    return .none
-                }
-
-                state.screenshots[index].imageURL = url
-
                 return .none
             case .reorderTapped:
-                state.destination = .screenshotsReorder(.init())
+                state.destination = .screenshotsReorder(.init(screenshots: state.screenshots))
+                return .none
+            case .destination(.presented(.mockupsPicker(.delegate(.close)))):
+                state.destination = nil
+                return .none
+            case .destination(.presented(.mockupsPicker(.delegate(.selection(let mockups))))):
+                state.destination = nil
+                let finalMockupIDs = Set(mockups.map(\.id))
+
+                state.screenshots.removeAll {
+                    !finalMockupIDs.contains($0.mockupID)
+                }
+
+                let existingMockupIDs = Set(
+                    state.screenshots.map(\.mockupID)
+                )
+
+                let newMockups = mockups.filter {
+                    !existingMockupIDs.contains($0.id)
+                }
+
+                for mockup in newMockups {
+                    state.screenshots.append(
+                        ProjectScreenshot(
+                            id: UUID().uuidString,
+                            mockupID: mockup.id,
+                            device: mockup.device,
+                            imageURL: mockup.url,
+                            aspectRatio: mockup.aspectRatio,
+                            order: 0
+                        )
+                    )
+                }
+
+                for index in state.screenshots.indices {
+                    state.screenshots[index].order = index + 1
+                }
+                return .none
+            case .destination(.presented(.mockupsPicker(.delegate(.select(let mockup))))):
+                state.destination = nil
+                if let index = state.screenshots.firstIndex(where: { $0.id == state.selectedScreenshotID }){
+                    state.selectedScreenshotID = nil
+                    state.screenshots[index].imageURL = mockup?.url
+                    state.screenshots[index].mockupID = mockup?.id ?? ""
+                    state.screenshots[index].aspectRatio = mockup?.aspectRatio ?? 0
+                    state.screenshots[index].device = mockup?.device ?? ""
+                }
+                return .none
+            case .destination(.presented(.screenshotsReorder(.delegate(.update(let updatedScreenshots))))):
+                state.screenshots = updatedScreenshots
+                state.destination = nil
+                return .none
+            case .destination(.presented(.screenshotsReorder(.delegate(.close)))):
+                state.destination = nil
                 return .none
             case .destination(_):
+                return .none
+            case .addPreviewsTapped:
+                let alreadySelected = state.screenshots.map(\.mockupID)
+                state.destination = .mockupsPicker(
+                    .init(
+                        mode: .picker,
+                        selectedMockupIds: Set(alreadySelected),
+                        maxSelection: ProjectConfiguration.screenshotsLimit
+                    )
+                )
                 return .none
             }
         }
@@ -121,76 +144,14 @@ public struct ScreenshotsFeature {
     }
 }
 
-enum ScreenshotSaver {
-    static func saveScreenshot(_ data: Data) throws -> URL {
-        let sourceOptions = [
-            kCGImageSourceShouldCache: false
-        ] as CFDictionary
-
-        guard let source = CGImageSourceCreateWithData(
-            data as CFData,
-            sourceOptions
-        ) else {
-            throw ScreenshotError.invalidImage
-        }
-
-        let options = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: 2048,
-            kCGImageSourceShouldCacheImmediately: false
-        ] as CFDictionary
-
-        guard let image = CGImageSourceCreateThumbnailAtIndex(
-            source,
-            0,
-            options
-        ) else {
-            throw ScreenshotError.invalidImage
-        }
-
-        let directory = FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        )[0]
-        .appendingPathComponent("ProjectScreenshots", isDirectory: true)
-
-        try FileManager.default.createDirectory(
-            at: directory,
-            withIntermediateDirectories: true
-        )
-
-        let url = directory
-            .appendingPathComponent(UUID().uuidString)
-            .appendingPathExtension("jpg")
-
-        guard let destination = CGImageDestinationCreateWithURL(
-            url as CFURL,
-            UTType.jpeg.identifier as CFString,
-            1,
-            nil
-        ) else {
-            throw ScreenshotError.invalidImage
-        }
-
-        CGImageDestinationAddImage(
-            destination,
-            image,
-            [
-                kCGImageDestinationLossyCompressionQuality: 0.85
-            ] as CFDictionary
-        )
-
-        guard CGImageDestinationFinalize(destination) else {
-            throw ScreenshotError.invalidImage
-        }
-
-        return url
+internal extension ScreenshotsFeature.State {
+    var isDetailsReady: Bool {
+        !screenshots.isEmpty
     }
-}
-
-enum ScreenshotError: Error {
-    case invalidImage
+    
+    func update(into project: inout Project) {
+        project.screenshots = screenshots
+    }
 }
 
 extension ScreenshotsFeature.Destination.State: Equatable {}

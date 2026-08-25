@@ -16,20 +16,11 @@ public struct iOSDevicePickerView: View {
     public init(store: StoreOf<iOSDevicePickerFeature>) {
         self.store = store
     }
-    
-    @State private var selectedGeneration: String? = Devices.generations.first {
-        didSet {
-            if selectedVariant == nil {
-                selectedVariant = Devices.variants(for: selectedGeneration ?? "").first
-            }
-        }
-    }
-    
-    @State private var selectedVariant: String?
+
     @State private var scrollPosition: ScrollPosition = .init()
     
     public var body: some View {
-        let devices = Devices.devices(for: selectedGeneration ?? "", variant: selectedVariant ?? "")
+        let devices = Devices.devices(for: store.selectedGeneration ?? "", variant: store.selectedVariant ?? "")
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(spacing: 12), count: 2), spacing: 12) {
@@ -72,8 +63,8 @@ public struct iOSDevicePickerView: View {
             }
         }
         .task {
-            if selectedVariant == nil {
-                selectedVariant = Devices.variants(for: selectedGeneration ?? "").first
+            if let generation = store.selectedGeneration {
+                scrollPosition = .init(id: generation, anchor: .center)
             }
         }
     }
@@ -86,9 +77,8 @@ public struct iOSDevicePickerView: View {
                     ForEach(Devices.generations, id: \.self){ generation in
                         SVChip(
                             model: .init(id: generation, text: generation),
-                            isSelected: selectedGeneration == generation) {
-                                selectedVariant = nil
-                                selectedGeneration = generation
+                            isSelected: store.selectedGeneration == generation) {
+                                store.send(.generationTapped(generation))
                                 withAnimation(.smooth) {
                                     scrollPosition.scrollTo(id: generation, anchor: .center)
                                 }
@@ -101,16 +91,14 @@ public struct iOSDevicePickerView: View {
             .scrollIndicators(.hidden)
             .scrollPosition($scrollPosition)
             
-            let variants = Devices.variants(for: selectedGeneration ?? "")
+            let variants = Devices.variants(for: store.selectedGeneration ?? "")
             ChipLayoutUI(alignment: .leading, spacing: 6) {
                 ForEach(variants, id: \.self) { variant in
                     SVChip(
                         model: .init(id: variant, text: variant),
                         font: .caption,
-                        isSelected: selectedVariant == variant) {
-                            withAnimation(.smooth) {
-                                selectedVariant = variant
-                            }
+                        isSelected: store.selectedVariant == variant) {
+                            store.send(.variantTapped(variant))
                         }
                 }
             }

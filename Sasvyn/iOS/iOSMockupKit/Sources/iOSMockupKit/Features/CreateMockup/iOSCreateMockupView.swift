@@ -34,6 +34,8 @@ public struct iOSCreateMockupView: View {
                         ) {
                             if store.selectedMockup?.imageData == nil {
                                 isPhotosPickerPresented.toggle()
+                            }else {
+                                store.send(.selectedMockupTapped)
                             }
                         }
                         .overlay {
@@ -69,6 +71,12 @@ public struct iOSCreateMockupView: View {
                                 ) {
                                     store.send(.mockupTapped(mockup))
                                 }
+                                .overlay {
+                                    if store.selectedMockup?.id == mockup.id {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.headline)
+                                    }
+                                }
                             }
                             
                             if let device = store.selectedMockup?.device, maxSelectionCount > 0{
@@ -82,7 +90,7 @@ public struct iOSCreateMockupView: View {
                                 }
                                 .overlay {
                                    Image(systemName: "plus.circle.fill")
-                                        .font(.title.bold())
+                                        .font(.headline)
                                 }
                             }
                         }
@@ -103,7 +111,7 @@ public struct iOSCreateMockupView: View {
                                 text:  quality.rawValue
                             ),
                             isSelected: store.exportType == quality) {
-//                                store.exportType = quality
+                                store.send(.qualityTapped(quality))
                             }
                     }
                 }
@@ -130,8 +138,12 @@ public struct iOSCreateMockupView: View {
                 selection: $store.selectedItems,
                 maxSelectionCount: maxSelectionCount
             )
+            .photosPicker(isPresented: $store.isMockupPhotoPickerPresented, selection: $store.selectedItem)
             .onChange(of: store.selectedItems) { oldValue, newValue in
                 store.send(.newItemsAdded(newValue))
+            }
+            .onChange(of: store.selectedItem) { oldValue, newValue in
+                store.send(.onMockupPhotoItemChange(newValue))
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in

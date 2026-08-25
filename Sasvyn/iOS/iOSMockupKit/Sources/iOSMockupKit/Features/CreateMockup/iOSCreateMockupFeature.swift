@@ -19,9 +19,11 @@ public struct iOSCreateMockupFeature {
     public struct State: Equatable {
         public var mockups: [Mockup] = []
         public var selectedMockup: Mockup? = nil
-        public var selectedDevice: Device? = Devices.all.randomElement()
+        public var selectedDevice: Device? = Devices.all.first { $0.screen.isNotEmpty }
         public var selectedItems: [PhotosPickerItem] = []
         public var exportType: ExportQuality = .hd
+        public var selectedItem: PhotosPickerItem?
+        public var isMockupPhotoPickerPresented: Bool = false
         
         public init(){
             
@@ -36,6 +38,9 @@ public struct iOSCreateMockupFeature {
         case destination(PresentationAction<Destination.Action>)
         case changeDeviceTapped
         case newItemsAdded([PhotosPickerItem])
+        case onMockupPhotoItemChange(PhotosPickerItem?)
+        case updatedImageDataForSelectedMockup(Data)
+        case selectedMockupTapped
         case mockupsReady([Mockup])
         case mockupTapped(Mockup)
         case exportTapped
@@ -44,6 +49,7 @@ public struct iOSCreateMockupFeature {
         case closeTapped
         case resizeTapped
         case applyToAllTapped
+        case qualityTapped(ExportQuality)
         case delegate(Delegate)
         
         public enum Delegate {
@@ -87,7 +93,7 @@ public struct iOSCreateMockupFeature {
             case .destination:
                 return .none
             case .changeDeviceTapped:
-                state.destination = .devicePicker(.init())
+                state.destination = .devicePicker(.init(selectedDevice: state.selectedDevice))
                 return .none
             case .newItemsAdded(let newItems):
                 state.selectedItems.removeAll()
@@ -171,6 +177,7 @@ public struct iOSCreateMockupFeature {
                                     url: mockupURL,
                                     thumbnail: thumbnailURL,
                                     size: Int64(values.fileSize ?? 0),
+                                    device: mockup.device.assetName,
                                     aspectRatio: aspectRatio,
                                     createdAt: .now,
                                     updatedAt: .now
@@ -203,14 +210,33 @@ public struct iOSCreateMockupFeature {
             case .applyToAllTapped:
                 if let selectedMockup = state.selectedMockup{
                     for index in 0..<state.mockups.count {
-                        if state.mockups[index].id == selectedMockup.id {
-                            continue
-                        }else {
-                            state.mockups[index].device = selectedMockup.device
-                            state.mockups[index].imageResize = selectedMockup.imageResize
-                        }
+                        state.mockups[index].device = selectedMockup.device
+                        state.mockups[index].imageResize = selectedMockup.imageResize
                     }
                 }
+                return .none
+            case .onMockupPhotoItemChange(let newItem):
+                state.selectedItem = nil
+                guard let newItem else { return .none }
+                return .run { send in
+                    do {
+                        guard let data = try await newItem.loadTransferable(type: Data.self) else { return }
+                        await send(.updatedImageDataForSelectedMockup(data))
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .updatedImageDataForSelectedMockup(let newData):
+                state.selectedMockup?.imageData = newData
+                if let index = state.mockups.firstIndex(where: { $0.id == state.selectedMockup?.id }){
+                    state.mockups[index].imageData = newData
+                }
+                return .none
+            case .selectedMockupTapped:
+                state.isMockupPhotoPickerPresented = true
+                return .none
+            case .qualityTapped(let quality):
+                state.exportType = quality
                 return .none
             }
         }

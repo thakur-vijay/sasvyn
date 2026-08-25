@@ -62,13 +62,15 @@ public struct SVRemoteImage<S: Shape, Placeholder: View & Sendable>: View {
     }
 
     public var body: some View {
+        let targetSize = size?.scaled(by: displayScale) ?? .zero
         LazyImage(
             request: ImageRequest(
                 url: url,
                 processors: [
                     ImageProcessors.Resize(
-                        size: size?.scaled(by: displayScale) ?? .zero,
-                        contentMode: .aspectFill
+                        size: targetSize,
+                        unit: .pixels,
+                        contentMode: .aspectFit
                     )
                 ],
                 options: cache.options
@@ -78,19 +80,17 @@ public struct SVRemoteImage<S: Shape, Placeholder: View & Sendable>: View {
                 image
                     .resizable()
                     .aspectRatio(aspectRatio, contentMode: contentMode)
+                    .task {
+                        print("SERVER IMAGE")
+                    }
             } else {
                 placeholder
             }
         }
-        .frame(width: size?.width, height: size?.height)
+        .frame(width: max(size?.width ?? 0, 0), height: max(size?.height ?? 0, 0))
         .aspectRatio(aspectRatio, contentMode: contentMode)
         .clipShape(shape)
-        .task {
-            print(cache.options)
-        }
-        
     }
-
 }
 
 public extension SVRemoteImage where Placeholder == Color {
@@ -152,4 +152,14 @@ public extension CGSize {
 
     }
 
+}
+
+extension URL {
+    var isRemote: Bool {
+        scheme == "http" || scheme == "https"
+    }
+
+    var isLocalFile: Bool {
+        isFileURL
+    }
 }

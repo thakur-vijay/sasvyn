@@ -36,6 +36,7 @@ final class MockupsLocalDataSource: @unchecked Sendable{
                 thumbnailPath: try MockupStorage.relativePath(for: thumbnailURL),
                 aspectRatio: mockup.aspectRatio,
                 fileSize: mockup.size,
+                device: mockup.device,
                 createdAt: mockup.createdAt,
                 updatedAt: mockup.createdAt
             )

@@ -15,6 +15,10 @@ public struct SVEditableText: View {
     private let collapsedLineLimit: Int
     private let characterLimit: Int
     private let isEditable: Bool
+    private let font: Font
+    private let placeholderStyle: Color
+    private let foregroundStyle: Color
+    private let onEditingEnded: ()->()
     
     public init(
         description: Binding<String>,
@@ -22,7 +26,11 @@ public struct SVEditableText: View {
         isExpandable: Bool = true,
         collapsedLineLimit: Int = 2,
         characterLimit: Int,
-        isEditable: Bool = false
+        isEditable: Bool = false,
+        font: Font = .caption,
+        placeholderStyle: Color = Color(.placeholderText),
+        foregroundStyle: Color = Color.primary,
+        onEditingEnded: @escaping ()->()
     ) {
         self._description = description
         self.placeholder = placeholder
@@ -30,16 +38,40 @@ public struct SVEditableText: View {
         self.characterLimit = characterLimit
         self.collapsedLineLimit = collapsedLineLimit
         self.isEditable = isEditable
+        self.font = font
+        self.placeholderStyle = placeholderStyle
+        self.foregroundStyle = foregroundStyle
+        self.onEditingEnded = onEditingEnded
     }
+    
+    @State private var debounceTask: Task<Void, Never>?
     
     public var body: some View {
         Group {
             if isEditable {
-                TextField("", text: $description, prompt: Text(placeholder), axis: isExpandable ? .vertical : .horizontal)
-                    .onChange(of: description) { _, newValue in
-                        guard newValue.count > characterLimit else { return }
+                TextField(
+                    "",
+                    text: $description,
+                    prompt: Text(placeholder).foregroundStyle(
+                        placeholderStyle
+                    ),
+                    axis: isExpandable ? .vertical : .horizontal
+                )
+                .onChange(of: description) { _, newValue in
+                    if newValue.count > characterLimit {
                         description = String(newValue.prefix(characterLimit))
                     }
+                    
+                    debounceTask?.cancel()
+                    debounceTask = Task { @MainActor in
+                        try? await Task.sleep(for: .milliseconds(500))
+                        guard !Task.isCancelled else { return }
+                        onEditingEnded()
+                    }
+                }
+                .onDisappear {
+                    debounceTask?.cancel()
+                }
             }else {
                 Text(description)
                     .expandable(
@@ -50,6 +82,7 @@ public struct SVEditableText: View {
                     )
             }
         }
-        .font(.callout)
+        .font(font)
+        .foregroundStyle(foregroundStyle)
     }
 }

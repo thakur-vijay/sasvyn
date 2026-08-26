@@ -24,8 +24,9 @@ struct RoleView: View {
                 isExpandable: false,
                 collapsedLineLimit: 1,
                 characterLimit: 80,
-                isEditable: store.mode.isEditable
-            )
+                isEditable: store.mode.isEditable) {
+                    store.send(.roleChanged)
+                }
         }
     }
 }

@@ -69,15 +69,25 @@ struct ScreenshotsView: View {
                                 ),
                                 contentMode: .fit,
                                 shape: .rect,
-                                cache: store.mode == .create ? .disabled : .enabled
+                                cache: store.mode.isEditable ? .disabled : .enabled
                             )
                             .contentShape(.rect)
                             .onTapGesture {
                                 store.send(.screenshotTapped(screenshot))
                             }
+                            .optionalContextMenu(
+                                store.mode.isEditable,
+                                isPreviewHidden: true) {
+                                    Button("Delete", systemImage: "trash") {
+                                        store.send(.deleteScreenshotTapped(screenshot))
+                                    }
+                                } preview: {
+                                    
+                                }
+
                         }
                         
-                        if let last = store.screenshots.last, store.screenshots.count < ProjectConfiguration.screenshotsLimit {
+                        if let last = store.screenshots.last, store.screenshots.count < ProjectConfiguration.screenshotsLimit, store.mode.isEditable{
                             if let device = Devices.all.first(where: {$0.assetName == last.device}), let uiImage = device.uiImage{
                                 Image(uiImage: uiImage)
                                     .resizable()
@@ -103,8 +113,10 @@ struct ScreenshotsView: View {
                 .scrollTargetBehavior(.viewAligned)
             }
         } trailing: {
-            Button("Reorder"){
-                store.send(.reorderTapped)
+            if store.screenshots.count > 1 && store.mode.isEditable{
+                Button("Reorder"){
+                    store.send(.reorderTapped)
+                }
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
@@ -115,5 +127,6 @@ struct ScreenshotsView: View {
                 iOSMockupsView(store: store)
             }
         }
+        .imageViewer(item: $store.selectedScreenshot, items: store.screenshots)
     }
 }

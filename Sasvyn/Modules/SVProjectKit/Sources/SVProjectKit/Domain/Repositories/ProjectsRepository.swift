@@ -15,4 +15,5 @@ public protocol ProjectsRepository: Sendable {
     func delete(id: String) async throws
     func fetch(id: String) async throws->Project?
     func removeSkill(id: String, from projectID: String) async throws
+    func deleteProjectScreenshot(id: String, from projectID: String) async throws
 }

@@ -13,20 +13,6 @@ import SVDesignSystem
 
 extension View {
     @ViewBuilder
-    func optionalContextMenu<M, P>(
-        _ isEnabled: Bool,
-        @ContentBuilder menuItems: () -> M,
-        @ContentBuilder preview: () -> P
-    ) -> some View where M : View, P : View {
-        if isEnabled {
-            self
-                .contextMenu(menuItems: menuItems, preview: preview)
-        }else {
-            self
-        }
-    }
-    
-    @ViewBuilder
     func isASheet(_ isEnabled: Bool)-> some View {
         if isEnabled {
             NavigationStack {
@@ -52,7 +38,7 @@ public struct iOSMockupsView: View {
         ScrollView {
             LazyVGrid(columns: Array(repeating: GridItem(spacing: 1, alignment: .top), count: 4), spacing: 1) {
                 ForEach(store.mockups) { mockup in
-                    let isUserInteractionDisabled = (store.maxSelection == store.selectedMockupIds.count) && (!store.selectedMockupIds.contains(mockup.id))
+                    let isUserInteractionDisabled = (store.mode == .picker) && (store.maxSelection == store.selectedMockupIds.count) && (!store.selectedMockupIds.contains(mockup.id))
                     GeometryReader {
                         SVRemoteImage(url: mockup.thumbnail, size: $0.size, shape: .rect)
                     }
@@ -147,6 +133,7 @@ public struct iOSMockupsView: View {
                 iOSCreateMockupView(store: store)
             }
         }
+        .imageViewer(item: $store.selectedMockup, items: store.mockups)
         .isASheet(store.mode == .picker)
         .task {
             await store.send(.onTask).finish()

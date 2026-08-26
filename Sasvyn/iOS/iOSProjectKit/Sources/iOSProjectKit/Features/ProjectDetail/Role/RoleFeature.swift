@@ -24,6 +24,12 @@ public struct RoleFeature {
         case binding(BindingAction<State>)
         case modeChanged(ProjectMode)
         case setData(_ role: String)
+        case roleChanged
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case roleChanged
+        }
     }
     
     public init(){}
@@ -39,6 +45,10 @@ public struct RoleFeature {
                 return .none
             case .setData(let role):
                 state.role = role
+                return .none
+            case .roleChanged:
+                return .send(.delegate(.roleChanged))
+            case .delegate(_):
                 return .none
             }
         }

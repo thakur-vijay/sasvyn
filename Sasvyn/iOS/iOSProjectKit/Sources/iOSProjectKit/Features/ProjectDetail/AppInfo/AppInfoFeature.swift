@@ -41,6 +41,13 @@ public struct AppInfoFeature {
             _ category: AppCategory?,
             _ appIconURL: URL?
         )
+        case updateAppIcon(URL?)
+        case infoChanged
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case infoChanged
+        }
     }
     
     public init(){
@@ -67,12 +74,20 @@ public struct AppInfoFeature {
                 }
             case .appIconValidationResult(let item):
                 state.appIconURL = item
-                return .none
+                return .send(.infoChanged)
             case .setData(let name, let tagline, let category, let appIconURL):
                 state.name = name
                 state.tagline = tagline
                 state.category = category
                 state.appIconURL = appIconURL
+                return .none
+            case .infoChanged:
+                return .send(.delegate(.infoChanged))
+            case .delegate(_):
+                return .none
+            case .updateAppIcon(let appIcon):
+                guard let appIcon else { return .none }
+                state.appIconURL = appIcon
                 return .none
             }
         }
@@ -139,30 +154,36 @@ internal extension AppInfoFeature.State {
         return (appIconURL != nil) && name.isNotEmpty && tagline.isNotEmpty && (category != nil)
     }
     
-    func update(into project: inout Project) {
-        project.name = name
-        project.tagline = tagline
-        project.category = category
+    func update(into project: inout Project)-> URL?{
+        do {
+            project.name = name
+            project.tagline = tagline
+            project.category = category
 
-        guard let temporaryURL = appIconURL else {
-            return
+            guard let temporaryURL = appIconURL else {
+                return nil
+            }
+            
+            if let currentIconURL = project.icon,
+                currentIconURL.standardizedFileURL == temporaryURL.standardizedFileURL {
+                print("app icon not changed")
+                return nil
+            }
+            
+            let permanentURL = try ProjectStorage.appIconURL(
+                projectID: project.id
+            )
+            
+            try FileStorage.replaceItem(
+                at: temporaryURL,
+                with: permanentURL
+            )
+
+            project.icon = permanentURL
+            return permanentURL
+        }catch {
+            print(error.localizedDescription)
+            return nil
         }
-        
-        if let currentIconURL = project.icon,
-            currentIconURL.standardizedFileURL == temporaryURL.standardizedFileURL {
-            print("app icon not changed")
-            return
-        }
-        
-        guard let permanentURL = try? ProjectStorage.appIconURL(
-            projectID: project.id
-        ) else { return }
-
-        try? FileStorage.replaceItem(
-            at: temporaryURL,
-            with: permanentURL
-        )
-
-        project.icon = permanentURL
     }
 }

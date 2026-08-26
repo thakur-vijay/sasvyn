@@ -13,11 +13,17 @@ let package = Package(
             targets: ["SVDesignSystem"]
         ),
     ],
+    dependencies: [
+        .package(path: "../SVRemoteImage")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "SVDesignSystem",
+            dependencies: [
+                .product(name: "SVRemoteImage", package: "SVRemoteImage")
+            ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],

@@ -48,7 +48,7 @@ public enum ProjectStorage {
     ) throws -> URL {
         try projectDirectory(id: projectID)
             .appendingPathComponent(
-                "app-icon",
+                "app-icon-\(UUID().uuidString)",
                 isDirectory: false
             )
             .appendingPathExtension("png")
@@ -81,6 +81,17 @@ public enum ProjectStorage {
             .appendingPathComponent(fileName)
     }
     
+    public static func screenshotURL(
+        projectsDirectory: URL,
+        projectID: String,
+        fileName: String
+    ) -> URL {
+        projectsDirectory
+            .appendingPathComponent(projectID, isDirectory: true)
+            .appendingPathComponent("screenshots", isDirectory: true)
+            .appendingPathComponent(fileName, isDirectory: false)
+    }
+    
     public static func relativePath(
         for url: URL
     ) throws -> String {
@@ -110,5 +121,12 @@ public enum ProjectStorage {
         )
 
         return destinationURL
+    }
+    
+    public static func url(
+        forRelativePath path: String
+    ) throws -> URL {
+        try projectsDirectory()
+            .appendingPathComponent(path)
     }
 }

@@ -23,8 +23,11 @@ struct OverviewView: View {
                 placeholder: "Write overview...",
                 collapsedLineLimit: 3,
                 characterLimit: 300,
-                isEditable: store.mode.isEditable
-            )
+                isEditable: store.mode.isEditable,
+                font: .body
+            ) {
+                    store.send(.overviewChanged)
+                }
         }
     }
 }

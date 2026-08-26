@@ -16,6 +16,9 @@ import SVDIInfra
 
 @main
 struct SasvynApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    private var appDelegate
+    
     private let appDIContainer = SVAppDIContainer()
     var body: some Scene {
         WindowGroup {
@@ -34,3 +37,73 @@ struct SasvynApp: App {
     }
 }
 
+final class AppDelegate: NSObject, UIApplicationDelegate {
+
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+
+        let configuration = UISceneConfiguration(
+            name: "Default Configuration",
+            sessionRole: connectingSceneSession.role
+        )
+
+        configuration.delegateClass = SceneDelegate.self
+
+        return configuration
+    }
+}
+
+final class SceneDelegate: NSObject, UIWindowSceneDelegate {
+
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        print("🔥 QUICK ACTION")
+        print(shortcutItem.type)
+
+        handleQuickAction(shortcutItem)
+
+        completionHandler(true)
+    }
+    
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+
+        if let shortcutItem = connectionOptions.shortcutItem {
+            print("❄️ COLD LAUNCH QUICK ACTION")
+            print(shortcutItem.type)
+
+            handleQuickAction(shortcutItem)
+        }
+    }
+    
+    private func handleQuickAction(
+        _ shortcutItem: UIApplicationShortcutItem
+    ) {
+        switch shortcutItem.type {
+
+        case "com.sasvyn.new-project":
+            print("➡️ New Project")
+
+        case "com.sasvyn.projects":
+            print("➡️ My Projects")
+
+        case "com.sasvyn.create-mockup":
+            print("➡️ Create Mockup")
+
+        case "com.sasvyn.export-portfolio":
+            print("➡️ Export Portfolio")
+
+        default:
+            print("❓ Unknown shortcut:", shortcutItem.type)
+        }
+    }
+}

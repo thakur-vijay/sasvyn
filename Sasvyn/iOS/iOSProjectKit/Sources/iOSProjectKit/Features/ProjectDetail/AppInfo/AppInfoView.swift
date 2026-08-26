@@ -32,7 +32,7 @@ internal struct AppInfoView: View {
                         shape: .rect(
                             cornerRadius: 24,
                             style: .continuous
-                        )
+                        ),
                     )
                     .optionalGlassEffect(
                         .rect(cornerRadius: 24, style: .continuous)
@@ -67,31 +67,29 @@ internal struct AppInfoView: View {
                         store.isAppCategoryPickerPresented.toggle()
                     }
                 
-                Group {
-                    if store.mode.isEditable {
-                        TextField(
-                            "",
-                            text: $store.name,
-                            prompt: Text("Enter App Name").foregroundStyle(.gray)
-                        )
-                    }else {
-                        Text(store.name)
-                    }
+                SVEditableText(
+                    description: $store.name,
+                    placeholder: "Enter App Name",
+                    isExpandable: false,
+                    collapsedLineLimit: 1,
+                    characterLimit: 50,
+                    isEditable: store.mode.isEditable,
+                    font: .title2.bold()
+                ) {
+                    store.send(.infoChanged)
                 }
-                .font(.title2.bold())
-                Group {
-                    if store.mode.isEditable {
-                        TextField(
-                            "",
-                            text: $store.tagline,
-                            prompt: Text("Enter App Tagline")
-                        )
-                    }else {
-                        Text(store.tagline)
-                    }
+                SVEditableText(
+                    description: $store.tagline,
+                    placeholder: "Enter App Tagline",
+                    isExpandable: false,
+                    collapsedLineLimit: 1,
+                    characterLimit: 50,
+                    isEditable: store.mode.isEditable,
+                    font: .subheadline,
+                    foregroundStyle: Color(.systemGray)
+                ) {
+                    store.send(.infoChanged)
                 }
-                .font(.subheadline)
-                .foregroundStyle(Color(.systemGray))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -100,16 +98,14 @@ internal struct AppInfoView: View {
             isPresented: $store.isAppCategoryPickerPresented,
             title: "Select App Category",
             categories: AppCategory.allCases,
-            selection: $store.category
+            selection: .init(get: {
+                return store.category
+            }, set: { newValue in
+                store.category = newValue
+                store.send(.infoChanged)
+            })
         )
     }
-    
-    
-    var RemoteAppIcon: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .frame(width: 100, height: 100)
-    }
-    
    
 }
 

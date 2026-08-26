@@ -26,4 +26,24 @@ public extension View {
                 .background(.ultraThinMaterial, in: shape)
         }
     }
+    
+    @ViewBuilder
+    func optionalContextMenu<M, P>(
+        _ isEnabled: Bool,
+        isPreviewHidden: Bool,
+        @ContentBuilder menuItems: () -> M,
+        @ContentBuilder preview: () -> P
+    ) -> some View where M : View, P : View {
+        if isEnabled {
+            if isPreviewHidden {
+                self
+                    .contextMenu(menuItems: menuItems)
+            }else {
+                self
+                    .contextMenu(menuItems: menuItems, preview: preview)
+            }
+        }else {
+            self
+        }
+    }
 }

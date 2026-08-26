@@ -24,6 +24,12 @@ public struct OverviewFeature {
         case binding(BindingAction<State>)
         case modeChanged(ProjectMode)
         case setData(_ overview: String)
+        case overviewChanged
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case overviewChanged
+        }
     }
     
     public init(){}
@@ -39,6 +45,10 @@ public struct OverviewFeature {
                 return .none
             case .setData(let overview):
                 state.overview = overview
+                return .none
+            case .overviewChanged:
+                return .send(.delegate(.overviewChanged))
+            case .delegate(_):
                 return .none
             }
         }

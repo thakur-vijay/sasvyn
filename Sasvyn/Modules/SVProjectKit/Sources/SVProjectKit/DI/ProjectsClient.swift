@@ -26,6 +26,9 @@ public struct ProjectsClient: Sendable{
     
     public var removeSkill:
     @Sendable (_ id: String, _ projectId: String) async throws -> Void
+    
+    public var deleteProjectScreenshot:
+    @Sendable (_ id: String, _ projectId: String) async throws -> Void
 }
 
 extension ProjectsClient {
@@ -37,6 +40,7 @@ extension ProjectsClient {
         updateProjectUseCase: UpdateProjectUseCase,
         deleteProjectUseCase: DeleteProjectUseCase,
         removeSkillFromProjectUseCase: RemoveSkillFromProjectUseCase,
+        deleteProjectScreenshotUseCase: DeleteProjectScreenshotUseCase
     ) -> Self {
 
         Self { search in
@@ -51,6 +55,8 @@ extension ProjectsClient {
             try await updateProjectUseCase.execute(project: project)
         } removeSkill: { id, projectId in
             try await removeSkillFromProjectUseCase.execute(id: id, from: projectId)
+        } deleteProjectScreenshot: { id, projectId in
+            try await deleteProjectScreenshotUseCase.execute(id: id, projectID: projectId)
         }
 
     }
@@ -70,6 +76,8 @@ extension ProjectsClient: DependencyKey {
         fatalError("Unimplemented")
     } removeSkill: { id, projectId in
         fatalError("Unimplemented")
+    } deleteProjectScreenshot: { id, projectId in
+        fatalError("Unimplemented")
     }
     
 }
@@ -87,6 +95,8 @@ extension ProjectsClient: TestDependencyKey {
     } update: { project in
         
     } removeSkill: { id, projectId in
+        
+    } deleteProjectScreenshot: { id, projectId in
         
     }
 }

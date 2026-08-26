@@ -69,12 +69,13 @@ public struct iOSProjectsFeature {
                 return .none
             case .binding(_):
                 return .none
-            case .path(.element(_, action: .detail(.delegate(.projectUpdated(let project))))):
+            case .path(.element(_, action: .detail(.delegate(.projectAdded(let project))))):
                 state.path.removeLast()
+                state.projects.insert(project, at: 0)
+                return .none
+            case .path(.element(_, action: .detail(.delegate(.projectUpdated(let project))))):
                 if let index = state.projects.firstIndex(where: { $0.id == project.id}){
                     state.projects[index] = project
-                }else {
-                    state.projects.insert(project, at: 0)
                 }
                 return .none
             case .path(_):

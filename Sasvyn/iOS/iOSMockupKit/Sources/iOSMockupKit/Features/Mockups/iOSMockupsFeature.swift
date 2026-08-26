@@ -17,6 +17,7 @@ public struct iOSMockupsFeature {
     @ObservableState
     public struct State: Equatable {
         public var mockups: [MockupImage] = []
+        public var selectedMockup: MockupImage?
         public var mode: MockupsPresentationMode
         public var isSingleSelection: Bool
         public init(
@@ -132,22 +133,27 @@ public struct iOSMockupsFeature {
             case .closeTapped:
                 return .send(.delegate(.close))
             case .mockupTapped(let mockup):
-                if state.isSingleSelection {
-                    if state.selection == mockup.id {
-                        state.selection = nil
-                        return .none
+                if state.mode == .picker {
+                    if state.isSingleSelection {
+                        if state.selection == mockup.id {
+                            state.selection = nil
+                            return .none
+                        }else {
+                            return .send(.delegate(.select(mockup)))
+                        }
                     }else {
-                        return .send(.delegate(.select(mockup)))
+                        if state.selectedMockupIds.contains(mockup.id){
+                            state.selectedMockupIds.remove(mockup.id)
+                        }else {
+                            state.selectedMockupIds.insert(mockup.id)
+                        }
+                        return .none
                     }
                 }else {
-                    if state.selectedMockupIds.contains(mockup.id){
-                        state.selectedMockupIds.remove(mockup.id)
-                    }else {
-                        state.selectedMockupIds.insert(mockup.id)
-                    }
+                    state.selectedMockup = mockup
                     return .none
                 }
-             
+              
             }
         }
         .ifLet(\.$destination, action: \.destination)

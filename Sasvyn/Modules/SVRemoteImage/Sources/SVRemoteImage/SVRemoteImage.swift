@@ -80,9 +80,6 @@ public struct SVRemoteImage<S: Shape, Placeholder: View & Sendable>: View {
                 image
                     .resizable()
                     .aspectRatio(aspectRatio, contentMode: contentMode)
-                    .task {
-                        print("SERVER IMAGE")
-                    }
             } else {
                 placeholder
             }
@@ -95,7 +92,7 @@ public struct SVRemoteImage<S: Shape, Placeholder: View & Sendable>: View {
 
 public extension SVRemoteImage where Placeholder == Color {
 
-    init(
+    nonisolated init(
         url: URL?,
         size: CGSize,
         contentMode: ContentMode = .fill,
@@ -114,7 +111,7 @@ public extension SVRemoteImage where Placeholder == Color {
         }
     }
     
-    init(
+    nonisolated init(
         url: URL?,
         aspectRatio: CGFloat,
         contentMode: ContentMode = .fill,

@@ -19,6 +19,7 @@ public struct ScreenshotsFeature {
         public var mode: ProjectMode
         public var screenshots: [ProjectScreenshot] = []
         public var selectedScreenshotID: String?
+        public var selectedScreenshot: ProjectScreenshot?
         
         public init(mode: ProjectMode) {
             self.mode = mode
@@ -36,7 +37,16 @@ public struct ScreenshotsFeature {
         case screenshotTapped(ProjectScreenshot)
         case reorderTapped
         case addPreviewsTapped
+        case deleteScreenshotTapped(ProjectScreenshot)
+        case screenshotDeleted(ProjectScreenshot)
         case setData(_ screenshots: [ProjectScreenshot])
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case screenshotsUpdated
+            case screenshotUpdated(Int, ProjectScreenshot)
+            case screenshotToDelete(ProjectScreenshot)
+        }
     }
     
     public init(){}
@@ -60,7 +70,7 @@ public struct ScreenshotsFeature {
                 return .none
             case .screenshotTapped(let screenshot):
                 if state.mode == .view {
-                    //open viewer
+                    state.selectedScreenshot = screenshot
                 }else {
                     state.selectedScreenshotID = screenshot.id
                     state.destination = .mockupsPicker(
@@ -109,7 +119,7 @@ public struct ScreenshotsFeature {
                 for index in state.screenshots.indices {
                     state.screenshots[index].order = index + 1
                 }
-                return .none
+                return .send(.delegate(.screenshotsUpdated))
             case .destination(.presented(.mockupsPicker(.delegate(.select(let mockup))))):
                 state.destination = nil
                 if let index = state.screenshots.firstIndex(where: { $0.id == state.selectedScreenshotID }){
@@ -118,12 +128,14 @@ public struct ScreenshotsFeature {
                     state.screenshots[index].mockupID = mockup?.id ?? ""
                     state.screenshots[index].aspectRatio = mockup?.aspectRatio ?? 0
                     state.screenshots[index].device = mockup?.device ?? ""
+                    return .send(.delegate(.screenshotUpdated(index, state.screenshots[index])))
+                }else {
+                    return .none
                 }
-                return .none
             case .destination(.presented(.screenshotsReorder(.delegate(.update(let updatedScreenshots))))):
                 state.screenshots = updatedScreenshots
                 state.destination = nil
-                return .none
+                return .send(.delegate(.screenshotsUpdated))
             case .destination(.presented(.screenshotsReorder(.delegate(.close)))):
                 state.destination = nil
                 return .none
@@ -142,6 +154,24 @@ public struct ScreenshotsFeature {
             case .setData(let screenshots):
                 state.screenshots = screenshots
                 return .none
+            case .delegate(_):
+                return .none
+            case .deleteScreenshotTapped(let screenshot):
+                if state.mode == .create {
+                    state.screenshots.removeAll { $0.id == screenshot.id }
+                    for index in 0..<state.screenshots.count {
+                        state.screenshots[index].order = index + 1
+                    }
+                    return .send(.delegate(.screenshotsUpdated))
+                }else {
+                    return .send(.delegate(.screenshotToDelete(screenshot)))
+                }
+            case .screenshotDeleted(let screenshot):
+                state.screenshots.removeAll { $0.id == screenshot.id }
+                for index in 0..<state.screenshots.count {
+                    state.screenshots[index].order = index + 1
+                }
+                return .send(.delegate(.screenshotsUpdated))
             }
         }
         .ifLet(\.$destination, action: \.destination)

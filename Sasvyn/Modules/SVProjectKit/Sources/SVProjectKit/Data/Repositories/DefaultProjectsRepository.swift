@@ -54,4 +54,8 @@ public final class DefaultProjectsRepository: ProjectsRepository {
     public func removeSkill(id: String, from projectID: String) async throws {
         try await dataSource.removeSkill(skillID: id, fromProject: projectID)
     }
+    
+    public func deleteProjectScreenshot(id: String, from projectID: String) async throws {
+        try await dataSource.deleteScreenshot(id: id, projectID: projectID)
+    }
 }

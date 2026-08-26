@@ -79,7 +79,6 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
     }
     
     func update(project: Project) async throws {
-        print("ROLE", project.role)
         try await database.write {[weak self] db in
             let existing = try db.fetchOne(
                 ProjectRecord.self,
@@ -92,6 +91,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             )
             var iconPath: String = ""
             if let appIconURL = project.icon {
+                print("SAVING APPICON URL IN DB", appIconURL)
                 iconPath = try ProjectStorage.relativePath(for: appIconURL)
             }else {
                 iconPath = existing?.iconPath ?? ""
@@ -202,7 +202,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                             SELECT json_group_array(
                                 json_object(
                                     'id', ps.id,
-                                    'path', ps.path,
+                                    'file_name', ps.file_name,
                                     'project_id', ps.project_id,
                                     'order', ps."order",
                                     'mockup_id', ps.mockup_id,
@@ -302,7 +302,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             try db.insert(
                 ProjectScreenshotRecord(
                     id: screenshot.id,
-                    path: try ProjectStorage.relativePath(for: destinationURL),
+                    fileName: destinationURL.lastPathComponent,
                     projectId: projectID,
                     order: screenshot.order,
                     mockupID: screenshot.mockupID,
@@ -351,6 +351,35 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                         )
                     )
                 )
+            )
+        }
+    }
+    
+    func deleteScreenshot(id: String, projectID: String) async throws {
+        try await database.write { db in
+            guard let screenshotRecord = try db.fetchOne(
+                ProjectScreenshotRecord.self,
+                filters: [.equals(ProjectScreenshotRecord.ColumnNames.id, .text(id))]
+            ) else {
+                throw DatabaseError.recordNotFound
+            }
+            guard screenshotRecord.projectId == projectID else {
+                throw DatabaseError.recordNotFound
+            }
+            
+            let screenshotURL = try ProjectStorage.screenshotURL(
+                projectID: projectID,
+                fileName: screenshotRecord.fileName
+            )
+
+            print("Deleting Screenshot:", screenshotURL)
+
+            if FileManager.default.fileExists(atPath: screenshotURL.path()) {
+                try FileManager.default.removeItem(at: screenshotURL)
+            }
+            try db.delete(
+                ProjectScreenshotRecord.self,
+                key: id
             )
         }
     }

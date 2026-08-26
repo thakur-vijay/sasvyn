@@ -6,5 +6,53 @@
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string></string>
+    <key>UIApplicationShortcutItems</key>
+    <array>
+
+        <dict>
+            <key>UIApplicationShortcutItemType</key>
+            <string>com.sasvyn.new-project</string>
+
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>New Project</string>
+
+            <key>UIApplicationShortcutItemIconSymbolName</key>
+            <string>plus</string>
+        </dict>
+
+        <dict>
+            <key>UIApplicationShortcutItemType</key>
+            <string>com.sasvyn.projects</string>
+
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>My Projects</string>
+
+            <key>UIApplicationShortcutItemIconSymbolName</key>
+            <string>folder</string>
+        </dict>
+
+        <dict>
+            <key>UIApplicationShortcutItemType</key>
+            <string>com.sasvyn.create-mockup</string>
+
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Create Mockup</string>
+
+            <key>UIApplicationShortcutItemIconSymbolName</key>
+            <string>rectangle.on.rectangle</string>
+        </dict>
+
+        <dict>
+            <key>UIApplicationShortcutItemType</key>
+            <string>com.sasvyn.export-portfolio</string>
+
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Export Portfolio</string>
+
+            <key>UIApplicationShortcutItemIconSymbolName</key>
+            <string>square.and.arrow.up</string>
+        </dict>
+
+    </array>
 </dict>
 </plist>

@@ -49,6 +49,10 @@ public final class ProjectsDIContainer{
         RemoveSkillFromProjectUseCase(repository: repository)
     }()
     
+    private lazy var deleteProjectScreenshotUseCase: DeleteProjectScreenshotUseCase = {
+        DeleteProjectScreenshotUseCase(repository: repository)
+    }()
+    
     private lazy var client: ProjectsClient = {
         ProjectsClient.live(
             fetchProjectsUseCase: fetchProjectsUseCase,
@@ -56,7 +60,8 @@ public final class ProjectsDIContainer{
             addProjectUseCase: addProjectUseCase,
             updateProjectUseCase: updateProjectUseCase,
             deleteProjectUseCase: deleteProjectUseCase,
-            removeSkillFromProjectUseCase: removeSkillFromProjectUseCase
+            removeSkillFromProjectUseCase: removeSkillFromProjectUseCase,
+            deleteProjectScreenshotUseCase: deleteProjectScreenshotUseCase
         )
     }()
     

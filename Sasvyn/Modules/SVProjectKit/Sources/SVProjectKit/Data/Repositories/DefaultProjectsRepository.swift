@@ -58,4 +58,16 @@ public final class DefaultProjectsRepository: ProjectsRepository {
     public func deleteProjectScreenshot(id: String, from projectID: String) async throws {
         try await dataSource.deleteScreenshot(id: id, projectID: projectID)
     }
+    
+    public func deleteProjectScreenshots(screenshots: [ProjectScreenshot]) async throws {
+        try await dataSource.deleteScreenshots(screenshots: screenshots)
+    }
+    
+    public func addProjectScreenshots(screenshots: [ProjectScreenshot], projectID: String) async throws {
+        try await dataSource.addScreenshots(projectID: projectID, screenshots: screenshots)
+    }
+    
+    public func reorderProjectScreenshots(screenshots: [ProjectScreenshot]) async throws {
+        try await dataSource.updateScreenshotsOrder(screenshots: screenshots)
+    }
 }

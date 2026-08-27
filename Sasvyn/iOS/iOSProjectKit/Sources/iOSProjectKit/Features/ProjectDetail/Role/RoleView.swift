@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SVDesignSystem
+import SVProjectKit
 
 struct RoleView: View {
     @Bindable var store: StoreOf<RoleFeature>
@@ -23,10 +24,12 @@ struct RoleView: View {
                 placeholder: "Enter role",
                 isExpandable: false,
                 collapsedLineLimit: 1,
-                characterLimit: 80,
-                isEditable: store.mode.isEditable) {
-                    store.send(.roleChanged)
-                }
+                characterLimit: ProjectConfiguration.Content.roleLimit,
+                isEditable: store.mode.isEditable,
+                font: .body
+            ) {
+                store.send(.roleChanged)
+            }
         }
     }
 }

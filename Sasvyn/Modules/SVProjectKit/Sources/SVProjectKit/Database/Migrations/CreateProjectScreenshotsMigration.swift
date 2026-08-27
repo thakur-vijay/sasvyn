@@ -16,13 +16,13 @@ struct CreateProjectScreenshotsMigration: DatabaseMigration {
             ProjectScreenshotRecord.databaseTableName,
             ifNotExists: true
         ) { table in
-            table.text("id").notNull()
-            table.text("path").notNull()
+            table.text("id").primaryKey().notNull()
+            table.text("file_name").notNull()
             table.text("project_id").notNull()
             table.text("mockup_id").notNull()
             table.text("device").notNull()
             table.double("aspect_ratio").notNull()
-            table.integer("order").notNull()
+            table.integer("sort_order").notNull()
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
         }

@@ -49,8 +49,16 @@ public final class ProjectsDIContainer{
         RemoveSkillFromProjectUseCase(repository: repository)
     }()
     
-    private lazy var deleteProjectScreenshotUseCase: DeleteProjectScreenshotUseCase = {
-        DeleteProjectScreenshotUseCase(repository: repository)
+    private lazy var deleteProjectScreenshotsUseCase: DeleteProjectScreenshotsUseCase = {
+        DeleteProjectScreenshotsUseCase(repository: repository)
+    }()
+    
+    private lazy var addProjectScreenshotsUseCase: AddProjectScreenshotsUseCase = {
+        AddProjectScreenshotsUseCase(repository: repository)
+    }()
+    
+    private lazy var reorderProjectScreenshotsUseCase: ReorderProjectScreenshotsUseCase = {
+        ReorderProjectScreenshotsUseCase(repository: repository)
     }()
     
     private lazy var client: ProjectsClient = {
@@ -61,7 +69,9 @@ public final class ProjectsDIContainer{
             updateProjectUseCase: updateProjectUseCase,
             deleteProjectUseCase: deleteProjectUseCase,
             removeSkillFromProjectUseCase: removeSkillFromProjectUseCase,
-            deleteProjectScreenshotUseCase: deleteProjectScreenshotUseCase
+            deleteProjectScreenshotsUseCase: deleteProjectScreenshotsUseCase,
+            addProjectScreenshotsUseCase: addProjectScreenshotsUseCase,
+            reorderProjectScreenshotsUseCase: reorderProjectScreenshotsUseCase
         )
     }()
     

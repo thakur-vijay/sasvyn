@@ -11,9 +11,13 @@ import SVProjectKit
 
 public struct ProjectCard: View {
     private let project: Project
-    private let onTap: ()->()
+    private let onTap: (ProjectMode)->()
     private let onDelete: ()->()
-    public init(project: Project, onTap: @escaping ()->(), onDelete: @escaping ()->()){
+    public init(
+        project: Project,
+        onTap: @escaping (ProjectMode) -> Void,
+        onDelete: @escaping () -> Void
+    ) {
         self.project = project
         self.onTap = onTap
         self.onDelete = onDelete
@@ -42,11 +46,10 @@ public struct ProjectCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             Menu {
-                Button("Edit", systemImage: "pencil"){
                     
+                Button("Edit", systemImage: "pencil"){
+                    onTap(.edit)
                 }
-                
-                Button("View", systemImage: "eye", action: onTap)
                 
                 Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
             } label: {
@@ -59,12 +62,15 @@ public struct ProjectCard: View {
 
         }
         .padding(.vertical, 10)
+        .background(.background)
         .overlay(alignment: .bottom) {
             Divider()
                 .padding(.leading, 102)
         }
         .contentShape(.rect)
-        .onTapGesture(perform: onTap)
+        .onTapGesture {
+            onTap(.view)
+        }
     }
     
 }

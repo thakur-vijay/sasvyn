@@ -25,6 +25,7 @@ public struct iOSProjectDetailFeature {
             self.role = .init(mode: mode)
             self.techStack = .init(mode: mode)
             self.screenshots = .init(mode: mode)
+            self.appDescription = .init(mode: mode)
         }
         
         var project: Project
@@ -33,6 +34,7 @@ public struct iOSProjectDetailFeature {
         var role: RoleFeature.State
         var techStack: TechStackFeature.State
         var screenshots: ScreenshotsFeature.State
+        var appDescription: DescriptionFeature.State
    
     }
     
@@ -40,8 +42,7 @@ public struct iOSProjectDetailFeature {
         case binding(BindingAction<State>)
         case onTask
         case projectLoaded(Project)
-        case editModeTapped
-        case cancelEditTapped
+        case toggleModeTapped
         case saveTapped
         case projectSaved
         case updateProject
@@ -50,6 +51,7 @@ public struct iOSProjectDetailFeature {
         case role(RoleFeature.Action)
         case techStack(TechStackFeature.Action)
         case screenshots(ScreenshotsFeature.Action)
+        case appDescription(DescriptionFeature.Action)
         case delegate(Delegate)
         
         public enum Delegate {
@@ -80,6 +82,9 @@ public struct iOSProjectDetailFeature {
         Scope(\.screenshots, action: \.screenshots) {
             ScreenshotsFeature()
         }
+        Scope(\.appDescription, action: \.appDescription) {
+            DescriptionFeature()
+        }
         Reduce { state, action in
             switch action {
             case .onTask:
@@ -90,7 +95,6 @@ public struct iOSProjectDetailFeature {
                         guard let project = try await client.fetchProject(projectID) else {
                             return
                         }
-                        print("FETCHED ICON:", project.icon)
                         await send(.projectLoaded(project))
                     }catch {
                         print(error.localizedDescription)
@@ -107,11 +111,10 @@ public struct iOSProjectDetailFeature {
                 )
             case .binding(_):
                 return .none
-            case .editModeTapped:
+            case .toggleModeTapped:
                 state.mode = state.mode == .view ? .edit : .view
 
                 let mode = state.mode
-
                 return .merge(
                     .send(.appInfo(.modeChanged(mode))),
                     .send(.overview(.modeChanged(mode))),
@@ -119,19 +122,15 @@ public struct iOSProjectDetailFeature {
                     .send(.techStack(.modeChanged(mode))),
                     .send(.screenshots(.modeChanged(mode))),
                 )
-            case .cancelEditTapped:
-                return .none
             case .saveTapped:
                 guard state.isProjectReadyToAdd else { return .none }
                 let project = state.project
+                let screenshots = state.project.screenshots
                 let mode = state.mode
                 return .run {[client] send in
                     do {
-                        if mode == .edit {
-                            try await client.update(project)
-                        }else {
-                            try await client.add(project)
-                        }
+                        try await client.add(project)
+                        try await client.addScreenshots(screenshots, project.id)
                         await send(.projectSaved)
                     }catch {
                         print(error.localizedDescription)
@@ -144,8 +143,6 @@ public struct iOSProjectDetailFeature {
                     return .send(.delegate(.projectAdded(state.project)))
                 }
             case .delegate(_):
-                return .none
-            case .techStack(_):
                 return .none
             case .updateProject:
                 guard state.mode == .edit else { return .none }
@@ -179,22 +176,66 @@ public struct iOSProjectDetailFeature {
                 )
             case .appInfo(_):
                 return .none
-            case .screenshots(.delegate(.screenshotsUpdated)):
-                guard state.screenshots.isDetailsReady else { return .none }
+            case .screenshots(.delegate(.screenshotsUpdated(let removed, let new))):
+//                guard state.screenshots.isDetailsReady else { return .none } 
                 state.screenshots.update(into: &state.project)
-                return .none
-            case .screenshots(.delegate(.screenshotUpdated(let index, let screenshot))):
-                return .none
-            case .screenshots(.delegate(.screenshotToDelete(let screenshot))):
                 let projectID = state.project.id
-                return .run {[client] send in
+                let screenshots = state.project.screenshots
+                if state.mode == .create {
+                    return .none
+                }else {
+                    return .merge(
+                        .run {[client] send in
+                            do {
+                                guard !removed.isEmpty else { return }
+                                try await client.deleteScreenshots(removed)
+                            }catch {
+                                print(error.localizedDescription)
+                            }
+                        },
+                        .run {[client] send in
+                            do {
+                                guard !new.isEmpty else { return }
+                                try await client.addScreenshots(new, projectID)
+                            }catch {
+                                print(error.localizedDescription)
+                            }
+                        },
+                        .run { [client] send in
+                            do {
+                                guard !removed.isEmpty else { return }
+                                try await client.reorderScreenshots(screenshots)
+                            }catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+                    )
+                }
+            case .screenshots(.delegate(.screenshotUpdated(_, _))):
+                return .none
+            case .screenshots(.delegate(.screenshotsReordered)):
+                state.screenshots.update(into: &state.project)
+                let screenshots = state.project.screenshots
+                return .run { [client] send in
                     do {
-                        try await client.deleteProjectScreenshot(screenshot.id, projectID)
+                        try await client.reorderScreenshots(screenshots)
                     }catch {
                         print(error.localizedDescription)
                     }
                 }
             case .screenshots(_):
+                return .none
+            case .techStack(.delegate(.updateStack)):
+                guard state.techStack.isDetailsReady else { return .none }
+                state.techStack.update(into: &state.project)
+                return .send(.updateProject)
+            case .techStack(_):
+                return .none
+            case .appDescription(.delegate(.descriptionChanged)):
+                guard state.appDescription.isDetailsReady else { return .none }
+                state.appDescription.update(into: &state.project)
+                return .send(.updateProject)
+            case .appDescription(_):
                 return .none
             }
         }

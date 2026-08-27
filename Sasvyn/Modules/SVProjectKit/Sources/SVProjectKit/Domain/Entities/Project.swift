@@ -18,6 +18,7 @@ public struct Project: Identifiable, Hashable, Sendable{
     public var role: String
     public var techStack: [Skill]
     public var screenshots: [ProjectScreenshot]
+    public var description: String
     
     public init(
         id: String = UUID().uuidString,
@@ -29,6 +30,7 @@ public struct Project: Identifiable, Hashable, Sendable{
         role: String = "",
         techStack: [Skill] = [],
         screenshots: [ProjectScreenshot] = [],
+        description: String = ""
     ) {
         self.id = id
         self.icon = icon
@@ -39,6 +41,7 @@ public struct Project: Identifiable, Hashable, Sendable{
         self.role = role
         self.techStack = techStack
         self.screenshots = screenshots
+        self.description = description
     }
     
 }

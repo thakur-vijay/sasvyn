@@ -24,11 +24,12 @@ internal struct RecentProjectsSection: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 ForEach(1...10, id: \.self){ _ in
-                    ProjectCard(project: .init()) {
+                    ProjectCard(project: .init()) { _ in
                         
                     } onDelete: {
                         
                     }
+
                 }
             }
         }

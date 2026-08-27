@@ -43,7 +43,8 @@ public struct ScreenshotsFeature {
         case delegate(Delegate)
         
         public enum Delegate {
-            case screenshotsUpdated
+            case screenshotsUpdated(removed: [ProjectScreenshot], new: [ProjectScreenshot])
+            case screenshotsReordered
             case screenshotUpdated(Int, ProjectScreenshot)
             case screenshotToDelete(ProjectScreenshot)
         }
@@ -89,7 +90,12 @@ public struct ScreenshotsFeature {
                 return .none
             case .destination(.presented(.mockupsPicker(.delegate(.selection(let mockups))))):
                 state.destination = nil
+
                 let finalMockupIDs = Set(mockups.map(\.id))
+
+                let removed = state.screenshots.filter {
+                    !finalMockupIDs.contains($0.mockupID)
+                }
 
                 state.screenshots.removeAll {
                     !finalMockupIDs.contains($0.mockupID)
@@ -103,23 +109,25 @@ public struct ScreenshotsFeature {
                     !existingMockupIDs.contains($0.id)
                 }
 
-                for mockup in newMockups {
-                    state.screenshots.append(
-                        ProjectScreenshot(
-                            id: UUID().uuidString,
-                            mockupID: mockup.id,
-                            device: mockup.device,
-                            imageURL: mockup.url,
-                            aspectRatio: mockup.aspectRatio,
-                            order: 0
-                        )
+                let exisitingCount = state.screenshots.count
+                let newScreenshots = newMockups.enumerated().map { result in
+                    ProjectScreenshot(
+                        id: UUID().uuidString,
+                        mockupID: result.element.id,
+                        device: result.element.device,
+                        imageURL: result.element.url,
+                        aspectRatio: result.element.aspectRatio,
+                        order: exisitingCount + (result.offset + 1)
                     )
                 }
+
+                state.screenshots.append(contentsOf: newScreenshots)
 
                 for index in state.screenshots.indices {
                     state.screenshots[index].order = index + 1
                 }
-                return .send(.delegate(.screenshotsUpdated))
+
+                return .send(.delegate(.screenshotsUpdated(removed: removed, new: newScreenshots)))
             case .destination(.presented(.mockupsPicker(.delegate(.select(let mockup))))):
                 state.destination = nil
                 if let index = state.screenshots.firstIndex(where: { $0.id == state.selectedScreenshotID }){
@@ -135,7 +143,7 @@ public struct ScreenshotsFeature {
             case .destination(.presented(.screenshotsReorder(.delegate(.update(let updatedScreenshots))))):
                 state.screenshots = updatedScreenshots
                 state.destination = nil
-                return .send(.delegate(.screenshotsUpdated))
+                return .send(.delegate(.screenshotsReordered))
             case .destination(.presented(.screenshotsReorder(.delegate(.close)))):
                 state.destination = nil
                 return .none
@@ -147,7 +155,7 @@ public struct ScreenshotsFeature {
                     .init(
                         mode: .picker,
                         selectedMockupIds: Set(alreadySelected),
-                        maxSelection: ProjectConfiguration.screenshotsLimit
+                        maxSelection: ProjectConfiguration.Media.screenshotsLimit
                     )
                 )
                 return .none
@@ -157,21 +165,17 @@ public struct ScreenshotsFeature {
             case .delegate(_):
                 return .none
             case .deleteScreenshotTapped(let screenshot):
-                if state.mode == .create {
-                    state.screenshots.removeAll { $0.id == screenshot.id }
-                    for index in 0..<state.screenshots.count {
-                        state.screenshots[index].order = index + 1
-                    }
-                    return .send(.delegate(.screenshotsUpdated))
-                }else {
-                    return .send(.delegate(.screenshotToDelete(screenshot)))
+                state.screenshots.removeAll { $0.id == screenshot.id }
+                for index in 0..<state.screenshots.count {
+                    state.screenshots[index].order = index + 1
                 }
+                return .send(.delegate(.screenshotsUpdated(removed: [screenshot], new: [])))
             case .screenshotDeleted(let screenshot):
                 state.screenshots.removeAll { $0.id == screenshot.id }
                 for index in 0..<state.screenshots.count {
                     state.screenshots[index].order = index + 1
                 }
-                return .send(.delegate(.screenshotsUpdated))
+                return .send(.delegate(.screenshotsUpdated(removed: [], new: [])))
             }
         }
         .ifLet(\.$destination, action: \.destination)

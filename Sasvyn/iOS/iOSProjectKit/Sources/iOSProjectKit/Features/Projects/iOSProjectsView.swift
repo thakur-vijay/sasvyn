@@ -16,15 +16,27 @@ public struct iOSProjectsView: View {
     }
     
     @State private var isMusicPickerPresented: Bool = false
+    @Namespace private var namespace
     public var body: some View {
         NavigationStack(path: $store.scope(\.path, action: \.path)){
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(store.projects){ project in
-                        ProjectCard(project: project) {
-                            store.send(.projectTapped(project))
+                        
+                        ProjectCard(project: project) { mode in
+                            store.send(.projectTapped(project, mode))
                         } onDelete: {
                             store.send(.deleteProjectTapped(project))
+                        }
+                        .contentShape(.contextMenuPreview, .rect)
+                        .contextMenu {
+                            Button("Edit", systemImage: "pencil") {
+                                store.send(.projectTapped(project, .edit))
+                            }
+                            
+                            Button("Delete", systemImage: "trash", role: .destructive){
+                                store.send(.deleteProjectTapped(project))
+                            }
                         }
                     }
                 }
@@ -48,6 +60,7 @@ public struct iOSProjectsView: View {
                     }
                 }
             }
+            .alert($store.scope(\.alert, action: \.alert))
             .onChange(of: store.search) { oldValue, newValue in
                 store.send(.onTask)
             }

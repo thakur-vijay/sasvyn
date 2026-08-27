@@ -27,8 +27,14 @@ public struct ProjectsClient: Sendable{
     public var removeSkill:
     @Sendable (_ id: String, _ projectId: String) async throws -> Void
     
-    public var deleteProjectScreenshot:
-    @Sendable (_ id: String, _ projectId: String) async throws -> Void
+    public var deleteScreenshots:
+    @Sendable (_ screenshots: [ProjectScreenshot]) async throws -> Void
+    
+    public var addScreenshots:
+    @Sendable (_ screenshots: [ProjectScreenshot], _ projectID: String) async throws -> Void
+    
+    public var reorderScreenshots:
+    @Sendable (_ screenshots: [ProjectScreenshot]) async throws -> Void
 }
 
 extension ProjectsClient {
@@ -40,7 +46,9 @@ extension ProjectsClient {
         updateProjectUseCase: UpdateProjectUseCase,
         deleteProjectUseCase: DeleteProjectUseCase,
         removeSkillFromProjectUseCase: RemoveSkillFromProjectUseCase,
-        deleteProjectScreenshotUseCase: DeleteProjectScreenshotUseCase
+        deleteProjectScreenshotsUseCase: DeleteProjectScreenshotsUseCase,
+        addProjectScreenshotsUseCase: AddProjectScreenshotsUseCase,
+        reorderProjectScreenshotsUseCase: ReorderProjectScreenshotsUseCase
     ) -> Self {
 
         Self { search in
@@ -55,8 +63,12 @@ extension ProjectsClient {
             try await updateProjectUseCase.execute(project: project)
         } removeSkill: { id, projectId in
             try await removeSkillFromProjectUseCase.execute(id: id, from: projectId)
-        } deleteProjectScreenshot: { id, projectId in
-            try await deleteProjectScreenshotUseCase.execute(id: id, projectID: projectId)
+        } deleteScreenshots: { screenshots in
+            try await deleteProjectScreenshotsUseCase.execute(screenshots: screenshots)
+        } addScreenshots: { screenshots, projectID in
+            try await addProjectScreenshotsUseCase.execute(screenshots: screenshots, projectID: projectID)
+        } reorderScreenshots: { screenshots in
+            try await reorderProjectScreenshotsUseCase.execute(screenshots: screenshots)
         }
 
     }
@@ -76,10 +88,13 @@ extension ProjectsClient: DependencyKey {
         fatalError("Unimplemented")
     } removeSkill: { id, projectId in
         fatalError("Unimplemented")
-    } deleteProjectScreenshot: { id, projectId in
+    } deleteScreenshots: { screenshots in
+        fatalError("Unimplemented")
+    } addScreenshots: { screenshots, projectID in
+        fatalError("Unimplemented")
+    } reorderScreenshots: { screenshots in
         fatalError("Unimplemented")
     }
-    
 }
 
 extension ProjectsClient: TestDependencyKey {
@@ -96,7 +111,11 @@ extension ProjectsClient: TestDependencyKey {
         
     } removeSkill: { id, projectId in
         
-    } deleteProjectScreenshot: { id, projectId in
+    } deleteScreenshots: { screenshots in
+        
+    } addScreenshots: { screenshots, projectID in
+        
+    } reorderScreenshots: { screenshots in
         
     }
 }

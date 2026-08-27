@@ -11,6 +11,11 @@ import SVRemoteImage
 import SVDesignSystem
 import Photos
 import PhotosUI
+import TipKit
+
+struct AppInfoTip: Tip {
+    var title: Text = Text("All info about app")
+}
 
 public struct iOSProjectDetailView: View {
     private let store: StoreOf<iOSProjectDetailFeature>
@@ -19,6 +24,7 @@ public struct iOSProjectDetailView: View {
         self.store = store
     }
     
+    let tip = AppInfoTip()
     public var body: some View {
         GeometryReader {
             let size = $0.size
@@ -47,33 +53,38 @@ public struct iOSProjectDetailView: View {
                         screenSize: size,
                         store: store.scope(\.screenshots, action: \.screenshots)
                     )
-                    
-                    appDescription
-                        .padding(.horizontal, SVSpacing.screenHorizontal)
+                    DescriptionView(
+                        store: store.scope(
+                            \.appDescription,
+                             action: \.appDescription
+                        )
+                    )
+                    .padding(.horizontal, SVSpacing.screenHorizontal)
                 }
                 .padding(.vertical, SVSpacing.screenVertical)
             }
             .scrollDismissesKeyboard(.interactively)
         }
+        .animation(.smooth, value: store.mode)
         .toolbar {
-            if store.mode == .create || store.mode == .edit {
-                ToolbarItemGroup(placement: .topBarTrailing) {
+            if store.mode == .create {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("", systemImage: "checkmark") {
                         store.send(.saveTapped)
                     }
                     .tint(store.isProjectReadyToAdd ? .blue : .gray.opacity(0.3))
                     .disabledWithOpacity(!store.isProjectReadyToAdd)
-                    
-                    if store.mode != .create{
-                        Button("", systemImage: "xmark") {
-                            store.send(.cancelEditTapped)
-                        }
-                    }
                 }
-            }else {
+            } else {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Edit") {
-                        store.send(.editModeTapped)
+                    Button {
+                        store.send(.toggleModeTapped)
+                    } label: {
+                        if store.mode == .edit {
+                            Image(systemName: "xmark")
+                        } else {
+                            Text("Edit")
+                        }
                     }
                 }
             }

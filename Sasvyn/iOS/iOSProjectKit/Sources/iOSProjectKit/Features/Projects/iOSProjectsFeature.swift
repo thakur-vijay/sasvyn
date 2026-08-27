@@ -19,20 +19,30 @@ public struct iOSProjectsFeature {
     public struct State: Equatable {
         public var search: String = ""
         public var projects: [Project] = []
+        public var projectToDelete: Project? = nil
         public var path = StackState<Path.State>()
         public init(){
             
         }
+        
+        @Presents
+        public var alert: AlertState<Action.Alert>?
     }
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
+        case alert(PresentationAction<Alert>)
         case path(StackActionOf<Path>)
         case onTask
         case projectsLoaded([Project])
-        case projectTapped(Project)
+        case projectTapped(Project, ProjectMode)
         case createProjectTapped
         case deleteProjectTapped(Project)
+        case projectDeleted(Project)
+        
+        public enum Alert {
+            case deleteConfirmed
+        }
     }
     
     public init(){
@@ -61,8 +71,8 @@ public struct iOSProjectsFeature {
             case .projectsLoaded(let projects):
                 state.projects = projects
                 return .none
-            case .projectTapped(let project):
-                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .view, id: project.id)))
+            case .projectTapped(let project, let mode):
+                state.path.append(.detail(iOSProjectDetailFeature.State(mode: mode, id: project.id)))
                 return .none
             case .createProjectTapped:
                 state.path.append(.detail(iOSProjectDetailFeature.State(mode: .create, id: UUID().uuidString)))
@@ -81,9 +91,50 @@ public struct iOSProjectsFeature {
             case .path(_):
                 return .none
             case .deleteProjectTapped(let project):
-                return .run {[client] send in
-                    try await client.delete(project.id)
+                state.projectToDelete = project
+                state.alert = AlertState {
+                    TextState("Delete Project?")
+                } actions: {
+                    ButtonState(
+                        role: .destructive,
+                        action: .deleteConfirmed
+                    ) {
+                        TextState("Delete")
+                    }
+                    
+                    ButtonState(role: .cancel) {
+                        TextState("Cancel")
+                    }
+                } message: {
+                    TextState(
+                        "Are you sure you want to delete \"\(project.name)\"?"
+                    )
                 }
+                
+                return .none
+             
+            case .alert(.presented(.deleteConfirmed)):
+                guard let project = state.projectToDelete else {
+                    return .none
+                }
+
+                state.projectToDelete = nil
+                state.alert = nil
+                return .run {[client] send in
+                    do {
+                        try await client.delete(project.id)
+                        await send(.projectDeleted(project))
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .alert(.dismiss):
+                state.projectToDelete = nil
+                state.alert = nil
+                return .none
+            case .projectDeleted(let project):
+                state.projects.removeAll { $0.id == project.id }
+                return .none
             }
         }
         .forEach(\.path, action: \.path)
@@ -91,3 +142,4 @@ public struct iOSProjectsFeature {
 }
 
 extension iOSProjectsFeature.Path.State: Equatable { }
+

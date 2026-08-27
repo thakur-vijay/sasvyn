@@ -32,6 +32,11 @@ public struct TechStackFeature {
         case addStackTapped
         case setData(_ techStack: [Skill])
         case deleteStackTapped(Skill)
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case updateStack
+        }
     }
     
     @Reducer
@@ -60,7 +65,8 @@ public struct TechStackFeature {
                 return .none
             case .destination(.presented(.skillsPicker(.delegate(.saveTapped(let skills))))):
                 state.techStack = skills
-                return .none
+                state.destination = nil
+                return .send(.delegate(.updateStack))
             case .destination(_):
                 return .none
             case .setData(let techStack):
@@ -68,6 +74,8 @@ public struct TechStackFeature {
                 return .none
             case .deleteStackTapped(let skill):
                 state.techStack.removeAll { $0.id == skill.id }
+                return .send(.delegate(.updateStack))
+            case .delegate(_):
                 return .none
             }
         }

@@ -8,7 +8,16 @@
 import Foundation
 
 public enum ProjectConfiguration {
-    public static let screenshotsLimit = 20
-    public static let overviewLimit = 300
-    public static let descriptionLimit = 2000
+
+    public enum Content {
+        public static let appNameLimit = 50
+        public static let taglineLimit = 120
+        public static let overviewLimit = 500
+        public static let roleLimit = 80
+        public static let descriptionLimit = 2_000
+    }
+
+    public enum Media {
+        public static let screenshotsLimit = 20
+    }
 }

@@ -20,6 +20,7 @@ struct CreateProjectsMigration: DatabaseMigration {
             table.text("tagline").notNull()
             table.text("overview").notNull()
             table.text("role").notNull()
+            table.text("app_description").notNull()
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
         }

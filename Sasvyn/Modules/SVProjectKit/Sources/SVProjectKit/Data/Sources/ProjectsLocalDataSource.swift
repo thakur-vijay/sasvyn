@@ -58,6 +58,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                 tagline: project.tagline,
                 overview: project.overview,
                 role: project.role,
+                appDescription: project.description,
                 createdAt: .now,
                 updatedAt: .now
             )
@@ -67,12 +68,6 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             try self?.setTechStack(
                 projectID: project.id,
                 skillIDs: project.techStack.map { $0.id },
-                db: db
-            )
-            
-            try self?.setScreenshots(
-                projectID: project.id,
-                screenshots: project.screenshots,
                 db: db
             )
         }
@@ -109,6 +104,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                     ProjectRecord.ColumnNames.tagline: .text(project.tagline),
                     ProjectRecord.ColumnNames.overview: .text(project.overview),
                     ProjectRecord.ColumnNames.role: .text(project.role),
+                    ProjectRecord.ColumnNames.appDescription: .text(project.description),
                     ProjectRecord.ColumnNames.updatedAt: .date(.now),
                 ],
                 whereColumn: ProjectRecord.ColumnNames.id,
@@ -132,6 +128,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
         let projectTagline: String
         let projectOverview: String
         let projectRole: String
+        let projectDescription: String
         let projectCreatedAt: Date
         let projectUpdatedAt: Date
 
@@ -146,6 +143,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             case projectTagline = "project_tagline"
             case projectOverview = "project_overview"
             case projectRole = "project_role"
+            case projectDescription = "project_description"
             case projectCreatedAt = "project_created_at"
             case projectUpdatedAt = "project_updated_at"
 
@@ -175,6 +173,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                     p.tagline AS project_tagline,
                     p.overview AS project_overview,
                     p.role AS project_role,
+                    p.app_description AS project_description,
                     p.created_at AS project_created_at,
                     p.updated_at AS project_updated_at,
 
@@ -204,7 +203,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                                     'id', ps.id,
                                     'file_name', ps.file_name,
                                     'project_id', ps.project_id,
-                                    'order', ps."order",
+                                    'sort_order', ps."sort_order",
                                     'mockup_id', ps.mockup_id,
                                     'device', ps.device,
                                     'aspect_ratio', ps.aspect_ratio,
@@ -216,7 +215,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                                 SELECT *
                                 FROM project_screenshots
                                 WHERE project_id = p.id
-                                ORDER BY "order" ASC
+                                ORDER BY "sort_order" ASC
                             ) ps
                         ),
                         '[]'
@@ -240,6 +239,7 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
                 tagline: row.projectTagline,
                 overview: row.projectOverview,
                 role: row.projectRole,
+                appDescription: row.projectDescription,
                 createdAt: row.projectCreatedAt,
                 updatedAt: row.projectUpdatedAt
             )
@@ -284,34 +284,35 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
         }
     }
     
-    private func setScreenshots(
+    func addScreenshots(
         projectID: String,
         screenshots: [ProjectScreenshot],
-        db: SVDatabase
-    ) throws {
-        for screenshot in screenshots {
-            guard let sourceURL = screenshot.imageURL else {
-                continue
-            }
+    ) async throws {
+        try await database.write { db in
+            for screenshot in screenshots {
+                guard let sourceURL = screenshot.imageURL else {
+                    continue
+                }
 
-            let destinationURL = try ProjectStorage.copyScreenshot(
-                from: sourceURL,
-                projectID: projectID
-            )
-
-            try db.insert(
-                ProjectScreenshotRecord(
-                    id: screenshot.id,
-                    fileName: destinationURL.lastPathComponent,
-                    projectId: projectID,
-                    order: screenshot.order,
-                    mockupID: screenshot.mockupID,
-                    device: screenshot.device,
-                    aspectRatio: screenshot.aspectRatio,
-                    createdAt: .now,
-                    updatedAt: .now
+                let destinationURL = try ProjectStorage.copyScreenshot(
+                    from: sourceURL,
+                    projectID: projectID
                 )
-            )
+
+                try db.insert(
+                    ProjectScreenshotRecord(
+                        id: screenshot.id,
+                        fileName: destinationURL.lastPathComponent,
+                        projectId: projectID,
+                        sortOrder: screenshot.order,
+                        mockupID: screenshot.mockupID,
+                        device: screenshot.device,
+                        aspectRatio: screenshot.aspectRatio,
+                        createdAt: .now,
+                        updatedAt: .now
+                    )
+                )
+            }
         }
     }
     
@@ -363,24 +364,45 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             ) else {
                 throw DatabaseError.recordNotFound
             }
-            guard screenshotRecord.projectId == projectID else {
-                throw DatabaseError.recordNotFound
-            }
             
             let screenshotURL = try ProjectStorage.screenshotURL(
                 projectID: projectID,
                 fileName: screenshotRecord.fileName
             )
-
-            print("Deleting Screenshot:", screenshotURL)
-
-            if FileManager.default.fileExists(atPath: screenshotURL.path()) {
-                try FileManager.default.removeItem(at: screenshotURL)
-            }
+            try FileManager.default.removeItem(at: screenshotURL)
             try db.delete(
                 ProjectScreenshotRecord.self,
                 key: id
             )
+        }
+    }
+    
+    func deleteScreenshots(screenshots: [ProjectScreenshot]) async throws {
+        try await database.write { db in
+            try screenshots.forEach { screenshot in
+                guard let screenshotURL = screenshot.imageURL else { throw DatabaseError.recordNotFound }
+                try FileManager.default.removeItem(at: screenshotURL)
+                try db.delete(
+                    ProjectScreenshotRecord.self,
+                    key: screenshot.id
+                )
+            }
+        }
+    }
+    
+    func updateScreenshotsOrder(screenshots: [ProjectScreenshot]) async throws {
+        try await database.write { db in
+            try screenshots.forEach { screenshot in
+                try db.update(
+                    table: ProjectScreenshotRecord.databaseTableName,
+                    values: [
+                        ProjectScreenshotRecord.ColumnNames.sortOrder: .integer(screenshot.order),
+                        ProjectScreenshotRecord.ColumnNames.updatedAt: .date(.now),
+                    ],
+                    whereColumn: ProjectScreenshotRecord.ColumnNames.id,
+                    equals: .text(screenshot.id)
+                )
+            }
         }
     }
 }

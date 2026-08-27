@@ -38,6 +38,7 @@ struct ScreenshotsView: View {
         return screenshotWidth / minimumAspectRatio
     }
     
+    @State private var scrollPosition: ScrollPosition = .init()
     var body: some View {
         SVSection(title: "Preview", titleHorizontalPadding: SVSpacing.screenHorizontal) {
             if store.screenshots.isEmpty {
@@ -71,6 +72,9 @@ struct ScreenshotsView: View {
                                 shape: .rect,
                                 cache: store.mode.isEditable ? .disabled : .enabled
                             )
+                            .task {
+                                print("ORDER", screenshot.order)
+                            }
                             .contentShape(.rect)
                             .onTapGesture {
                                 store.send(.screenshotTapped(screenshot))
@@ -84,10 +88,10 @@ struct ScreenshotsView: View {
                                 } preview: {
                                     
                                 }
-
+                            
                         }
                         
-                        if let last = store.screenshots.last, store.screenshots.count < ProjectConfiguration.screenshotsLimit, store.mode.isEditable{
+                        if let last = store.screenshots.last, store.screenshots.count < ProjectConfiguration.Media.screenshotsLimit, store.mode.isEditable{
                             if let device = Devices.all.first(where: {$0.assetName == last.device}), let uiImage = device.uiImage{
                                 Image(uiImage: uiImage)
                                     .resizable()
@@ -111,6 +115,7 @@ struct ScreenshotsView: View {
                 .scrollIndicators(.hidden)
                 .scrollClipDisabled()
                 .scrollTargetBehavior(.viewAligned)
+                .scrollPosition($scrollPosition, anchor: .center)
             }
         } trailing: {
             if store.screenshots.count > 1 && store.mode.isEditable{
@@ -127,6 +132,8 @@ struct ScreenshotsView: View {
                 iOSMockupsView(store: store)
             }
         }
-        .imageViewer(item: $store.selectedScreenshot, items: store.screenshots)
+        .imageViewer(item: $store.selectedScreenshot, items: store.screenshots) { scrollPosition in
+            self.scrollPosition = scrollPosition
+        }
     }
 }

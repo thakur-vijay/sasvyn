@@ -18,7 +18,7 @@ struct ProjectScreenshotRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     
     let projectId: String
     
-    let order: Int
+    let sortOrder: Int
     
     let mockupID: String
     
@@ -32,9 +32,10 @@ struct ProjectScreenshotRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     
     enum CodingKeys: String, CodingKey {
         
-        case id, order, device
+        case id, device
         case fileName = "file_name"
         case projectId = "project_id"
+        case sortOrder = "sort_order"
         case mockupID = "mockup_id"
         case aspectRatio = "aspect_ratio"
         case createdAt = "created_at"
@@ -51,7 +52,7 @@ extension ProjectScreenshotRecord {
         static let mockupID = SVColumnName("mockup_id")
         static let device = SVColumnName("device")
         static let aspectRatio = SVColumnName("aspect_ratio")
-        static let order = SVColumnName("order")
+        static let sortOrder = SVColumnName("sort_order")
         static let createdAt = SVColumnName("created_at")
         static let updatedAt = SVColumnName("updated_at")
     }
@@ -67,7 +68,7 @@ extension ProjectScreenshotRecord {
         static let mockupID = SVColumn("mockup_id")
         static let device = SVColumn("device")
         static let aspectRatio = SVColumn("aspect_ratio")
-        static let order = SVColumn("order")
+        static let sortOrder = SVColumn("sort_order")
         static let createdAt = SVColumn("created_at")
         static let updatedAt = SVColumn("updated_at")
         

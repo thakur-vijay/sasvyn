@@ -10,12 +10,17 @@ import SVRemoteImage
 
 public extension View {
     @ViewBuilder
-    func imageViewer<Item: ImageViewerItem>(item: Binding<Item?>, items: [Item]) -> some View {
+    func imageViewer<Item: ImageViewerItem>(
+        item: Binding<Item?>,
+        items: [Item],
+        onScrollPositionChange: @escaping (ScrollPosition)-> Void = { _ in }
+    ) -> some View {
         self
             .sheet(item: item) { value in
                 ImageViewer(
                     items: items,
-                    selection: value
+                    selection: value,
+                    onScrollPositionChange: onScrollPositionChange
                 ) {
                     item.wrappedValue = nil
                 }
@@ -27,6 +32,7 @@ public extension View {
 internal struct ImageViewer<Item: ImageViewerItem>: View {
     let items: [Item]
     let selection: Item
+    let onScrollPositionChange: (ScrollPosition)->()
     let onClose: ()->()
 
     @State private var scrollPosition: ScrollPosition = .init()
@@ -55,6 +61,9 @@ internal struct ImageViewer<Item: ImageViewerItem>: View {
                 .scrollClipDisabled()
                 .scrollTargetBehavior(.viewAligned)
                 .scrollPosition($scrollPosition, anchor: .center)
+                .onChange(of: scrollPosition) { oldValue, newValue in
+                    onScrollPositionChange(newValue)
+                }
             }
             .navigationTitle("Preview")
             .navigationBarTitleDisplayMode(.inline)

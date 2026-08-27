@@ -24,7 +24,7 @@ enum ProjectScreenshotRecordMapper {
             device: record.device,
             imageURL: screenshotURL,
             aspectRatio: record.aspectRatio,
-            order: record.order
+            order: record.sortOrder
         )
     }
 }

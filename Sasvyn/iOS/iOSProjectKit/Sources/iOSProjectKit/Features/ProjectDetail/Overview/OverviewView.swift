@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SVDesignSystem
+import SVProjectKit
 
 struct OverviewView: View {
     @Bindable var store: StoreOf<OverviewFeature>
@@ -22,12 +23,12 @@ struct OverviewView: View {
                 description: $store.overview,
                 placeholder: "Write overview...",
                 collapsedLineLimit: 3,
-                characterLimit: 300,
+                characterLimit: ProjectConfiguration.Content.overviewLimit,
                 isEditable: store.mode.isEditable,
-                font: .body
+                font: .callout
             ) {
-                    store.send(.overviewChanged)
-                }
+                store.send(.overviewChanged)
+            }
         }
     }
 }

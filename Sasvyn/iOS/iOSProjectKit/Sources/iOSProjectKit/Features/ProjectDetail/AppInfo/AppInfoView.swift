@@ -72,7 +72,7 @@ internal struct AppInfoView: View {
                     placeholder: "Enter App Name",
                     isExpandable: false,
                     collapsedLineLimit: 1,
-                    characterLimit: 50,
+                    characterLimit: ProjectConfiguration.Content.appNameLimit,
                     isEditable: store.mode.isEditable,
                     font: .title2.bold()
                 ) {
@@ -83,7 +83,7 @@ internal struct AppInfoView: View {
                     placeholder: "Enter App Tagline",
                     isExpandable: false,
                     collapsedLineLimit: 1,
-                    characterLimit: 50,
+                    characterLimit: ProjectConfiguration.Content.taglineLimit,
                     isEditable: store.mode.isEditable,
                     font: .subheadline,
                     foregroundStyle: Color(.systemGray)

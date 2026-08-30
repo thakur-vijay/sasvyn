@@ -108,6 +108,7 @@ public struct iOSProjectDetailFeature {
                     .send(.role(.setData(project.role))),
                     .send(.techStack(.setData(project.techStack))),
                     .send(.screenshots(.setData(project.screenshots))),
+                    .send(.appDescription(.setData(project.description)))
                 )
             case .binding(_):
                 return .none
@@ -126,7 +127,6 @@ public struct iOSProjectDetailFeature {
                 guard state.isProjectReadyToAdd else { return .none }
                 let project = state.project
                 let screenshots = state.project.screenshots
-                let mode = state.mode
                 return .run {[client] send in
                     do {
                         try await client.add(project)
@@ -177,7 +177,6 @@ public struct iOSProjectDetailFeature {
             case .appInfo(_):
                 return .none
             case .screenshots(.delegate(.screenshotsUpdated(let removed, let new))):
-//                guard state.screenshots.isDetailsReady else { return .none } 
                 state.screenshots.update(into: &state.project)
                 let projectID = state.project.id
                 let screenshots = state.project.screenshots
@@ -245,7 +244,7 @@ public struct iOSProjectDetailFeature {
 internal extension iOSProjectDetailFeature.State {
     var isProjectReadyToAdd: Bool {
         return (
-            appInfo.isDetailsReady && overview.isDetailsReady && role.isDetailsReady && techStack.isDetailsReady && screenshots.isDetailsReady
+            appInfo.isDetailsReady && overview.isDetailsReady && role.isDetailsReady && techStack.isDetailsReady && screenshots.isDetailsReady && appDescription.isDetailsReady
         )
     }
 }

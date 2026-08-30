@@ -22,6 +22,8 @@ let package = Package(
         .package(path: "../iOSAboutKit"),
         .package(path: "../iOSDocumentsKit"),
         .package(path: "../iOSMockupKit"),
+        .package(path: "../iOSEducationKit"),
+        .package(path: "../iOSLanguageKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -37,6 +39,8 @@ let package = Package(
                 .product(name: "iOSAboutKit", package: "iOSAboutKit"),
                 .product(name: "iOSDocumentsKit", package: "iOSDocumentsKit"),
                 .product(name: "iOSMockupKit", package: "iOSMockupKit"),
+                .product(name: "iOSEducationKit", package: "iOSEducationKit"),
+                .product(name: "iOSLanguageKit", package: "iOSLanguageKit"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

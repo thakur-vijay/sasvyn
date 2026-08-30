@@ -1,0 +1,872 @@
+[
+  {
+    "code": "ab",
+    "iso639_3": "abk",
+    "name": "Abkhazian"
+  },
+  {
+    "code": "aa",
+    "iso639_3": "aar",
+    "name": "Afar"
+  },
+  {
+    "code": "af",
+    "iso639_3": "afr",
+    "name": "Afrikaans"
+  },
+  {
+    "code": "ak",
+    "iso639_3": "aka",
+    "name": "Akan"
+  },
+  {
+    "code": "sq",
+    "iso639_3": "sqi",
+    "name": "Albanian"
+  },
+  {
+    "code": "am",
+    "iso639_3": "amh",
+    "name": "Amharic"
+  },
+  {
+    "code": "ar",
+    "iso639_3": "ara",
+    "name": "Arabic"
+  },
+  {
+    "code": "an",
+    "iso639_3": "arg",
+    "name": "Aragonese"
+  },
+  {
+    "code": "hy",
+    "iso639_3": "hye",
+    "name": "Armenian"
+  },
+  {
+    "code": "as",
+    "iso639_3": "asm",
+    "name": "Assamese"
+  },
+  {
+    "code": "av",
+    "iso639_3": "ava",
+    "name": "Avaric"
+  },
+  {
+    "code": "ay",
+    "iso639_3": "aym",
+    "name": "Aymara"
+  },
+  {
+    "code": "az",
+    "iso639_3": "aze",
+    "name": "Azerbaijani"
+  },
+  {
+    "code": "bm",
+    "iso639_3": "bam",
+    "name": "Bambara"
+  },
+  {
+    "code": "ba",
+    "iso639_3": "bak",
+    "name": "Bashkir"
+  },
+  {
+    "code": "eu",
+    "iso639_3": "eus",
+    "name": "Basque"
+  },
+  {
+    "code": "be",
+    "iso639_3": "bel",
+    "name": "Belarusian"
+  },
+  {
+    "code": "bn",
+    "iso639_3": "ben",
+    "name": "Bengali"
+  },
+  {
+    "code": "bi",
+    "iso639_3": "bis",
+    "name": "Bislama"
+  },
+  {
+    "code": "bs",
+    "iso639_3": "bos",
+    "name": "Bosnian"
+  },
+  {
+    "code": "br",
+    "iso639_3": "bre",
+    "name": "Breton"
+  },
+  {
+    "code": "bg",
+    "iso639_3": "bul",
+    "name": "Bulgarian"
+  },
+  {
+    "code": "my",
+    "iso639_3": "mya",
+    "name": "Burmese"
+  },
+  {
+    "code": "ca",
+    "iso639_3": "cat",
+    "name": "Catalan"
+  },
+  {
+    "code": "ch",
+    "iso639_3": "cha",
+    "name": "Chamorro"
+  },
+  {
+    "code": "ce",
+    "iso639_3": "che",
+    "name": "Chechen"
+  },
+  {
+    "code": "ny",
+    "iso639_3": "nya",
+    "name": "Chichewa"
+  },
+  {
+    "code": "zh",
+    "iso639_3": "zho",
+    "name": "Chinese"
+  },
+  {
+    "code": "cv",
+    "iso639_3": "chv",
+    "name": "Chuvash"
+  },
+  {
+    "code": "kw",
+    "iso639_3": "cor",
+    "name": "Cornish"
+  },
+  {
+    "code": "co",
+    "iso639_3": "cos",
+    "name": "Corsican"
+  },
+  {
+    "code": "cr",
+    "iso639_3": "cre",
+    "name": "Cree"
+  },
+  {
+    "code": "hr",
+    "iso639_3": "hrv",
+    "name": "Croatian"
+  },
+  {
+    "code": "cs",
+    "iso639_3": "ces",
+    "name": "Czech"
+  },
+  {
+    "code": "da",
+    "iso639_3": "dan",
+    "name": "Danish"
+  },
+  {
+    "code": "dv",
+    "iso639_3": "div",
+    "name": "Dhivehi"
+  },
+  {
+    "code": "nl",
+    "iso639_3": "nld",
+    "name": "Dutch"
+  },
+  {
+    "code": "dz",
+    "iso639_3": "dzo",
+    "name": "Dzongkha"
+  },
+  {
+    "code": "en",
+    "iso639_3": "eng",
+    "name": "English"
+  },
+  {
+    "code": "et",
+    "iso639_3": "est",
+    "name": "Estonian"
+  },
+  {
+    "code": "ee",
+    "iso639_3": "ewe",
+    "name": "Ewe"
+  },
+  {
+    "code": "fo",
+    "iso639_3": "fao",
+    "name": "Faroese"
+  },
+  {
+    "code": "fj",
+    "iso639_3": "fij",
+    "name": "Fijian"
+  },
+  {
+    "code": "fi",
+    "iso639_3": "fin",
+    "name": "Finnish"
+  },
+  {
+    "code": "fr",
+    "iso639_3": "fra",
+    "name": "French"
+  },
+  {
+    "code": "ff",
+    "iso639_3": "ful",
+    "name": "Fulah"
+  },
+  {
+    "code": "gl",
+    "iso639_3": "glg",
+    "name": "Galician"
+  },
+  {
+    "code": "lg",
+    "iso639_3": "lug",
+    "name": "Ganda"
+  },
+  {
+    "code": "ka",
+    "iso639_3": "kat",
+    "name": "Georgian"
+  },
+  {
+    "code": "de",
+    "iso639_3": "deu",
+    "name": "German"
+  },
+  {
+    "code": "gn",
+    "iso639_3": "grn",
+    "name": "Guarani"
+  },
+  {
+    "code": "gu",
+    "iso639_3": "guj",
+    "name": "Gujarati"
+  },
+  {
+    "code": "ht",
+    "iso639_3": "hat",
+    "name": "Haitian"
+  },
+  {
+    "code": "ha",
+    "iso639_3": "hau",
+    "name": "Hausa"
+  },
+  {
+    "code": "he",
+    "iso639_3": "heb",
+    "name": "Hebrew"
+  },
+  {
+    "code": "hz",
+    "iso639_3": "her",
+    "name": "Herero"
+  },
+  {
+    "code": "hi",
+    "iso639_3": "hin",
+    "name": "Hindi"
+  },
+  {
+    "code": "ho",
+    "iso639_3": "hmo",
+    "name": "Hiri Motu"
+  },
+  {
+    "code": "hu",
+    "iso639_3": "hun",
+    "name": "Hungarian"
+  },
+  {
+    "code": "is",
+    "iso639_3": "isl",
+    "name": "Icelandic"
+  },
+  {
+    "code": "ig",
+    "iso639_3": "ibo",
+    "name": "Igbo"
+  },
+  {
+    "code": "id",
+    "iso639_3": "ind",
+    "name": "Indonesian"
+  },
+  {
+    "code": "iu",
+    "iso639_3": "iku",
+    "name": "Inuktitut"
+  },
+  {
+    "code": "ik",
+    "iso639_3": "ipk",
+    "name": "Inupiaq"
+  },
+  {
+    "code": "ga",
+    "iso639_3": "gle",
+    "name": "Irish"
+  },
+  {
+    "code": "os",
+    "iso639_3": "oss",
+    "name": "Iron Ossetic"
+  },
+  {
+    "code": "it",
+    "iso639_3": "ita",
+    "name": "Italian"
+  },
+  {
+    "code": "ja",
+    "iso639_3": "jpn",
+    "name": "Japanese"
+  },
+  {
+    "code": "jv",
+    "iso639_3": "jav",
+    "name": "Javanese"
+  },
+  {
+    "code": "kl",
+    "iso639_3": "kal",
+    "name": "Kalaallisut"
+  },
+  {
+    "code": "kn",
+    "iso639_3": "kan",
+    "name": "Kannada"
+  },
+  {
+    "code": "kr",
+    "iso639_3": "kau",
+    "name": "Kanuri"
+  },
+  {
+    "code": "ks",
+    "iso639_3": "kas",
+    "name": "Kashmiri"
+  },
+  {
+    "code": "kk",
+    "iso639_3": "kaz",
+    "name": "Kazakh"
+  },
+  {
+    "code": "km",
+    "iso639_3": "khm",
+    "name": "Khmer"
+  },
+  {
+    "code": "ki",
+    "iso639_3": "kik",
+    "name": "Kikuyu"
+  },
+  {
+    "code": "rw",
+    "iso639_3": "kin",
+    "name": "Kinyarwanda"
+  },
+  {
+    "code": "ky",
+    "iso639_3": "kir",
+    "name": "Kirghiz"
+  },
+  {
+    "code": "kv",
+    "iso639_3": "kom",
+    "name": "Komi"
+  },
+  {
+    "code": "kg",
+    "iso639_3": "kon",
+    "name": "Kongo"
+  },
+  {
+    "code": "ko",
+    "iso639_3": "kor",
+    "name": "Korean"
+  },
+  {
+    "code": "kj",
+    "iso639_3": "kua",
+    "name": "Kuanyama"
+  },
+  {
+    "code": "ku",
+    "iso639_3": "kur",
+    "name": "Kurdish"
+  },
+  {
+    "code": "lo",
+    "iso639_3": "lao",
+    "name": "Lao"
+  },
+  {
+    "code": "lv",
+    "iso639_3": "lav",
+    "name": "Latvian"
+  },
+  {
+    "code": "li",
+    "iso639_3": "lim",
+    "name": "Limburgan"
+  },
+  {
+    "code": "ln",
+    "iso639_3": "lin",
+    "name": "Lingala"
+  },
+  {
+    "code": "lt",
+    "iso639_3": "lit",
+    "name": "Lithuanian"
+  },
+  {
+    "code": "lu",
+    "iso639_3": "lub",
+    "name": "Luba-Katanga"
+  },
+  {
+    "code": "lb",
+    "iso639_3": "ltz",
+    "name": "Luxembourgish"
+  },
+  {
+    "code": "mk",
+    "iso639_3": "mkd",
+    "name": "Macedonian"
+  },
+  {
+    "code": "mg",
+    "iso639_3": "mlg",
+    "name": "Malagasy"
+  },
+  {
+    "code": "ms",
+    "iso639_3": "msa",
+    "name": "Malay (macrolanguage)"
+  },
+  {
+    "code": "ml",
+    "iso639_3": "mal",
+    "name": "Malayalam"
+  },
+  {
+    "code": "mt",
+    "iso639_3": "mlt",
+    "name": "Maltese"
+  },
+  {
+    "code": "gv",
+    "iso639_3": "glv",
+    "name": "Manx"
+  },
+  {
+    "code": "mi",
+    "iso639_3": "mri",
+    "name": "Maori"
+  },
+  {
+    "code": "mr",
+    "iso639_3": "mar",
+    "name": "Marathi"
+  },
+  {
+    "code": "mh",
+    "iso639_3": "mah",
+    "name": "Marshallese"
+  },
+  {
+    "code": "el",
+    "iso639_3": "ell",
+    "name": "Modern Greek (1453-)"
+  },
+  {
+    "code": "mn",
+    "iso639_3": "mon",
+    "name": "Mongolian"
+  },
+  {
+    "code": "na",
+    "iso639_3": "nau",
+    "name": "Nauru"
+  },
+  {
+    "code": "nv",
+    "iso639_3": "nav",
+    "name": "Navajo"
+  },
+  {
+    "code": "ng",
+    "iso639_3": "ndo",
+    "name": "Ndonga"
+  },
+  {
+    "code": "ne",
+    "iso639_3": "nep",
+    "name": "Nepali (macrolanguage)"
+  },
+  {
+    "code": "nd",
+    "iso639_3": "nde",
+    "name": "North Ndebele"
+  },
+  {
+    "code": "se",
+    "iso639_3": "sme",
+    "name": "Northern Sami"
+  },
+  {
+    "code": "no",
+    "iso639_3": "nor",
+    "name": "Norwegian"
+  },
+  {
+    "code": "nb",
+    "iso639_3": "nob",
+    "name": "Norwegian Bokmål"
+  },
+  {
+    "code": "nn",
+    "iso639_3": "nno",
+    "name": "Norwegian Nynorsk"
+  },
+  {
+    "code": "oc",
+    "iso639_3": "oci",
+    "name": "Occitan (post 1500)"
+  },
+  {
+    "code": "oj",
+    "iso639_3": "oji",
+    "name": "Ojibwa"
+  },
+  {
+    "code": "or",
+    "iso639_3": "ori",
+    "name": "Oriya (macrolanguage)"
+  },
+  {
+    "code": "om",
+    "iso639_3": "orm",
+    "name": "Oromo"
+  },
+  {
+    "code": "pa",
+    "iso639_3": "pan",
+    "name": "Panjabi"
+  },
+  {
+    "code": "fa",
+    "iso639_3": "fas",
+    "name": "Persian"
+  },
+  {
+    "code": "pl",
+    "iso639_3": "pol",
+    "name": "Polish"
+  },
+  {
+    "code": "pt",
+    "iso639_3": "por",
+    "name": "Portuguese"
+  },
+  {
+    "code": "ps",
+    "iso639_3": "pus",
+    "name": "Pushto"
+  },
+  {
+    "code": "qu",
+    "iso639_3": "que",
+    "name": "Quechua"
+  },
+  {
+    "code": "ro",
+    "iso639_3": "ron",
+    "name": "Romanian"
+  },
+  {
+    "code": "rm",
+    "iso639_3": "roh",
+    "name": "Romansh"
+  },
+  {
+    "code": "rn",
+    "iso639_3": "run",
+    "name": "Rundi"
+  },
+  {
+    "code": "ru",
+    "iso639_3": "rus",
+    "name": "Russian"
+  },
+  {
+    "code": "sm",
+    "iso639_3": "smo",
+    "name": "Samoan"
+  },
+  {
+    "code": "sg",
+    "iso639_3": "sag",
+    "name": "Sango"
+  },
+  {
+    "code": "sc",
+    "iso639_3": "srd",
+    "name": "Sardinian"
+  },
+  {
+    "code": "gd",
+    "iso639_3": "gla",
+    "name": "Scottish Gaelic"
+  },
+  {
+    "code": "sr",
+    "iso639_3": "srp",
+    "name": "Serbian"
+  },
+  {
+    "code": "sh",
+    "iso639_3": "hbs",
+    "name": "Serbo-Croatian"
+  },
+  {
+    "code": "sn",
+    "iso639_3": "sna",
+    "name": "Shona"
+  },
+  {
+    "code": "ii",
+    "iso639_3": "iii",
+    "name": "Sichuan Yi"
+  },
+  {
+    "code": "sd",
+    "iso639_3": "snd",
+    "name": "Sindhi"
+  },
+  {
+    "code": "si",
+    "iso639_3": "sin",
+    "name": "Sinhala"
+  },
+  {
+    "code": "sk",
+    "iso639_3": "slk",
+    "name": "Slovak"
+  },
+  {
+    "code": "sl",
+    "iso639_3": "slv",
+    "name": "Slovenian"
+  },
+  {
+    "code": "so",
+    "iso639_3": "som",
+    "name": "Somali"
+  },
+  {
+    "code": "nr",
+    "iso639_3": "nbl",
+    "name": "South Ndebele"
+  },
+  {
+    "code": "st",
+    "iso639_3": "sot",
+    "name": "Southern Sotho"
+  },
+  {
+    "code": "es",
+    "iso639_3": "spa",
+    "name": "Spanish"
+  },
+  {
+    "code": "su",
+    "iso639_3": "sun",
+    "name": "Sundanese"
+  },
+  {
+    "code": "sw",
+    "iso639_3": "swa",
+    "name": "Swahili (macrolanguage)"
+  },
+  {
+    "code": "ss",
+    "iso639_3": "ssw",
+    "name": "Swati"
+  },
+  {
+    "code": "sv",
+    "iso639_3": "swe",
+    "name": "Swedish"
+  },
+  {
+    "code": "tl",
+    "iso639_3": "tgl",
+    "name": "Tagalog"
+  },
+  {
+    "code": "ty",
+    "iso639_3": "tah",
+    "name": "Tahitian"
+  },
+  {
+    "code": "tg",
+    "iso639_3": "tgk",
+    "name": "Tajik"
+  },
+  {
+    "code": "ta",
+    "iso639_3": "tam",
+    "name": "Tamil"
+  },
+  {
+    "code": "tt",
+    "iso639_3": "tat",
+    "name": "Tatar"
+  },
+  {
+    "code": "te",
+    "iso639_3": "tel",
+    "name": "Telugu"
+  },
+  {
+    "code": "th",
+    "iso639_3": "tha",
+    "name": "Thai"
+  },
+  {
+    "code": "bo",
+    "iso639_3": "bod",
+    "name": "Tibetan"
+  },
+  {
+    "code": "ti",
+    "iso639_3": "tir",
+    "name": "Tigrinya"
+  },
+  {
+    "code": "to",
+    "iso639_3": "ton",
+    "name": "Tonga (Tonga Islands)"
+  },
+  {
+    "code": "ts",
+    "iso639_3": "tso",
+    "name": "Tsonga"
+  },
+  {
+    "code": "tn",
+    "iso639_3": "tsn",
+    "name": "Tswana"
+  },
+  {
+    "code": "tr",
+    "iso639_3": "tur",
+    "name": "Turkish"
+  },
+  {
+    "code": "tk",
+    "iso639_3": "tuk",
+    "name": "Turkmen"
+  },
+  {
+    "code": "tw",
+    "iso639_3": "twi",
+    "name": "Twi"
+  },
+  {
+    "code": "ug",
+    "iso639_3": "uig",
+    "name": "Uighur"
+  },
+  {
+    "code": "uk",
+    "iso639_3": "ukr",
+    "name": "Ukrainian"
+  },
+  {
+    "code": "ur",
+    "iso639_3": "urd",
+    "name": "Urdu"
+  },
+  {
+    "code": "uz",
+    "iso639_3": "uzb",
+    "name": "Uzbek"
+  },
+  {
+    "code": "ve",
+    "iso639_3": "ven",
+    "name": "Venda"
+  },
+  {
+    "code": "vi",
+    "iso639_3": "vie",
+    "name": "Vietnamese"
+  },
+  {
+    "code": "wa",
+    "iso639_3": "wln",
+    "name": "Walloon"
+  },
+  {
+    "code": "cy",
+    "iso639_3": "cym",
+    "name": "Welsh"
+  },
+  {
+    "code": "fy",
+    "iso639_3": "fry",
+    "name": "Western Frisian"
+  },
+  {
+    "code": "wo",
+    "iso639_3": "wol",
+    "name": "Wolof"
+  },
+  {
+    "code": "xh",
+    "iso639_3": "xho",
+    "name": "Xhosa"
+  },
+  {
+    "code": "yi",
+    "iso639_3": "yid",
+    "name": "Yiddish"
+  },
+  {
+    "code": "yo",
+    "iso639_3": "yor",
+    "name": "Yoruba"
+  },
+  {
+    "code": "za",
+    "iso639_3": "zha",
+    "name": "Zhuang"
+  },
+  {
+    "code": "zu",
+    "iso639_3": "zul",
+    "name": "Zulu"
+  }
+]

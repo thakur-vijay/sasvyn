@@ -10,6 +10,8 @@ import iOSSkillsKit
 import iOSAboutKit
 import iOSDocumentsKit
 import iOSMockupKit
+import iOSEducationKit
+import iOSLanguageKit
 
 @Reducer
 public struct iOSLibraryFeature {
@@ -35,6 +37,8 @@ public struct iOSLibraryFeature {
         case about(iOSAboutFeature)
         case documents(iOSDocumentsFeature)
         case mockups(iOSMockupsFeature)
+        case education(iOSEducationsFeature)
+        case languages(iOSLanguagesFeature)
     }
     
     public init(){
@@ -51,6 +55,8 @@ public struct iOSLibraryFeature {
                 case .about: state.path.append(.about(iOSAboutFeature.State()))
                 case .documents: state.path.append(.documents(iOSDocumentsFeature.State()))
                 case .mockups: state.path.append(.mockups(.init(mode: .full)))
+                case .education: state.path.append(.education(.init()))
+                case .languages: state.path.append(.languages(.init()))
                 default: break
                 }
                 return .none

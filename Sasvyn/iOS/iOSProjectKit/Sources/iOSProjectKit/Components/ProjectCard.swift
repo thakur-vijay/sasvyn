@@ -61,7 +61,7 @@ public struct ProjectCard: View {
             }
 
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 16)
         .background(.background)
         .overlay(alignment: .bottom) {
             Divider()

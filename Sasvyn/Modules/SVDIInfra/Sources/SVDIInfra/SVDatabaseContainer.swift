@@ -10,6 +10,8 @@ import SVSkillsKit
 import SVDocumentKit
 import SVProjectKit
 import SVMockupKit
+import SVEducationKit
+import SVLanguageKit
 
 public final class SVDatabaseContainer {
     
@@ -20,6 +22,8 @@ public final class SVDatabaseContainer {
             migrator.register(DocumentsDatabaseModule.self)
             migrator.register(ProjectsDatabaseModule.self)
             migrator.register(MockupsDatabaseModule.self)
+            migrator.register(EducationsDatabaseModule.self)
+            migrator.register(SpokenLanguagesDatabaseModule.self)
 
             let database = try AppDatabase(
                 migrator: migrator

@@ -1,0 +1,73 @@
+//
+//  File.swift
+//  iOSEducationKit
+//
+//  Created by Vijay Thakur on 29/08/26.
+//
+
+import SwiftUI
+import ComposableArchitecture
+
+public struct iOSEducationsView: View {
+    @Bindable var store: StoreOf<iOSEducationsFeature>
+    
+    public init(store: StoreOf<iOSEducationsFeature>) {
+        self.store = store
+    }
+    
+    public var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(store.educations) { education in
+                    EducationCard(education)
+                        .contextMenu {
+                            Button("Edit", systemImage: "pencil") {
+                                store.send(.editTapped(education))
+                            }
+                            
+                            Button("Delete", systemImage: "trash", role: .destructive){
+                                store.send(.deleteTapped(education))
+                            }
+                        }
+                }
+            }
+            .padding(20)
+        }
+        .overlay {
+            if store.educations.isEmpty {
+                ContentUnavailableView(
+                    "No Education Added",
+                    systemImage: "graduationcap.fill",
+                    description: Text("Add your education history to showcase your academic background.")
+                )
+            }
+        }
+        .navigationTitle("Education")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("", systemImage: "plus"){
+                    store.send(.addTapped)
+                }
+            }
+        }
+        .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
+            switch store.case {
+            case .educationForm(let store):
+                if #available(iOS 26.0, *) {
+                    EducationFormView(store: store)
+                        .interactiveDismissDisabled()
+                        .onInteractiveResizeChange { trigger in
+                            print(trigger)
+                        }
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
+        }
+        .alert($store.scope(\.alert, action: \.alert))
+        .task {
+            await store.send(.onTask).finish()
+        }
+    }
+}

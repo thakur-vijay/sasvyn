@@ -12,6 +12,8 @@ import iOSAboutKit
 import SVDesignSystem
 import iOSDocumentsKit
 import iOSMockupKit
+import iOSEducationKit
+import iOSLanguageKit
 
 public struct iOSLibraryView: View {
     @Bindable var store: StoreOf<iOSLibraryFeature>
@@ -44,6 +46,10 @@ public struct iOSLibraryView: View {
                 iOSDocumentsView(store: store)
             case .mockups(let store):
                 iOSMockupsView(store: store)
+            case .education(let store):
+                iOSEducationsView(store: store)
+            case .languages(let store):
+                iOSLanguagesView(store: store)
             }
         }
     }

@@ -21,7 +21,8 @@ enum ProjectRecordMapper {
             category: .init(rawValue: record.category),
             tagline: record.tagline,
             overview: record.overview,
-            role: record.role
+            role: record.role,
+            description: record.appDescription
         )
     }
 }

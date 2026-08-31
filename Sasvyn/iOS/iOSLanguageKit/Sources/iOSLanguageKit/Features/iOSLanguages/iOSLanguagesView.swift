@@ -16,33 +16,27 @@ public struct iOSLanguagesView: View {
     }
     
     public var body: some View {
-        List {
-            ForEach(store.languages) { spokenLanguage in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(spokenLanguage.language)
-                        .font(.body)
-                        .foregroundStyle(.primary)
-                    
-                    Text(spokenLanguage.proficiency.displayName)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.vertical, 6)
-                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    Button {
-                        store.send(.editLanguageTapped(spokenLanguage))
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                ForEach(store.languages) { spokenLanguage in
+                    GroupBox {
+                        Text(spokenLanguage.proficiency.displayName)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     } label: {
-                        Label("Edit", systemImage: "pencil")
+                        Text(spokenLanguage.language)
                     }
-                    .tint(.blue)
-                    
-                    Button(role: .destructive) {
-                        store.send(.deleteLanguageTapped(spokenLanguage))
-                    } label: {
-                        Label("Delete", systemImage: "trash")
+                    .contextMenu {
+                        Button("Edit", systemImage: "pencil") {
+                            store.send(.editLanguageTapped(spokenLanguage))
+                        }
+                        
+                        Button("Delete", systemImage: "trash", role: .destructive){
+                            store.send(.deleteLanguageTapped(spokenLanguage))
+                        }
                     }
                 }
             }
+            .padding(20)
         }
         .overlay {
             if store.languages.isEmpty {
@@ -71,6 +65,7 @@ public struct iOSLanguagesView: View {
                 LanguageFormView(store: store)
             }
         }
+        .alert($store.scope(\.alert, action: \.alert))
         .task {
             await store.send(.onTask).finish()
         }

@@ -18,22 +18,32 @@ public struct iOSLanguagesFeature {
     @ObservableState
     public struct State: Equatable {
         public var languages: [SpokenLanguage] = []
+        public var languageToDelete: SpokenLanguage? = nil
         public init(){
             
         }
         
         @Presents
         public var destination: Destination.State?
+        
+        @Presents
+        public var alert: AlertState<Action.Alert>?
     }
     
     public enum Action: BindableAction {
         case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
+        case alert(PresentationAction<Alert>)
         case addLanguageTapped
         case editLanguageTapped(SpokenLanguage)
         case deleteLanguageTapped(SpokenLanguage)
+        case languageDeleted(SpokenLanguage)
         case onTask
         case languagesLoaded([SpokenLanguage])
+        
+        public enum Alert {
+            case deleteConfirmed
+        }
     }
     
     public init(){
@@ -79,7 +89,47 @@ public struct iOSLanguagesFeature {
             case .editLanguageTapped(let language):
                 state.destination = .languageForm(.init(spokenLanguage: language, mode: .edit))
                 return .none
-            case .deleteLanguageTapped(_):
+            case .deleteLanguageTapped(let language):
+                state.languageToDelete = language
+                state.alert = AlertState {
+                    TextState("Delete Language?")
+                } actions: {
+                    ButtonState(
+                        role: .destructive,
+                        action: .deleteConfirmed
+                    ) {
+                        TextState("Delete")
+                    }
+                    
+                    ButtonState(role: .cancel) {
+                        TextState("Cancel")
+                    }
+                } message: {
+                    TextState(
+                        "Are you sure you want to delete \"\(language.language)\"?"
+                    )
+                }
+                
+                return .none
+             
+            case .alert(.presented(.deleteConfirmed)):
+                guard let language = state.languageToDelete else {
+                    return .none
+                }
+
+                state.languageToDelete = nil
+                state.alert = nil
+                return .run {[client] send in
+                    do {
+                        try await client.delete(language.id)
+                        await send(.languageDeleted(language), animation: .snappy)
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .alert(.dismiss):
+                state.languageToDelete = nil
+                state.alert = nil
                 return .none
             case .onTask:
                 return .run {[client] send in
@@ -92,6 +142,9 @@ public struct iOSLanguagesFeature {
                 }
             case .languagesLoaded(let languages):
                 state.languages = languages
+                return .none
+            case .languageDeleted(let language):
+                state.languages.removeAll { $0.id == language.id }
                 return .none
             }
         }

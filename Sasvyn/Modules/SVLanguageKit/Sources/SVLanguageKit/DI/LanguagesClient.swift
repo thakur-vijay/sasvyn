@@ -18,10 +18,7 @@ public struct LanguagesClient: Sendable{
     public var delete:
     @Sendable (_ id: String) async throws -> Void
     
-    public var add:
-    @Sendable (_ language: SpokenLanguage) async throws -> Void
-    
-    public var update:
+    public var save:
     @Sendable (_ language: SpokenLanguage) async throws -> Void
     
 }
@@ -31,8 +28,7 @@ extension LanguagesClient {
     static func live(
         loadLanguagesJSONUseCase: LoadLanguagesJSONUseCase,
         fetchSpokenLanguagesUseCase: FetchSpokenLanguagesUseCase,
-        addSpokenLanguageUseCase: AddSpokenLanguageUseCase,
-        updateSpokenLanguageUseCase: UpdateSpokenLanguageUseCase,
+        saveSpokenLanguageUseCase: SaveSpokenLanguageUseCase,
         deleteSpokenLanguageUseCase: DeleteSpokenLanguageUseCase
     ) -> Self {
         Self {
@@ -41,10 +37,8 @@ extension LanguagesClient {
             try await fetchSpokenLanguagesUseCase.execute()
         } delete: { id in
             try await deleteSpokenLanguageUseCase.execute(id)
-        } add: { language in
-            try await addSpokenLanguageUseCase.execute(language)
-        } update: { language in
-            try await updateSpokenLanguageUseCase.execute(language)
+        } save: { language in
+            try await saveSpokenLanguageUseCase.execute(language)
         }
     }
 }
@@ -57,9 +51,7 @@ extension LanguagesClient: DependencyKey {
         fatalError("Unimplemented")
     } delete: { id in
         fatalError("Unimplemented")
-    } add: { education in
-        fatalError("Unimplemented")
-    } update: { education in
+    } save: { education in
         fatalError("Unimplemented")
     }
 }
@@ -72,9 +64,7 @@ extension LanguagesClient: TestDependencyKey {
         return []
     } delete: { id in
         
-    } add: { education in
-        
-    } update: { education in
+    } save: { education in
         
     }
 

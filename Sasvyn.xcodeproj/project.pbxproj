@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1854B9BD301CA27700F2E614 /* macOSMainKit */; };
-		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
+		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
 		18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18C382A6303083BC008F2B81 /* iOSRootKit */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +44,7 @@
 				iOS/iOSAuthKit,
 				iOS/iOSDocumentsKit,
 				iOS/iOSEducationKit,
+				iOS/iOSExperienceKit,
 				iOS/iOSHomeKit,
 				iOS/iOSLanguageKit,
 				iOS/iOSLibraryKit,
@@ -54,6 +55,7 @@
 				iOS/iOSRootKit,
 				iOS/iOSSettingsKit,
 				iOS/iOSSkillsKit,
+				iOS/iOSSocialLinkKit,
 				macOS/macOSAuthKit,
 				macOS/macOSMainKit,
 				Modules/AuthKit,
@@ -70,6 +72,7 @@
 				Modules/SVProjectKit,
 				Modules/SVRemoteImage,
 				Modules/SVSkillsKit,
+				Modules/SVSocialLinkKit,
 			);
 			target = 1854B950301BE27000F2E614 /* Sasvyn */;
 		};

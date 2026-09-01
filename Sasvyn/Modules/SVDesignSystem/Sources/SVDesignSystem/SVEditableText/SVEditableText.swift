@@ -18,6 +18,8 @@ public struct SVEditableText: View {
     private let font: Font
     private let placeholderStyle: Color
     private let foregroundStyle: Color
+    private let keyboardType: UIKeyboardType
+    private let contentType: UITextContentType
     private let onEditingEnded: ()->()
     
     public init(
@@ -30,6 +32,8 @@ public struct SVEditableText: View {
         font: Font = .caption,
         placeholderStyle: Color = Color(.placeholderText),
         foregroundStyle: Color = Color.primary,
+        keyboardType: UIKeyboardType = .default,
+        contentType: UITextContentType = .name,
         onEditingEnded: @escaping ()->()
     ) {
         self._description = description
@@ -41,6 +45,8 @@ public struct SVEditableText: View {
         self.font = font
         self.placeholderStyle = placeholderStyle
         self.foregroundStyle = foregroundStyle
+        self.keyboardType = keyboardType
+        self.contentType = contentType
         self.onEditingEnded = onEditingEnded
     }
     
@@ -57,6 +63,10 @@ public struct SVEditableText: View {
                     ),
                     axis: isExpandable ? .vertical : .horizontal
                 )
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+                .keyboardType(keyboardType)
+                .textContentType(contentType)
                 .onChange(of: description) { _, newValue in
                     if newValue.count > characterLimit {
                         description = String(newValue.prefix(characterLimit))

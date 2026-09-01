@@ -12,6 +12,7 @@ import iOSDocumentsKit
 import iOSMockupKit
 import iOSEducationKit
 import iOSLanguageKit
+import iOSSocialLinkKit
 
 @Reducer
 public struct iOSLibraryFeature {
@@ -39,6 +40,7 @@ public struct iOSLibraryFeature {
         case mockups(iOSMockupsFeature)
         case education(iOSEducationsFeature)
         case languages(iOSLanguagesFeature)
+        case socialLinks(iOSSocialLinksFeature)
     }
     
     public init(){
@@ -57,6 +59,7 @@ public struct iOSLibraryFeature {
                 case .mockups: state.path.append(.mockups(.init(mode: .full)))
                 case .education: state.path.append(.education(.init()))
                 case .languages: state.path.append(.languages(.init()))
+                case .socialLinks: state.path.append(.socialLinks(.init()))
                 default: break
                 }
                 return .none

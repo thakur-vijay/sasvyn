@@ -24,12 +24,8 @@ final class DefaultLanguagesRepository: LanguagesRepository {
         return records.compactMap { SpokenLanguageRecordMapper.map($0) }
     }
     
-    func add(_ language: SpokenLanguage) async throws {
-        try await dataSource.create(language)
-    }
-    
-    func update(_ language: SpokenLanguage) async throws {
-        try await dataSource.update(language)
+    func save(_ language: SpokenLanguage) async throws {
+        try await dataSource.save(language)
     }
     
     func delete(_ id: String) async throws {

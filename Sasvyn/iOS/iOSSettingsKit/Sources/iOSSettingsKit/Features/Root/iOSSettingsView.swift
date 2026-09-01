@@ -37,43 +37,40 @@ public struct iOSSettingsView: View {
                 }
                 .listStyle(.plain)
                 .listRowInsets(.init())
+                .listRowSeparator(.hidden)
                 .listRowBackground(EmptyView())
                 .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+
+                NavigationLink(value: 0) {
+                    Label("Personal Information", systemImage: "person.text.rectangle.fill")
+                }
                 
-                Section {
-                    NavigationLink(value: 0) {
-                        Label("Personal Information", systemImage: "person.text.rectangle.fill")
-                    }
-                    
-                    NavigationLink(value: 0) {
-                        Label("Appearance", systemImage: "circle.lefthalf.filled")
-                    }
+                NavigationLink(value: 0) {
+                    Label("Appearance", systemImage: "circle.lefthalf.filled")
                 }
     
-                Section {
-                    NavigationLink(value: 0) {
-                        Label("Privacy", systemImage: "lock.shield.fill")
-                    }
-                    
-                    NavigationLink(value: 0) {
-                        Label("Terms of Service", systemImage: "doc.plaintext.fill")
-                    }
-                    
-                    NavigationLink(value: 0) {
-                        Label("Help & Support", systemImage: "questionmark.circle.fill")
-                    }
+                NavigationLink(value: 0) {
+                    Label("Privacy", systemImage: "lock.shield.fill")
                 }
                 
-                Section {
-                    Button(role: .destructive) {
-                        isSignOutAlertPresented.toggle()
-                    } label: {
-                        Text("Sign Out")
-                            .frame(maxWidth: .infinity)
-                            .multilineTextAlignment(.center)
-                    }
+                NavigationLink(value: 0) {
+                    Label("Terms of Service", systemImage: "doc.plaintext.fill")
                 }
+                
+                NavigationLink(value: 0) {
+                    Label("Help & Support", systemImage: "questionmark.circle.fill")
+                }
+                
+                Button(role: .destructive) {
+                    isSignOutAlertPresented.toggle()
+                } label: {
+                    Label("Sign Out", systemImage: "iphone.and.arrow.forward.outward")
+                        .foregroundStyle(.red)
+                }
+
             }
+            .listStyle(.plain)
             .navigationTitle("Settings")
         }
         .alert("Sign Out", isPresented: $isSignOutAlertPresented) {

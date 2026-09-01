@@ -12,6 +12,7 @@ import SVProjectKit
 import SVMockupKit
 import SVEducationKit
 import SVLanguageKit
+import SVSocialLinkKit
 
 public final class SVDatabaseContainer {
     
@@ -24,6 +25,7 @@ public final class SVDatabaseContainer {
             migrator.register(MockupsDatabaseModule.self)
             migrator.register(EducationsDatabaseModule.self)
             migrator.register(SpokenLanguagesDatabaseModule.self)
+            migrator.register(SocialLinksDatabaseModule.self)
 
             let database = try AppDatabase(
                 migrator: migrator

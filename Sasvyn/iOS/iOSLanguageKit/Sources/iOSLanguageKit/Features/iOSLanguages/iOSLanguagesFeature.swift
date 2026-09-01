@@ -64,7 +64,7 @@ public struct iOSLanguagesFeature {
             case .binding(_):
                 return .none
             case .destination(.presented(.languageForm(.delegate(.update(let language))))):
-                if let index = state.languages.firstIndex(where: { $0.id == language.id }){
+                if let index = state.languages.firstIndex(where: { $0.languageCode == language.languageCode }){
                     state.languages[index] = language
                 }else {
                     state.languages.append(language)

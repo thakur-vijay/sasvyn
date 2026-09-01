@@ -17,7 +17,7 @@ struct CreateSpokenLanguagesMigration: DatabaseMigration {
             ifNotExists: true
         ) { table in
             table.text("id").primaryKey()
-            table.text("language_code").notNull()
+            table.text("language_code").unique().notNull()
             table.text("language").notNull()
             table.integer("proficiency").notNull()
             table.datetime("created_at").notNull()

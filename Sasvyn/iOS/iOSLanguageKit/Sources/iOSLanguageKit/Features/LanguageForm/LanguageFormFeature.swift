@@ -66,14 +66,9 @@ public struct LanguageFormFeature {
                 return .send(.delegate(.close))
             case .saveTapped:
                 let spokenLanguage = state.spokenLanguage
-                let mode = state.mode
                 return .run { [client] send in
                     do {
-                        if mode == .create {
-                            try await client.add(spokenLanguage)
-                        }else {
-                            try await client.update(spokenLanguage)
-                        }
+                        try await client.save(spokenLanguage)
                         await send(.delegate(.update(spokenLanguage)))
                     }catch {
                         print(error.localizedDescription)

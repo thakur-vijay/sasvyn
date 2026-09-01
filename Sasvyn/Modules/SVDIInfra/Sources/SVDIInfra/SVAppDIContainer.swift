@@ -12,6 +12,7 @@ import SVProjectKit
 import SVMockupKit
 import SVEducationKit
 import SVLanguageKit
+import SVSocialLinkKit
 
 public final class SVAppDIContainer {
     
@@ -46,6 +47,10 @@ public final class SVAppDIContainer {
         LanguagesDIContainer(database: databaseContainer.appDatabase)
     }()
     
+    lazy var socialLinksDIContianer: SocialLinksDIContainer = {
+        SocialLinksDIContainer(database: databaseContainer.appDatabase)
+    }()
+    
     public lazy var rootDIContainer: RootDIContainer = {
         RootDIContainer(
             skillsDIContainer: skillsDIContainer,
@@ -53,7 +58,8 @@ public final class SVAppDIContainer {
             projectsDIContainer: projectsDIContainer,
             mockupsDIContainer: mockupsDIContainer,
             educationsDIContainer: educationsDIContainer,
-            languagesDIContainer: languagesDIContainer
+            languagesDIContainer: languagesDIContainer,
+            socialLinksDIContainer: socialLinksDIContianer
         )
     }()
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AddSpokenLanguageUseCase: Sendable {
+public struct SaveSpokenLanguageUseCase: Sendable {
     private let repository: LanguagesRepository
     
     init(repository: LanguagesRepository) {
@@ -15,6 +15,6 @@ public struct AddSpokenLanguageUseCase: Sendable {
     }
     
     func execute(_ language: SpokenLanguage)async throws {
-        try await repository.add(language)
+        try await repository.save(language)
     }
 }

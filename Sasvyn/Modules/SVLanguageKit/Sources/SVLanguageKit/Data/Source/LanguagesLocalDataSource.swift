@@ -40,33 +40,33 @@ final class LanguagesLocalDataSource: @unchecked Sendable {
         }
     }
 
-    func create(_ language: SpokenLanguage) async throws {
+    func save(_ language: SpokenLanguage) async throws {
         try await database.write { db in
-            let record = SpokenLanguageRecord(
-                id: language.id,
-                languageCode: language.languageCode,
-                language: language.language,
-                proficiency: language.proficiency.rawValue,
-                createdAt: .now,
-                updatedAt: .now
-            )
-            try db.insert(record)
-        }
-    }
-    
-    func update(_ language: SpokenLanguage) async throws {
-        try await database.write { db in
-            try db.update(
-                table: SpokenLanguageRecord.databaseTableName,
-                values: [
-                    SpokenLanguageRecord.ColumnNames.language: .text(language.language),
-                    SpokenLanguageRecord.ColumnNames.languageCode: .text(language.languageCode),
-                    SpokenLanguageRecord.ColumnNames.proficiency: .integer(language.proficiency.rawValue),
-                    SpokenLanguageRecord.ColumnNames.updatedAt: .date(.now),
-                ],
-                whereColumn: SpokenLanguageRecord.ColumnNames.id,
-                equals: .text(language.id)
-            )
+            if try db.fetchOne(SpokenLanguageRecord.self, filters: [
+                .equals(SpokenLanguageRecord.ColumnNames.languageCode, .text(language.languageCode))
+            ]) != nil{
+                try db.update(
+                    table: SpokenLanguageRecord.databaseTableName,
+                    values: [
+                        SpokenLanguageRecord.ColumnNames.language: .text(language.language),
+                        SpokenLanguageRecord.ColumnNames.proficiency: .integer(language.proficiency.rawValue),
+                        SpokenLanguageRecord.ColumnNames.updatedAt: .date(.now),
+                    ],
+                    whereColumn: SpokenLanguageRecord.ColumnNames.languageCode,
+                    equals: .text(language.languageCode)
+                )
+            } else {
+                let record = SpokenLanguageRecord(
+                    id: language.id,
+                    languageCode: language.languageCode,
+                    language: language.language,
+                    proficiency: language.proficiency.rawValue,
+                    createdAt: .now,
+                    updatedAt: .now
+                )
+
+                try db.insert(record)
+            }
         }
     }
     

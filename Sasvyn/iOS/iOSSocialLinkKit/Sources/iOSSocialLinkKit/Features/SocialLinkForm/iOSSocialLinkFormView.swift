@@ -1,0 +1,92 @@
+//
+//  File.swift
+//  iOSSocialLinkKit
+//
+//  Created by Vijay Thakur on 31/08/26.
+//
+
+import SwiftUI
+import ComposableArchitecture
+import SVDesignSystem
+import SVSocialLinkKit
+
+public struct iOSSocialLinkFormView: View {
+    @Bindable var store: StoreOf<iOSSocialLinkFormFeature>
+    
+    public init(store: StoreOf<iOSSocialLinkFormFeature>) {
+        self.store = store
+    }
+    
+    public var body: some View {
+        NavigationStack {
+            List {
+                Section("Link") {
+                    SVEditableText(
+                        description: $store.url,
+                        placeholder: "https://example.com",
+                        isExpandable: false,
+                        collapsedLineLimit: 1,
+                        characterLimit: 500,
+                        isEditable: true,
+                        font: .body,
+                        placeholderStyle: .secondary,
+                        foregroundStyle: .primary,
+                        contentType: .URL,
+                        onEditingEnded: {
+                            store.send(.linkEditingEnded)
+                        }
+                    )
+                }
+                Section("Link Type") {
+                    ForEach(LinkType.allCases, id: \.self) { type in
+                        
+                        Button {
+                            store.send(.onLinkTypeChanged(type))
+                        } label: {
+                            LabeledContent {
+                                if store.link.type == type {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(.blue)
+                                }
+                            } label: {
+                                Label {
+                                    Text(type.rawValue.capitalized)
+                                } icon: {
+                                    type.icon
+                                        .frame(width: 24, height: 24)
+                                }
+                            }
+                        }
+                        .tint(.primary)
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .scrollDismissesKeyboard(.interactively)
+            .navigationTitle(navigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("", systemImage: "xmark") {
+                        store.send(.closeTapped)
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("", systemImage: "checkmark") {
+                        store.send(.saveTapped)
+                    }
+                    .tint(store.isDetailsReady ? .blue : .gray.opacity(0.3))
+                    .disabledWithOpacity(!store.isDetailsReady)
+                }
+            }
+        }
+        .task {
+            await store.send(.onTask).finish()
+        }
+    }
+    
+    private var navigationTitle: String {
+        store.mode == .create ? "Add Social Link" : "Edit Social Link"
+    }
+}

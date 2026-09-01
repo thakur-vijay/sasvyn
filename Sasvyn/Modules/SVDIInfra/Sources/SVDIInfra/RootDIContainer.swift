@@ -15,6 +15,7 @@ import SVProjectKit
 import SVMockupKit
 import SVEducationKit
 import SVLanguageKit
+import SVSocialLinkKit
 
 @available(iOS 17.0, *)
 public final class RootDIContainer {
@@ -24,13 +25,15 @@ public final class RootDIContainer {
     private let mockupsDIContainer: MockupsDIContainer
     private let educationsDIContainer: EducationsDIContainer
     private let languagesDIContainer: LanguagesDIContainer
+    private let socialLinksDIContainer: SocialLinksDIContainer
     public init(
         skillsDIContainer: SkillsDIContainer,
         documentsDIContainer: DocumentsDIContainer,
         projectsDIContainer: ProjectsDIContainer,
         mockupsDIContainer: MockupsDIContainer,
         educationsDIContainer: EducationsDIContainer,
-        languagesDIContainer: LanguagesDIContainer
+        languagesDIContainer: LanguagesDIContainer,
+        socialLinksDIContainer: SocialLinksDIContainer
     ) {
         self.skillsDIContainer = skillsDIContainer
         self.documentsDIContainer = documentsDIContainer
@@ -38,6 +41,7 @@ public final class RootDIContainer {
         self.mockupsDIContainer = mockupsDIContainer
         self.educationsDIContainer = educationsDIContainer
         self.languagesDIContainer = languagesDIContainer
+        self.socialLinksDIContainer = socialLinksDIContainer
     }
     
     @MainActor
@@ -50,6 +54,7 @@ public final class RootDIContainer {
         self.mockupsDIContainer.register(&$0)
         self.educationsDIContainer.register(&$0)
         self.languagesDIContainer.register(&$0)
+        self.socialLinksDIContainer.register(&$0)
     }
 
     @MainActor public func makeView() -> some View {

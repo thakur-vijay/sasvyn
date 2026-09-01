@@ -33,14 +33,10 @@ public final class LanguagesDIContainer{
         FetchSpokenLanguagesUseCase(repository: repository)
     }()
     
-    private lazy var addSpokenLanguageUseCase: AddSpokenLanguageUseCase = {
-        AddSpokenLanguageUseCase(repository: repository)
+    private lazy var saveSpokenLanguageUseCase: SaveSpokenLanguageUseCase = {
+        SaveSpokenLanguageUseCase(repository: repository)
     }()
-    
-    private lazy var updateSpokenLanguageUseCase: UpdateSpokenLanguageUseCase = {
-        UpdateSpokenLanguageUseCase(repository: repository)
-    }()
-    
+
     private lazy var deleteSpokenLanguageUseCase: DeleteSpokenLanguageUseCase = {
         DeleteSpokenLanguageUseCase(repository: repository)
     }()
@@ -49,8 +45,7 @@ public final class LanguagesDIContainer{
         LanguagesClient.live(
             loadLanguagesJSONUseCase: loadLanguagesJSONUseCase,
             fetchSpokenLanguagesUseCase: fetchSpokenLanguagesUseCase,
-            addSpokenLanguageUseCase: addSpokenLanguageUseCase,
-            updateSpokenLanguageUseCase: updateSpokenLanguageUseCase,
+            saveSpokenLanguageUseCase: saveSpokenLanguageUseCase,
             deleteSpokenLanguageUseCase: deleteSpokenLanguageUseCase
         )
     }()

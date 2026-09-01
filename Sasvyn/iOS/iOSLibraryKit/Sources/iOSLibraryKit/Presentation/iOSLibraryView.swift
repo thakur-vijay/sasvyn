@@ -14,6 +14,7 @@ import iOSDocumentsKit
 import iOSMockupKit
 import iOSEducationKit
 import iOSLanguageKit
+import iOSSocialLinkKit
 
 public struct iOSLibraryView: View {
     @Bindable var store: StoreOf<iOSLibraryFeature>
@@ -50,6 +51,8 @@ public struct iOSLibraryView: View {
                 iOSEducationsView(store: store)
             case .languages(let store):
                 iOSLanguagesView(store: store)
+            case .socialLinks(let store):
+                iOSSocialLinksView(store: store)
             }
         }
     }
@@ -73,7 +76,7 @@ public struct SVList: View {
                 item.view
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
     }
 }
 

@@ -21,6 +21,7 @@ let package = Package(
         .package(path: "../SVMockupKit"),
         .package(path: "../SVEducationKit"),
         .package(path: "../SVLanguageKit"),
+        .package(path: "../SVSocialLinkKit"),
         .package(path: "../../iOS/iOSRootKit"),
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
@@ -40,6 +41,7 @@ let package = Package(
                 .product(name: "SVMockupKit", package: "SVMockupKit"),
                 .product(name: "SVEducationKit", package: "SVEducationKit"),
                 .product(name: "SVLanguageKit", package: "SVLanguageKit"),
+                .product(name: "SVSocialLinkKit", package: "SVSocialLinkKit"),
                 .product(name: "iOSRootKit", package: "iOSRootKit"),
                 .product(
                     name: "ComposableArchitecture",

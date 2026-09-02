@@ -41,7 +41,7 @@ public struct TechStackFeature {
     
     @Reducer
     public enum Destination {
-        case skillsPicker(iOSSkillsPickerFeature)
+        case skillsPicker(iOSSkillsFeature)
     }
     
     public init(){}
@@ -58,12 +58,12 @@ public struct TechStackFeature {
                 return .none
             case .addStackTapped:
                 let alreadySelectedIDs = Set(state.techStack.map { $0.id })
-                state.destination = .skillsPicker(.init(selectedSkillIDs: alreadySelectedIDs))
+                state.destination = .skillsPicker(.init(mode: .picker, selectedSkillIDs: alreadySelectedIDs))
                 return .none
             case .destination(.presented(.skillsPicker(.delegate(.cancelTapped)))):
                 state.destination = nil
                 return .none
-            case .destination(.presented(.skillsPicker(.delegate(.saveTapped(let skills))))):
+            case .destination(.presented(.skillsPicker(.delegate(.selection(let skills))))):
                 state.techStack = skills
                 state.destination = nil
                 return .send(.delegate(.updateStack))

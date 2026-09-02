@@ -48,7 +48,7 @@ internal struct TechStackView: View {
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
             switch store.case {
             case .skillsPicker(let store):
-                iOSSkillPicker(store: store)
+                iOSSKillsView(store: store)
             }
         }
     }

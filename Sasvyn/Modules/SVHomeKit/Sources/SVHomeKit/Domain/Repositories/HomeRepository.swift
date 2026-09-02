@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+internal protocol HomeRepository: Sendable {
+    func fetchRecentProjects(limit: Int = 5)
+}

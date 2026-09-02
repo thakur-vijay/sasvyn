@@ -12,7 +12,8 @@ public extension SVDatabase {
     func fetchAll<Record: SVFetchableRecord & SVTableRecord>(
         _ record: Record.Type,
         filters: [SVDatabaseFilter] = [],
-        sorting: [SVDatabaseSort] = []
+        sorting: [SVDatabaseSort] = [],
+        limit: Int? = nil
     ) throws -> [Record] {
 
         var request = record.all()
@@ -23,6 +24,10 @@ public extension SVDatabase {
 
         for sort in sorting {
             request = request.order(sort.ordering)
+        }
+
+        if let limit {
+            request = request.limit(limit)
         }
 
         return try request.fetchAll(db)

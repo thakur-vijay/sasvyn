@@ -46,4 +46,15 @@ public extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func isASheet(_ isEnabled: Bool)-> some View {
+        if isEnabled {
+            NavigationStack {
+                self
+            }
+        }else {
+            self
+        }
+    }
 }

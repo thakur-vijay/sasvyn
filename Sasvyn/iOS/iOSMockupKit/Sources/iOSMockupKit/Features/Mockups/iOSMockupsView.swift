@@ -11,19 +11,6 @@ import SVRemoteImage
 import SVMockupKit
 import SVDesignSystem
 
-extension View {
-    @ViewBuilder
-    func isASheet(_ isEnabled: Bool)-> some View {
-        if isEnabled {
-            NavigationStack {
-                self
-            }
-        }else {
-            self
-        }
-    }
-}
-
 public struct iOSMockupsView: View {
     @Bindable var store: StoreOf<iOSMockupsFeature>
     

@@ -16,11 +16,25 @@ public struct iOSSkillsFeature {
     
     @ObservableState
     public struct State: Equatable {
+        public let mode: SkillMode
         public var skillGroups: [SkillMainModel] = []
         @Presents
         public var destination: Destination.State?
-        public init(){
-            
+        
+        var selectedSkillIDs: Set<String>
+
+        var selectedSkills: [Skill] {
+            skillGroups
+                .flatMap(\.skills)
+                .filter { selectedSkillIDs.contains($0.id) }
+        }
+
+        public init(
+            mode: SkillMode = .screen,
+            selectedSkillIDs: Set<String> = .init()
+        ) {
+            self.selectedSkillIDs = selectedSkillIDs
+            self.mode = mode
         }
     }
     
@@ -34,6 +48,16 @@ public struct iOSSkillsFeature {
         case deleteSkillTapped(_ groupIndex: Int, _ skill: Skill)
         case deleteSkillSucceeded(_ groupIndex: Int, _ skill: Skill)
         case deleteSkillFailed
+        
+        case skillTapped(Skill)
+        case saveTapped
+        case cancelTapped
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case selection([Skill])
+            case cancelTapped
+        }
     }
     
     public init(){
@@ -103,6 +127,20 @@ public struct iOSSkillsFeature {
                 return .none
             case .skillsUpdated:
                 state.skillGroups = state.skillGroups.sorted { $0.category.order < $1.category.order }
+                return .none
+            case .skillTapped(let skill):
+                if state.selectedSkillIDs.contains(skill.id) {
+                    state.selectedSkillIDs.remove(skill.id)
+                } else {
+                    state.selectedSkillIDs.insert(skill.id)
+                }
+
+                return .none
+            case .saveTapped:
+                return .send(.delegate(.selection(state.selectedSkills)))
+            case .cancelTapped:
+                return .send(.delegate(.cancelTapped))
+            case .delegate(_):
                 return .none
             }
         }

@@ -12,6 +12,9 @@ public struct ProjectsClient: Sendable{
     public var fetch:
     @Sendable (_ search: String) async throws -> [Project]
     
+    public var fetchRecent:
+    @Sendable (_ limit: Int) async throws -> [Project]
+    
     public var fetchProject:
     @Sendable (_ id: String) async throws -> Project?
 
@@ -41,6 +44,7 @@ extension ProjectsClient {
 
     static func live(
         fetchProjectsUseCase: FetchProjectsUseCase,
+        fetchRecentProjectsUseCase: FetchRecentProjectsUseCase,
         fetchProjectUseCase: FetchProjectUseCase,
         addProjectUseCase: AddProjectUseCase,
         updateProjectUseCase: UpdateProjectUseCase,
@@ -53,6 +57,8 @@ extension ProjectsClient {
 
         Self { search in
             try await fetchProjectsUseCase.execute(search: search)
+        } fetchRecent: { limit in
+            try await fetchRecentProjectsUseCase.execute(limit: limit)
         } fetchProject: { id in
             try await fetchProjectUseCase.execute(id: id)
         } delete: { id in
@@ -78,6 +84,8 @@ extension ProjectsClient: DependencyKey {
 
     public static let liveValue = Self { search in
         fatalError("Unimplemented")
+    } fetchRecent: { limit in
+        fatalError("Unimplemented")
     } fetchProject: { id in
         fatalError("Unimplemented")
     } delete: { id in
@@ -100,6 +108,8 @@ extension ProjectsClient: DependencyKey {
 extension ProjectsClient: TestDependencyKey {
 
     public static let testValue = Self { search in
+        return []
+    } fetchRecent: { limit in
         return []
     } fetchProject: { id in
         return nil

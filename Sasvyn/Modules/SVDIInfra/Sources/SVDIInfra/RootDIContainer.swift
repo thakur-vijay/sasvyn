@@ -14,6 +14,7 @@ import SVDocumentKit
 import SVProjectKit
 import SVMockupKit
 import SVEducationKit
+import SVExperienceKit
 import SVLanguageKit
 import SVSocialLinkKit
 
@@ -24,6 +25,7 @@ public final class RootDIContainer {
     private let projectsDIContainer: ProjectsDIContainer
     private let mockupsDIContainer: MockupsDIContainer
     private let educationsDIContainer: EducationsDIContainer
+    private let experiencesDIContainer: ExperiencesDIContainer
     private let languagesDIContainer: LanguagesDIContainer
     private let socialLinksDIContainer: SocialLinksDIContainer
     public init(
@@ -32,6 +34,7 @@ public final class RootDIContainer {
         projectsDIContainer: ProjectsDIContainer,
         mockupsDIContainer: MockupsDIContainer,
         educationsDIContainer: EducationsDIContainer,
+        experiencesDIContainer: ExperiencesDIContainer,
         languagesDIContainer: LanguagesDIContainer,
         socialLinksDIContainer: SocialLinksDIContainer
     ) {
@@ -40,6 +43,7 @@ public final class RootDIContainer {
         self.projectsDIContainer = projectsDIContainer
         self.mockupsDIContainer = mockupsDIContainer
         self.educationsDIContainer = educationsDIContainer
+        self.experiencesDIContainer = experiencesDIContainer
         self.languagesDIContainer = languagesDIContainer
         self.socialLinksDIContainer = socialLinksDIContainer
     }
@@ -53,6 +57,7 @@ public final class RootDIContainer {
         self.projectsDIContainer.register(&$0)
         self.mockupsDIContainer.register(&$0)
         self.educationsDIContainer.register(&$0)
+        self.experiencesDIContainer.register(&$0)
         self.languagesDIContainer.register(&$0)
         self.socialLinksDIContainer.register(&$0)
     }

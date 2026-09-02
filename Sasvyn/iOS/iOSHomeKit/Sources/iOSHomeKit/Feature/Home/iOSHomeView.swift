@@ -9,40 +9,37 @@ import SwiftUI
 import ComposableArchitecture
 import iOSPortfolioKit
 import SVFoundation
+import iOSProjectKit
 
 public struct iOSHomeView: View {
-    let store: StoreOf<iOSHomeFeature>
+    @Bindable var store: StoreOf<iOSHomeFeature>
     
     public init(store: StoreOf<iOSHomeFeature>) {
         self.store = store
     }
     
     public var body: some View {
-        NavigationStack {
+        NavigationStack(path: $store.scope(\.path, action: \.path)){
             ScrollView {
                 VStack(spacing: 20){
 //                    FeaturedPortfolioCardView()
                     CreatePortfolioSection()
-                    if store.recentProjects.isNotEmpty {
-                        RecentProjectsSection(
-                            projects: store.recentProjects
-                        ) { project, mode in
-                            
-                        } onDelete: { project in
-                            
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                    }else {
-                        CreateProjectSection()
-                    }
+                    QuickActionsSection()
+                    RecentProjectsSection(
+                        store: store.scope(
+                            \.recentProjects,
+                             action: \.recentProjects
+                        )
+                    )
                 }
             }
 //            .ignoresSafeArea(.container, edges: .top)
             .navigationTitle("Welcome")
-        }
-        .task {
-            await store.send(.onTask).finish()
+        } destination: { store in
+            switch store.case {
+            case .projectDetail(let store):
+                iOSProjectDetailView(store: store)
+            }
         }
     }
 }

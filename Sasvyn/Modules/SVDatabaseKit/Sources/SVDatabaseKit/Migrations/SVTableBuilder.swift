@@ -57,4 +57,16 @@ public final class SVTableBuilder {
             column: table.column(name, .double)
         )
     }
+
+    public func foreignKey(
+        _ columns: [String],
+        references tableName: String,
+        onDeleteCascade: Bool = false
+    ) {
+        table.foreignKey(
+            columns,
+            references: tableName,
+            onDelete: onDeleteCascade ? .cascade : nil
+        )
+    }
 }

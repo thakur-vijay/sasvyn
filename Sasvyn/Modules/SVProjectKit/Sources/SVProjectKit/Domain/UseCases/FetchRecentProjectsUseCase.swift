@@ -8,14 +8,14 @@
 
 import Foundation
 
-public struct FetchProjectsUseCase: Sendable {
+public struct FetchRecentProjectsUseCase: Sendable {
     private let repository: ProjectsRepository
     
     init(repository: ProjectsRepository) {
         self.repository = repository
     }
     
-    func execute(search: String)async throws->[Project] {
-        try await repository.fetch(search: search)
+    func execute(limit: Int)async throws->[Project] {
+        try await repository.fetchRecent(limit: limit)
     }
 }

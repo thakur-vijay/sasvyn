@@ -6,3 +6,14 @@
 //
 
 import Foundation
+
+public struct ExperienceResponsibility: Identifiable, Hashable, Sendable {
+    public let id: String
+    public let experienceID: String
+    public var responsibility: String
+    public init(id: String, experienceID: String, responsibility: String) {
+        self.id = id
+        self.experienceID = experienceID
+        self.responsibility = responsibility
+    }
+}

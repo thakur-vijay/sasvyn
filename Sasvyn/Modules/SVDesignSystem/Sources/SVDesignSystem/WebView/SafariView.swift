@@ -10,16 +10,17 @@ import SafariServices
 
 internal struct SafariView: UIViewControllerRepresentable {
 
-    private let url: URL
+    private let item: WebItem
 
-    init(url: URL) {
-        self.url = url
+    init(item: WebItem) {
+        self.item = item
     }
 
     func makeUIViewController(
         context: Context
     ) -> SFSafariViewController {
-        let controller = SFSafariViewController(url: url)
+        let controller = SFSafariViewController(url: item.url)
+        controller.title = item.title
         return controller
     }
 

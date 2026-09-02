@@ -11,6 +11,7 @@ import SVDocumentKit
 import SVProjectKit
 import SVMockupKit
 import SVEducationKit
+import SVExperienceKit
 import SVLanguageKit
 import SVSocialLinkKit
 
@@ -24,6 +25,7 @@ public final class SVDatabaseContainer {
             migrator.register(ProjectsDatabaseModule.self)
             migrator.register(MockupsDatabaseModule.self)
             migrator.register(EducationsDatabaseModule.self)
+            migrator.register(ExperiencesDatabaseModule.self)
             migrator.register(SpokenLanguagesDatabaseModule.self)
             migrator.register(SocialLinksDatabaseModule.self)
 

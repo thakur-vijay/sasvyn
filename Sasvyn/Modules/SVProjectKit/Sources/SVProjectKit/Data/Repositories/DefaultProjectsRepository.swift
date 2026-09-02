@@ -28,6 +28,18 @@ public final class DefaultProjectsRepository: ProjectsRepository {
         }
     }
     
+    public func fetchRecent(limit: Int) async throws -> [Project] {
+        let allProjects = try await dataSource.fetchRecent(limit: limit)
+        let directory = try ProjectStorage.projectsDirectory()
+
+        return allProjects.compactMap {
+            return ProjectRecordMapper.map(
+                $0,
+                projectsDirectory: directory
+            )
+        }
+    }
+    
     public func add(project: Project) async throws {
         try await dataSource.create(project: project)
     }

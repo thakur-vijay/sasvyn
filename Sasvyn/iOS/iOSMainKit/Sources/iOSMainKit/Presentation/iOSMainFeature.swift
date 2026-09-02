@@ -76,6 +76,8 @@ public struct iOSMainFeature {
                 return .none
             case .delegate(_):
                 return .none
+            case .home(_):
+                return .none
             }
         }
     }

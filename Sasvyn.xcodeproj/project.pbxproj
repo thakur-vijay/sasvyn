@@ -66,6 +66,7 @@
 				Modules/SVDocumentKit,
 				Modules/SVEducationKit,
 				Modules/SVFoundation,
+				Modules/SVHomeKit,
 				Modules/SVLanguageKit,
 				Modules/SVMockupKit,
 				Modules/SVPortfolioKit,

@@ -43,6 +43,19 @@ final class ProjectsLocalDataSource: @unchecked Sendable{
             )
         }
     }
+    
+    func fetchRecent(limit: Int = 5) async throws -> [ProjectRecord] {
+        try await database.read { db in
+            try db.fetchAll(
+                ProjectRecord.self,
+                sorting: [
+                    .descending(ProjectRecord.ColumnNames.updatedAt),
+                    .descending(ProjectRecord.ColumnNames.createdAt)
+                ],
+                limit: limit
+            )
+        }
+    }
 
     func create(project: Project) async throws {
         try await database.write {[weak self] db in

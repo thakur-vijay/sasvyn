@@ -11,7 +11,7 @@ import SVSkillsKit
 @Reducer
 public struct iOSSkillsPickerFeature {
     
-    @Dependency(\.skillsClient)
+    @Dependency(\.skillsClient) 
     private var client
     
     @ObservableState

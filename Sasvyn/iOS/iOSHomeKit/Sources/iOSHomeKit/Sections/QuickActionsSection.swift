@@ -1,3 +1,11 @@
+//
+//  QuickActionsSection.swift
+//  iOSHomeKit
+//
+//  Created by Vijay Thakur on 02/09/26.
+//
+
+
 import SwiftUI
 import SVDesignSystem
 
@@ -39,10 +47,7 @@ internal struct QuickActionsSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Quick Actions")
-                .font(.title3.bold())
-
+        SVSection(title: "Quick Actions"){
             Grid(horizontalSpacing: 12, verticalSpacing: 12) {
                 GridRow {
                     actionCard(.addDocument)
@@ -62,7 +67,7 @@ internal struct QuickActionsSection: View {
         Button {
             handle(action)
         } label: {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 10) {
                 Image(systemName: action.systemImage)
                     .font(.title2)
 
@@ -70,17 +75,11 @@ internal struct QuickActionsSection: View {
                     .font(.callout.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, minHeight: 100, alignment: .leading)
-            .background {
-                RoundedRectangle(
-                    cornerRadius: 16,
-                    style: .continuous
-                )
-                .fill(.secondary.opacity(0.1))
-            }
+            .padding(14)
+            .background(.secondary.opacity(0.1), in: .rect(cornerRadius: 16, style: .continuous))
         }
         .buttonStyle(.plain)
+        .optionalGlassEffect(.rect(cornerRadius: 16, style: .continuous), isInteractive: true)
     }
 
     private func handle(_ action: QuickAction) {

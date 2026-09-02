@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+public enum SkillMode {
+    case picker
+    case screen
+}

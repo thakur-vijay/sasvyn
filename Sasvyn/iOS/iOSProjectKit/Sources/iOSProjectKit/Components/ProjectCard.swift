@@ -23,7 +23,6 @@ public struct ProjectCard: View {
         self.onDelete = onDelete
     }
     
-    @Environment(\.colorScheme) private var colorScheme
     public var body: some View {
         HStack(spacing: 12){
             SVRemoteImage(

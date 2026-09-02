@@ -25,15 +25,24 @@ public struct iOSSKillsView: View {
                         ChipLayoutUI(alignment: .leading, spacing: 10) {
                             ForEach(group.skills) { skill in
                                 SVChip(
-                                    model: .init(id: skill.id, text: skill.skill),
-                                    isSelected: false) {
-                                        
+                                    model: .init(
+                                        id: skill.id,
+                                        text: skill.skill
+                                    ),
+                                    isSelected: store.selectedSkillIDs.contains(skill.id)
+                                ) {
+                                    if store.mode == .picker {
+                                        store.send(.skillTapped(skill))
                                     }
-                                    .contextMenu {
-                                        Button("Delete", systemImage: "trash") {
-                                            store.send(.deleteSkillTapped(groupIndex, skill))
-                                        }
+                                }
+                                .optionalContextMenu(store.mode == .screen, isPreviewHidden: true) {
+                                    Button("Delete", systemImage: "trash") {
+                                        store.send(.deleteSkillTapped(groupIndex, skill))
                                     }
+                                } preview: {
+                                    
+                                }
+
                             }
                         }
                     }
@@ -47,6 +56,19 @@ public struct iOSSKillsView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("", systemImage: "plus") {
                     store.send(.addSkillsTapped)
+                }
+            }
+            
+            if store.mode == .picker {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("", systemImage: "xmark") {
+                        store.send(.cancelTapped)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("", systemImage: "checkmark") {
+                        store.send(.saveTapped)
+                    }
                 }
             }
         }
@@ -68,5 +90,6 @@ public struct iOSSKillsView: View {
         .task {
             await store.send(.onTask).finish()
         }
+        .isASheet(store.mode == .picker)
     }
 }

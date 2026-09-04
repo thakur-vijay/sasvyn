@@ -29,11 +29,11 @@ internal struct CreatePortfolioSection: View {
         } description: {
             SVGradientText(
                 text: "Create a professional portfolio that showcases your skills, experience, and best work.",
-                colors: [.gray, .white]
+                colors: [.gray, .primary]
             )
             .font(.callout)
         } actions: {
-            SVButton("Create Portfolio", systemImage: "plus") {
+            SVButton("Create Portfolio", systemImage: SVSymbols.Add.plain.name) {
                 
             }
         }

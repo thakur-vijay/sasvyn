@@ -34,7 +34,7 @@ public struct LanguageFormView: View {
                         LabeledContent {
                             if store.spokenLanguage.proficiency == proficiency {
                                 Image(systemName: "checkmark")
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.accentColor)
                             }
                         } label: {
                             Text(proficiency.displayName)
@@ -59,7 +59,7 @@ public struct LanguageFormView: View {
                     Button("", systemImage: "checkmark") {
                         store.send(.saveTapped)
                     }
-                    .tint(store.isDetailsReady ? .blue : .gray.opacity(0.3))
+                    .tint(store.isDetailsReady ? .accentColor : .gray.opacity(0.3))
                     .disabledWithOpacity(!store.isDetailsReady)
                 }
             }
@@ -67,6 +67,7 @@ public struct LanguageFormView: View {
                 switch store.case {
                 case .languagePicker(let store):
                     iOSLanguagePicker(store: store)
+                        .interactiveDismissDisabled()
                 }
             }
         }

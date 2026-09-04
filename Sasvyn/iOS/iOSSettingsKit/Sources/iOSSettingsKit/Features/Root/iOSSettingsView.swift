@@ -8,17 +8,17 @@
 import SwiftUI
 import ComposableArchitecture
 import SVRemoteImage
+import iOSAppearanceKit
 
 public struct iOSSettingsView: View {
-    let store: StoreOf<iOSSettingsFeature>
+    @Bindable var store: StoreOf<iOSSettingsFeature>
     
     public init(store: StoreOf<iOSSettingsFeature>) {
         self.store = store
     }
     
-    @State private var isSignOutAlertPresented: Bool = false
     public var body: some View {
-        NavigationStack {
+        NavigationStack(path: $store.scope(\.path, action: \.path)){
             List {
                 VStack {
                     SVRemoteImage(
@@ -41,45 +41,27 @@ public struct iOSSettingsView: View {
                 .listRowBackground(EmptyView())
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
+                ForEach(SettingsDestination.allCases) { destination in
+                    Button {
+                        store.send(.destinationTapped(destination))
+                    } label: {
+                        NavigationLink(value: destination) {
+                            Label(destination.rawValue, systemImage: destination.symbol)
+                        }
+                        .allowsHitTesting(false)
+                        .navigationLinkIndicatorVisibility(destination.navigationLinkIndicatorVisibility)
+                    }
 
-                NavigationLink(value: 0) {
-                    Label("Personal Information", systemImage: "person.text.rectangle.fill")
                 }
-                
-                NavigationLink(value: 0) {
-                    Label("Appearance", systemImage: "circle.lefthalf.filled")
-                }
-    
-                NavigationLink(value: 0) {
-                    Label("Privacy", systemImage: "lock.shield.fill")
-                }
-                
-                NavigationLink(value: 0) {
-                    Label("Terms of Service", systemImage: "doc.plaintext.fill")
-                }
-                
-                NavigationLink(value: 0) {
-                    Label("Help & Support", systemImage: "questionmark.circle.fill")
-                }
-                
-                Button(role: .destructive) {
-                    isSignOutAlertPresented.toggle()
-                } label: {
-                    Label("Sign Out", systemImage: "iphone.and.arrow.forward.outward")
-                        .foregroundStyle(.red)
-                }
-
             }
             .listStyle(.plain)
             .navigationTitle("Settings")
-        }
-        .alert("Sign Out", isPresented: $isSignOutAlertPresented) {
-            Button("Sign Out", role: .destructive){
-                store.send(.signoutTapped)
+        } destination: { store in
+            switch store.case {
+            case .appearance(let store):
+                iOSAppearanceView(store: store)
             }
-        } message: {
-            Text("Are you sure you want to sign out from the app?")
         }
-
+        .alert($store.scope(\.alert, action: \.alert))
     }
 }

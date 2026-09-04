@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import SVDesignSystem
 
 public struct iOSEducationsView: View {
     @Bindable var store: StoreOf<iOSEducationsFeature>
@@ -35,10 +36,10 @@ public struct iOSEducationsView: View {
         }
         .overlay {
             if store.educations.isEmpty {
-                ContentUnavailableView(
-                    "No Education Added",
+                SVContentUnavailableView(
+                    title: "No Education Added",
                     systemImage: "graduationcap.fill",
-                    description: Text("Add your education history to showcase your academic background.")
+                    description: "Add your education history to showcase your academic background."
                 )
             }
         }

@@ -49,6 +49,7 @@ internal struct TechStackView: View {
             switch store.case {
             case .skillsPicker(let store):
                 iOSSKillsView(store: store)
+                    .interactiveDismissDisabled()
             }
         }
     }

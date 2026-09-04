@@ -76,14 +76,15 @@ public struct iOSSKillsView: View {
             switch store.case {
             case .addSkills(let store):
                 iOSAddSkillsSheet(store: store)
+                    .interactiveDismissDisabled()
             }
         }
         .overlay {
             if store.skillGroups.isEmpty {
-                ContentUnavailableView(
-                    "No Skills Yet",
-                    systemImage: "square.grid.2x2",
-                    description: Text("Add your skills to showcase your expertise.")
+                SVContentUnavailableView(
+                    title: "No Skills Yet",
+                    systemImage: "wrench.and.screwdriver.fill",
+                    description: "Add your skills to showcase your expertise."
                 )
             }
         }

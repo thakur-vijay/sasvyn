@@ -7,17 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
-import SafariServices
-
-public struct WebURL: Identifiable {
-    public let id: String
-    public let url: URL
-    
-    public init(id: String, url: URL) {
-        self.id = id
-        self.url = url
-    }
-}
+import SVDesignSystem
 
 public struct iOSSocialLinksView: View {
     @Bindable var store: StoreOf<iOSSocialLinksFeature>
@@ -26,13 +16,13 @@ public struct iOSSocialLinksView: View {
         self.store = store
     }
     
-    @State private var clickedURL: WebURL?
+    @State private var clickedWebItem: WebItem?
     public var body: some View {
         List {
             ForEach(store.links) { link in
                 if let type = link.type, let url = link.url{
                     Button {
-                        clickedURL = .init(id: link.id, url: url)
+                        clickedWebItem = .init(url: url)
                     } label: {
                         NavigationLink(value: link) {
                             HStack(spacing: 12) {
@@ -66,10 +56,10 @@ public struct iOSSocialLinksView: View {
         .listStyle(.plain)
         .overlay {
             if store.links.isEmpty {
-                ContentUnavailableView(
-                    "No Links Added",
+                SVContentUnavailableView(
+                    title: "No Links Added",
                     systemImage: "link",
-                    description: Text("Add links to your portfolio, GitHub, LinkedIn, or other professional profiles.")
+                    description: "Add links to your portfolio, GitHub, LinkedIn, or other professional profiles."
                 )
             }
         }
@@ -91,37 +81,10 @@ public struct iOSSocialLinksView: View {
                     .interactiveDismissDisabled()
             }
         }
-        .sheet(item: $clickedURL) { url in
-            SafariView(url: url.url)
-        }
+        .web($clickedWebItem)
         .alert($store.scope(\.alert, action: \.alert))
         .task {
             await store.send(.onTask).finish()
         }
     }
 }
-
-public struct SafariView: UIViewControllerRepresentable {
-
-    private let url: URL
-
-    public init(url: URL) {
-        self.url = url
-    }
-
-    public func makeUIViewController(
-        context: Context
-    ) -> SFSafariViewController {
-        let controller = SFSafariViewController(url: url)
-        return controller
-    }
-
-    public func updateUIViewController(
-        _ viewController: SFSafariViewController,
-        context: Context
-    ) {
-        // Nothing to update.
-    }
-}
-
-

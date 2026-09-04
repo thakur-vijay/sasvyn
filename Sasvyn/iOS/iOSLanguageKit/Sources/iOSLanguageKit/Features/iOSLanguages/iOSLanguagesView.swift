@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import SVDesignSystem
 
 public struct iOSLanguagesView: View {
     @Bindable var store: StoreOf<iOSLanguagesFeature>
@@ -40,10 +41,10 @@ public struct iOSLanguagesView: View {
         }
         .overlay {
             if store.languages.isEmpty {
-                ContentUnavailableView(
-                    "No Languages Added",
+                SVContentUnavailableView(
+                    title: "No Languages Added",
                     systemImage: "character.bubble.fill",
-                    description: Text("Add the languages you speak to showcase your communication skills.")
+                    description: "Add the languages you speak to showcase your communication skills."
                 )
             }
         }
@@ -63,6 +64,7 @@ public struct iOSLanguagesView: View {
             switch store.case {
             case .languageForm(let store):
                 LanguageFormView(store: store)
+                    .interactiveDismissDisabled()
             }
         }
         .alert($store.scope(\.alert, action: \.alert))

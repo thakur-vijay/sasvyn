@@ -28,10 +28,13 @@ public struct SVChip: View {
     public var body: some View {
         Text(model.text)
             .font(font)
-            .foregroundStyle(.white)
+            .foregroundStyle(isSelected ? .white : .primary)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
-            .background(isSelected ? .purple : Color(.secondarySystemBackground), in: .capsule)
+            .background(
+                isSelected ? Color.accentColor : Color(.secondarySystemBackground),
+                in: .capsule
+            )
             .optionalGlassEffect(.capsule)
             .contentShape(.rect)
             .contentShape(.contextMenuPreview, .capsule)

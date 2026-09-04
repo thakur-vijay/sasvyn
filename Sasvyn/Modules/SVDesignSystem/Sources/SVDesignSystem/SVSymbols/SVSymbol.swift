@@ -1,16 +1,13 @@
 //
-//  AppSymbol.swift
+//  SVSymbol.swift
 //  SVDesignSystem
 //
-//  Created by Vijay Thakur on 31/07/26.
+//  Created by Vijay Thakur on 04/09/26.
 //
-
-
-import Foundation
 
 import SwiftUI
 
-public struct AppSymbol: Sendable {
+public struct SVSymbol: Sendable {
 
     public let name: String
 
@@ -31,8 +28,4 @@ public struct AppSymbol: Sendable {
     }
     
 #endif
-}
-
-public enum AppSymbols {
-    
 }

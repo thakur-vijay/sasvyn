@@ -15,20 +15,23 @@ public struct iOSHomeFeature {
     @ObservableState
     public struct State: Equatable {
         public var recentProjects = RecentProjectsFeature.State()
-        public var path = StackState<Path.State>()
         public init(){
             
         }
+        
+        @Presents
+        public var destination: Destination.State?
     }
     
     public enum Action: BindableAction{
         case binding(BindingAction<State>)
-        case path(StackActionOf<Path>)
+        case destination(PresentationAction<Destination.Action>)
         case recentProjects(RecentProjectsFeature.Action)
+        case quickAction(QuickActionsSection.QuickAction)
     }
     
     @Reducer
-    public enum Path {
+    public enum Destination {
         case projectDetail(iOSProjectDetailFeature)
     }
     
@@ -47,20 +50,36 @@ public struct iOSHomeFeature {
             case .binding(_):
                 return .none
             case let .recentProjects(.delegate(.openProjectDetail(mode, projectID))):
-                state.path.append(.projectDetail(.init(mode: mode, id: projectID)))
+                state.destination = .projectDetail(.init(mode: mode, id: projectID, viewMode: .sheet))
                 return .none
             case .recentProjects(_):
                 return .none
-            case .path(.element(_, action: .projectDetail(.delegate(.projectAdded(let project))))):
+            case .destination(.presented(.projectDetail(.delegate(.projectAdded(let project))))):
+                state.destination = nil
                 return .send(.recentProjects(.updateProject(project)))
-            case .path(.element(_, action: .projectDetail(.delegate(.projectUpdated(let project))))):
+            case .destination(.presented(.projectDetail(.delegate(.projectUpdated(let project))))):
                 return .send(.recentProjects(.updateProject(project)))
-            case .path(_):
+            case .destination(.presented(.projectDetail(.delegate(.close)))):
+                state.destination = nil
+                return .none
+            case .destination(_):
+                return .none
+            case .quickAction(let action):
+                switch action {
+                case .addDocument:
+                    break
+                case .createMockup:
+                    break
+                case .addProject:
+                    state.destination = .projectDetail(.init(mode: .create, id: UUID().uuidString, viewMode: .sheet))
+                case .editPortfolio:
+                    break
+                }
                 return .none
             }
         }
-        .forEach(\.path, action: \.path)
+        .ifLet(\.$destination, action: \.destination)
     }
 }
 
-extension iOSHomeFeature.Path.State: Equatable {}
+extension iOSHomeFeature.Destination.State: Equatable {}

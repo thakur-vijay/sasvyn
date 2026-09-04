@@ -19,12 +19,14 @@ public struct iOSHomeView: View {
     }
     
     public var body: some View {
-        NavigationStack(path: $store.scope(\.path, action: \.path)){
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 20){
-//                    FeaturedPortfolioCardView()
+                    //                    FeaturedPortfolioCardView()
                     CreatePortfolioSection()
-                    QuickActionsSection()
+                    QuickActionsSection { action in
+                        store.send(.quickAction(action))
+                    }
                     RecentProjectsSection(
                         store: store.scope(
                             \.recentProjects,
@@ -33,12 +35,14 @@ public struct iOSHomeView: View {
                     )
                 }
             }
-//            .ignoresSafeArea(.container, edges: .top)
+            //            .ignoresSafeArea(.container, edges: .top)
             .navigationTitle("Welcome")
-        } destination: { store in
-            switch store.case {
-            case .projectDetail(let store):
-                iOSProjectDetailView(store: store)
+            .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
+                switch store.case {
+                case .projectDetail(let store):
+                    iOSProjectDetailView(store: store)
+                        .interactiveDismissDisabled()
+                }
             }
         }
     }

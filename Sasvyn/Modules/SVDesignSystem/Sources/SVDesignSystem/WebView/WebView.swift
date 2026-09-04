@@ -25,6 +25,7 @@ public extension View {
         self
             .sheet(item: item) { value in
                 WebView(item: value)
+                    .interactiveDismissDisabled()
             }
     }
 }

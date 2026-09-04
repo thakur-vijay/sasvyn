@@ -8,13 +8,13 @@
 import ComposableArchitecture
 import iOSAuthKit
 import iOSMainKit
+import SVFoundation
 
 @Reducer
 public struct iOSRootFeature {
 
     @ObservableState
     public enum State: Equatable {
-        case launching
         case auth(iOSAuthFeature.State)
         case main(iOSMainFeature.State)
 
@@ -27,6 +27,7 @@ public struct iOSRootFeature {
         case onAppear
         case auth(iOSAuthFeature.Action)
         case main(iOSMainFeature.Action)
+        case quickAppAction(QuickAppAction)
     }
 
     public init() {}
@@ -49,6 +50,9 @@ public struct iOSRootFeature {
                 return .none
             case .main:
                 return .none
+            case .quickAppAction(let action):
+                print("Called", action)
+                return .send(.main(.quickAppAction(action)))
             }
         }
         .ifCaseLet(\.auth, action: \.auth) {

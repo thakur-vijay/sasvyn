@@ -67,6 +67,13 @@ public struct iOSProjectDetailView: View {
         }
         .animation(.smooth, value: store.mode)
         .toolbar {
+            if store.viewMode == .sheet {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("", systemImage: "xmark") {
+                        store.send(.closeTapped)
+                    }
+                }
+            }
             if store.mode == .create {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("", systemImage: "checkmark") {
@@ -92,6 +99,7 @@ public struct iOSProjectDetailView: View {
         .task {
             await store.send(.onTask).finish()
         }
+        .isASheet(store.viewMode == .sheet)
     }
     
     private var appDescription: some View {

@@ -7,7 +7,9 @@
 
 import Foundation
 
-public enum LibraryDestination: String, Hashable {
+public enum LibraryDestination: String, Identifiable, Hashable {
+    
+    public var id: String { rawValue }
     case experience = "Experience"
     case education = "Education"
     case skills = "Skills"

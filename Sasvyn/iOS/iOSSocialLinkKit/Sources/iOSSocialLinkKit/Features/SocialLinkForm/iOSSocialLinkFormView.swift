@@ -46,7 +46,7 @@ public struct iOSSocialLinkFormView: View {
                             LabeledContent {
                                 if store.link.type == type {
                                     Image(systemName: "checkmark")
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.accentColor)
                                 }
                             } label: {
                                 Label {
@@ -57,7 +57,6 @@ public struct iOSSocialLinkFormView: View {
                                 }
                             }
                         }
-                        .tint(.primary)
                     }
                 }
             }
@@ -76,7 +75,7 @@ public struct iOSSocialLinkFormView: View {
                     Button("", systemImage: "checkmark") {
                         store.send(.saveTapped)
                     }
-                    .tint(store.isDetailsReady ? .blue : .gray.opacity(0.3))
+                    .tint(store.isDetailsReady ? .accentColor : .gray.opacity(0.3))
                     .disabledWithOpacity(!store.isDetailsReady)
                 }
             }

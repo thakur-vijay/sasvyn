@@ -109,7 +109,7 @@ public struct iOSCreateMockupFeature {
                                     id: UUID().uuidString,
                                     device: selectedDevice,
                                     imageData: data,
-                                    imageResize: .fit
+                                    imageResize: .fill
                                 )
                             }
                         }
@@ -204,7 +204,7 @@ public struct iOSCreateMockupFeature {
             case .closeTapped:
                 return .send(.delegate(.close))
             case .resizeTapped:
-                let next = state.selectedMockup?.imageResize.next ?? .fit
+                let next = state.selectedMockup?.imageResize.next ?? .fill
                 state.selectedMockup?.imageResize = next
                 return .none
             case .applyToAllTapped:

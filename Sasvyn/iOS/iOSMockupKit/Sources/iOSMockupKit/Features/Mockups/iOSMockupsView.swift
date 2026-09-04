@@ -10,6 +10,8 @@ import ComposableArchitecture
 import SVRemoteImage
 import SVMockupKit
 import SVDesignSystem
+import SwiftUI
+import UniformTypeIdentifiers
 
 public struct iOSMockupsView: View {
     @Bindable var store: StoreOf<iOSMockupsFeature>
@@ -45,15 +47,24 @@ public struct iOSMockupsView: View {
                     }
                     .contextMenu{
                         if store.mode != .picker {
+                            if let url = mockup.url, let uiImage = UIImage(contentsOfFile: url.path){
+                                ShareLink(
+                                    item: Image(uiImage: uiImage),
+                                    preview: SharePreview("Mockup", image: Image(uiImage: uiImage))
+                                ) {
+                                    Label("Share", systemImage: "square.and.arrow.up")
+                                }
+                            }
+                            
                             Button("Save to Photos", systemImage: "photo") {
-                                
+                                store.send(.saveToPhotosTapped(mockup))
                             }
                             Button("Delete", systemImage: "trash", role: .destructive) {
                                 store.send(.deleteTapped(mockup))
                             }
                         }else {
                             Button("Select", systemImage: "checkmark.circle") {
-                                
+                                store.send(.mockupTapped(mockup))
                             }
                         }
                     } preview: {
@@ -73,10 +84,10 @@ public struct iOSMockupsView: View {
         .animation(.snappy(duration: 0.25), value: imageContentMode)
         .overlay {
             if store.mockups.isEmpty {
-                ContentUnavailableView(
-                    "No Mockups",
+                SVContentUnavailableView(
+                    title: "No Mockups",
                     systemImage: "iphone",
-                    description: Text("Create your first mockup to see it here.")
+                    description: "Create your first mockup to see it here."
                 )
             }
         }
@@ -118,6 +129,7 @@ public struct iOSMockupsView: View {
             switch store.case {
             case .iOSCreateMockup(let store):
                 iOSCreateMockupView(store: store)
+                    .interactiveDismissDisabled()
             }
         }
         .imageViewer(item: $store.selectedMockup, items: store.mockups)

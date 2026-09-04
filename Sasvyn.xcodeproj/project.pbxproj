@@ -41,6 +41,7 @@
 			membershipExceptions = (
 				Info.plist,
 				iOS/iOSAboutKit,
+				iOS/iOSAppearanceKit,
 				iOS/iOSAuthKit,
 				iOS/iOSDocumentsKit,
 				iOS/iOSEducationKit,
@@ -50,6 +51,7 @@
 				iOS/iOSLibraryKit,
 				iOS/iOSMainKit,
 				iOS/iOSMockupKit,
+				iOS/iOSPersonalInformationKit,
 				iOS/iOSPortfolioKit,
 				iOS/iOSProjectKit,
 				iOS/iOSRootKit,

@@ -42,24 +42,18 @@ internal struct RecentProjectsSection: View {
                 .alert($store.scope(\.alert, action: \.alert))
             }else {
                 GroupBox {
-                    ContentUnavailableView {
-                        Label(
-                            "Add Your First Project",
-                            systemImage: "folder"
-                        )
-                    } description: {
-                        Text(
-                            "Showcase your best work and bring your portfolio to life."
-                        )
-                    } actions: {
-                        SVButton(
-                            "Add Project",
-                            systemImage: "folder.badge.plus",
-                            width: .intrinsic
-                        ) {
-                            store.send(.addProjectTapped)
+                    SVContentUnavailableView(
+                        title: "Add Your First Project",
+                        systemImage: "folder",
+                        description: "Showcase your best work and bring your portfolio to life.") {
+                            SVButton(
+                                "Add Project",
+                                systemImage: "folder.badge.plus",
+                                width: .intrinsic
+                            ) {
+                                store.send(.addProjectTapped)
+                            }
                         }
-                    }
                 }
                 .padding(.horizontal, 20)
             }

@@ -24,6 +24,7 @@ public extension View {
                 ) {
                     item.wrappedValue = nil
                 }
+                .interactiveDismissDisabled()
             }
     }
 }

@@ -9,16 +9,18 @@
 import SwiftUI
 import SVDesignSystem
 
-internal struct QuickActionsSection: View {
-
-    private enum QuickAction: CaseIterable, Identifiable {
+public struct QuickActionsSection: View {
+    
+    let action: (QuickAction)-> ()
+    
+    public enum QuickAction: CaseIterable, Identifiable {
         case addDocument
         case createMockup
         case addProject
         case editPortfolio
-
-        var id: Self { self }
-
+        
+        public var id: Self { self }
+        
         var title: String {
             switch self {
             case .addDocument:
@@ -31,7 +33,7 @@ internal struct QuickActionsSection: View {
                 "Edit Portfolio"
             }
         }
-
+        
         var systemImage: String {
             switch self {
             case .addDocument:
@@ -45,15 +47,15 @@ internal struct QuickActionsSection: View {
             }
         }
     }
-
-    var body: some View {
+    
+    public var body: some View {
         SVSection(title: "Quick Actions"){
             Grid(horizontalSpacing: 12, verticalSpacing: 12) {
                 GridRow {
                     actionCard(.addDocument)
                     actionCard(.createMockup)
                 }
-
+                
                 GridRow {
                     actionCard(.addProject)
                     actionCard(.editPortfolio)
@@ -62,36 +64,23 @@ internal struct QuickActionsSection: View {
         }
         .padding(.horizontal, 20)
     }
-
+    
     private func actionCard(_ action: QuickAction) -> some View {
         Button {
-            handle(action)
+            self.action(action)
         } label: {
-            VStack(alignment: .leading, spacing: 10) {
-                Image(systemName: action.systemImage)
-                    .font(.title2)
-
+            GroupBox {
                 Text(action.title)
                     .font(.callout.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
+            } label: {
+                Image(systemName: action.systemImage)
+                    .font(.title2)
+                    .frame(width: 30, height: 30)
+                
             }
-            .padding(14)
-            .background(.secondary.opacity(0.1), in: .rect(cornerRadius: 16, style: .continuous))
         }
         .buttonStyle(.plain)
-        .optionalGlassEffect(.rect(cornerRadius: 16, style: .continuous), isInteractive: true)
     }
-
-    private func handle(_ action: QuickAction) {
-        switch action {
-        case .addDocument:
-            break
-        case .createMockup:
-            break
-        case .addProject:
-            break
-        case .editPortfolio:
-            break
-        }
-    }
+    
 }

@@ -22,6 +22,7 @@ let package = Package(
         .package(path: "../iOSProjectKit"),
         .package(path: "../iOSLibraryKit"),
         .package(path: "../iOSSettingsKit"),
+        .package(path: "../../Modules/SVFoundation"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -37,6 +38,7 @@ let package = Package(
                 .product(name: "iOSProjectKit", package: "iOSProjectKit"),
                 .product(name: "iOSLibraryKit", package: "iOSLibraryKit"),
                 .product(name: "iOSSettingsKit", package: "iOSSettingsKit"),
+                .product(name: "SVFoundation", package: "SVFoundation"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

@@ -8,6 +8,11 @@
 import ComposableArchitecture
 import SVProjectKit
 
+public enum ProjectDetailScreenMode {
+    case sheet
+    case screen
+}
+
 @Reducer
 public struct iOSProjectDetailFeature {
     
@@ -16,10 +21,12 @@ public struct iOSProjectDetailFeature {
     
     @ObservableState
     public struct State: Equatable {
+        public let viewMode: ProjectDetailScreenMode
         public var mode: ProjectMode
-        public init(mode: ProjectMode, id: String){
+        public init(mode: ProjectMode, id: String, viewMode: ProjectDetailScreenMode = .screen){
             self.project = .init(id: id)
             self.mode = mode
+            self.viewMode = viewMode
             self.appInfo = .init(mode: mode)
             self.overview = .init(mode: mode)
             self.role = .init(mode: mode)
@@ -43,6 +50,7 @@ public struct iOSProjectDetailFeature {
         case onTask
         case projectLoaded(Project)
         case toggleModeTapped
+        case closeTapped
         case saveTapped
         case projectSaved
         case updateProject
@@ -55,6 +63,7 @@ public struct iOSProjectDetailFeature {
         case delegate(Delegate)
         
         public enum Delegate {
+            case close
             case projectAdded(Project)
             case projectUpdated(Project)
         }
@@ -236,6 +245,8 @@ public struct iOSProjectDetailFeature {
                 return .send(.updateProject)
             case .appDescription(_):
                 return .none
+            case .closeTapped:
+                return .send(.delegate(.close))
             }
         }
     }

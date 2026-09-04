@@ -13,6 +13,8 @@ import iOSRootKit
 #endif
 import ComposableArchitecture
 import SVDIInfra
+import SVFoundation
+
 
 @main
 struct SasvynApp: App {
@@ -20,6 +22,11 @@ struct SasvynApp: App {
     private var appDelegate
     
     private let appDIContainer = SVAppDIContainer()
+    
+    init() {
+        AppDelegate.rootDIContainer = appDIContainer.rootDIContainer
+    }
+
     var body: some Scene {
         WindowGroup {
 #if os(macOS)
@@ -28,7 +35,6 @@ struct SasvynApp: App {
             }))
 #elseif os(iOS)
             appDIContainer.rootDIContainer.makeView()
-                .preferredColorScheme(.dark)
 #endif
         }
         .defaultSize(.init(width: 1200, height: 800))
@@ -38,7 +44,7 @@ struct SasvynApp: App {
 }
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
-
+    static var rootDIContainer: RootDIContainer?
     func application(
         _ application: UIApplication,
         configurationForConnecting connectingSceneSession: UISceneSession,
@@ -57,17 +63,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 final class SceneDelegate: NSObject, UIWindowSceneDelegate {
-
+    
     func windowScene(
         _ windowScene: UIWindowScene,
         performActionFor shortcutItem: UIApplicationShortcutItem,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        print("🔥 QUICK ACTION")
-        print(shortcutItem.type)
-
         handleQuickAction(shortcutItem)
-
         completionHandler(true)
     }
     
@@ -76,11 +78,7 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-
         if let shortcutItem = connectionOptions.shortcutItem {
-            print("❄️ COLD LAUNCH QUICK ACTION")
-            print(shortcutItem.type)
-
             handleQuickAction(shortcutItem)
         }
     }
@@ -88,22 +86,11 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
     private func handleQuickAction(
         _ shortcutItem: UIApplicationShortcutItem
     ) {
-        switch shortcutItem.type {
-
-        case "com.sasvyn.new-project":
-            print("➡️ New Project")
-
-        case "com.sasvyn.projects":
-            print("➡️ My Projects")
-
-        case "com.sasvyn.create-mockup":
-            print("➡️ Create Mockup")
-
-        case "com.sasvyn.export-portfolio":
-            print("➡️ Export Portfolio")
-
-        default:
-            print("❓ Unknown shortcut:", shortcutItem.type)
+        guard let action = QuickAppAction(rawValue: shortcutItem.type) else {
+            return
+        }
+        Task { @MainActor in
+            AppDelegate.rootDIContainer?.send(.quickAppAction(action))
         }
     }
 }

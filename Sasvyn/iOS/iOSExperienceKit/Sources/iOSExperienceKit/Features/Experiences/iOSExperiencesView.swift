@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import SVDesignSystem
 
 public struct iOSExperiencesView: View {
     @Bindable var store: StoreOf<iOSExperiencesFeature>
@@ -27,10 +28,10 @@ public struct iOSExperiencesView: View {
         .listStyle(.plain)
         .overlay {
             if store.experiences.isEmpty {
-                ContentUnavailableView(
-                    "No Experience Added",
+                SVContentUnavailableView(
+                    title: "No Experience Added",
                     systemImage: "briefcase.fill",
-                    description: Text("Add your work experience to showcase your professional journey.")
+                    description: "Add your work experience to showcase your professional journey."
                 )
             }
         }
@@ -43,7 +44,9 @@ public struct iOSExperiencesView: View {
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { destinationStore in
             switch destinationStore.case {
-            case .experienceForm(let formStore): ExperienceFormView(store: formStore)
+            case .experienceForm(let formStore):
+                ExperienceFormView(store: formStore)
+                    .interactiveDismissDisabled()
             }
         }
         .alert($store.scope(\.alert, action: \.alert))

@@ -65,4 +65,9 @@ public final class RootDIContainer {
     @MainActor public func makeView() -> some View {
         iOSRootView(store: store)
     }
+    
+    @MainActor
+    public func send(_ action: iOSRootFeature.Action) {
+        store.send(action)
+    }
 }

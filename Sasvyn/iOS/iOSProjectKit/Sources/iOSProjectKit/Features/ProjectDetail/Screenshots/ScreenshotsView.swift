@@ -42,19 +42,18 @@ struct ScreenshotsView: View {
     var body: some View {
         SVSection(title: "Preview", titleHorizontalPadding: SVSpacing.screenHorizontal) {
             if store.screenshots.isEmpty {
-                ContentUnavailableView {
-                    Label("No Screenshots Yet", systemImage: "photo.on.rectangle.angled")
-                } description: {
-                    Text("Add screenshots to preview your project here.")
-                } actions: {
-                    Button {
-                        store.send(.addPreviewsTapped)
-                    } label: {
-                        Label("Add Screenshots", systemImage: "plus")
-                            .padding(.vertical, 4)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .optionalGlassEffect(.capsule)
+                SVContentUnavailableView(
+                    title: "No Screenshots Yet",
+                    systemImage: "photo.on.rectangle.angled",
+                    description: "Add screenshots to preview your project here."
+                ) {
+                    SVButton(
+                        "Add Screenshots",
+                        systemImage: "plus",
+                        size: .medium,
+                        width: .intrinsic) {
+                            store.send(.addPreviewsTapped)
+                        }
                 }
             }else {
                 ScrollView(.horizontal) {
@@ -128,8 +127,10 @@ struct ScreenshotsView: View {
             switch store.case {
             case .screenshotsReorder(let store):
                 ScreenshotsReorderView(store: store)
+                    .interactiveDismissDisabled()
             case .mockupsPicker(let store):
                 iOSMockupsView(store: store)
+                    .interactiveDismissDisabled()
             }
         }
         .imageViewer(item: $store.selectedScreenshot, items: store.screenshots) { scrollPosition in

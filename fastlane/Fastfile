@@ -1,0 +1,28 @@
+default_platform(:ios)
+
+PROJECT_ROOT = File.expand_path("..", __dir__)
+PROJECT = File.join(PROJECT_ROOT, "Sasvyn.xcodeproj")
+
+platform :ios do
+
+  desc "Clean and build Sasvyn for simulator"
+  lane :simulator do
+    sh("xcodebuild clean -project '#{PROJECT}' -scheme Sasvyn")
+
+    sh("xcodebuild build \
+      -project '#{PROJECT}' \
+      -scheme Sasvyn \
+      -destination 'platform=iOS Simulator,name=iPhone 14 Plus'")
+  end
+
+  desc "Clean and build Sasvyn for iPhone"
+  lane :iphone do
+    sh("xcodebuild clean -project '#{PROJECT}' -scheme Sasvyn")
+
+    sh("xcodebuild build \
+      -project '#{PROJECT}' \
+      -scheme Sasvyn \
+      -destination 'generic/platform=iOS'")
+  end
+
+end

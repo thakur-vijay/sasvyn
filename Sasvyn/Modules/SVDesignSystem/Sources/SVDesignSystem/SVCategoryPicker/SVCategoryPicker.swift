@@ -30,6 +30,7 @@ public extension View {
                     isPresented.wrappedValue = false
                     onDismiss()
                 }
+                .interactiveDismissDisabled()
             }
     }
 }
@@ -54,7 +55,6 @@ internal struct CategoryPicker<T: SVCategory>: View {
                     Image(systemName: "xmark")
                         .frame(width: 40, height: 40)
                 }
-                .tint(.primary)
                 .optionalGlassEffect(.circle)
             }
             ChipLayoutUI(alignment: .leading, spacing: 12){
@@ -67,19 +67,14 @@ internal struct CategoryPicker<T: SVCategory>: View {
                 }
             }
             
-            Button {
+            SVButton(
+                buttonTitle,
+                systemImage: "plus"
+            ) {
                 if let selectedCategory {
                     add(selectedCategory)
                 }
-            } label: {
-                Text(buttonTitle)
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
             }
-            .tint(selectedCategory == nil ? .gray : .blue)
-            .buttonStyle(.borderedProminent)
-            .optionalGlassEffect(.capsule)
             .allowsTightening(!selectedCategory.isNull)
 
         }

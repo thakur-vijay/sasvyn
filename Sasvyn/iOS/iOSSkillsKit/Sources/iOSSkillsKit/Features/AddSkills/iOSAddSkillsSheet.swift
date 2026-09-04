@@ -103,8 +103,11 @@ public struct iOSAddSkillsSheet: View {
     func SkillsView()-> some View {
         Section("Skills"){
             if store.skills.isEmpty{
-                ContentUnavailableView("No skills added yet", systemImage: "wrench.and.screwdriver.fill")
-
+                SVContentUnavailableView(
+                    title: "No Skills Yet",
+                    systemImage: "wrench.and.screwdriver.fill",
+                    description: "Add new skills to see here."
+                )
             }else {
                 ForEach(store.skills) { skill in
                     HStack(spacing: 16) {

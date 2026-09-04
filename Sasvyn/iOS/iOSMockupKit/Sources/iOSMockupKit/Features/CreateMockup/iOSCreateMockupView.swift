@@ -28,7 +28,7 @@ public struct iOSCreateMockupView: View {
                     if let selectedDevice {
                         MockupPreview(
                             imageData: store.selectedMockup?.imageData,
-                            scaleResize: store.selectedMockup?.imageResize ?? .fit,
+                            scaleResize: store.selectedMockup?.imageResize ?? .fill,
                             selectedDevice: selectedDevice,
                             renderMode: .preview
                         ) {
@@ -42,6 +42,7 @@ public struct iOSCreateMockupView: View {
                             if store.selectedMockup?.imageData == nil{
                                 Image(systemName: "plus.circle.fill")
                                     .font(.largeTitle.bold())
+                                    .foregroundStyle(Color.accentColor)
                                     .allowsHitTesting(false)
                             }
                         }
@@ -75,6 +76,7 @@ public struct iOSCreateMockupView: View {
                                     if store.selectedMockup?.id == mockup.id {
                                         Image(systemName: "checkmark.circle.fill")
                                             .font(.headline)
+                                            .foregroundStyle(Color.accentColor)
                                     }
                                 }
                             }
@@ -82,7 +84,7 @@ public struct iOSCreateMockupView: View {
                             if let device = store.selectedMockup?.device, maxSelectionCount > 0{
                                 MockupPreview(
                                     imageData: nil,
-                                    scaleResize: .fit,
+                                    scaleResize: .fill,
                                     selectedDevice: device,
                                     renderMode: .preview
                                 ) {
@@ -91,6 +93,7 @@ public struct iOSCreateMockupView: View {
                                 .overlay {
                                    Image(systemName: "plus.circle.fill")
                                         .font(.headline)
+                                        .foregroundStyle(Color.accentColor)
                                 }
                             }
                         }
@@ -150,6 +153,7 @@ public struct iOSCreateMockupView: View {
             switch store.case {
             case .devicePicker(let store):
                 iOSDevicePickerView(store: store)
+                    .interactiveDismissDisabled()
             }
         }
     }

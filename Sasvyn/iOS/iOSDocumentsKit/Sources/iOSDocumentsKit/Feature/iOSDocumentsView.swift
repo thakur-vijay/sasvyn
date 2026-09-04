@@ -57,12 +57,10 @@ public struct iOSDocumentsView: View {
         }
         .overlay {
             if store.documents.isEmpty {
-                ContentUnavailableView(
-                    "No Documents",
+                SVContentUnavailableView(
+                    title: store.selectedDocumentCategory == nil ? "No Documents" : "No Documents in \("\(store.selectedDocumentCategory?.title ?? "")")",
                     systemImage: "doc.text.magnifyingglass",
-                    description: Text(
-                        "Add PDF documents to keep them ready for your portfolio."
-                    )
+                    description: "Add PDF documents to keep them ready for your portfolio."
                 )
             }
         }

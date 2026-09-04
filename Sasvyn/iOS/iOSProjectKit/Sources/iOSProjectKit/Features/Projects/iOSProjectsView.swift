@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import SVDesignSystem
 
 public struct iOSProjectsView: View {
     @Bindable var store: StoreOf<iOSProjectsFeature>
@@ -44,10 +45,10 @@ public struct iOSProjectsView: View {
             }
             .overlay {
                 if store.projects.isEmpty {
-                    ContentUnavailableView(
-                        "No Projects Yet",
+                    SVContentUnavailableView(
+                        title: "No Projects Yet",
                         systemImage: "square.stack.3d.up",
-                        description: Text("Create a project to start building your portfolio.")
+                        description: "Create a project to start building your portfolio."
                     )
                 }
             }

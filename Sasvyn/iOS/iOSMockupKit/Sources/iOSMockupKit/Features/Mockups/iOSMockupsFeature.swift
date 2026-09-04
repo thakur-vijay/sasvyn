@@ -14,6 +14,9 @@ public struct iOSMockupsFeature {
     @Dependency(\.mockupsClient)
     private var client
     
+    @Dependency(\.photosClient)
+    private var photosClient
+    
     @ObservableState
     public struct State: Equatable {
         public var mockups: [MockupImage] = []
@@ -66,6 +69,7 @@ public struct iOSMockupsFeature {
         case deleteTapped(MockupImage)
         case mockupTapped(MockupImage)
         case mockupDeleted(MockupImage)
+        case saveToPhotosTapped(MockupImage)
         case delegate(Delegate)
         
         public enum Delegate {
@@ -154,6 +158,15 @@ public struct iOSMockupsFeature {
                     return .none
                 }
               
+            case .saveToPhotosTapped(let mockup):
+                return .run {[photosClient] send in
+                    do {
+                        guard let url = mockup.url else { return }
+                        try await photosClient.saveImage(url)
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
             }
         }
         .ifLet(\.$destination, action: \.destination)

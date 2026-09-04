@@ -10,13 +10,14 @@ import iOSHomeKit
 import iOSProjectKit
 import iOSLibraryKit
 import iOSSettingsKit
+import SVFoundation
 
 @Reducer
 public struct iOSMainFeature {
     
     @ObservableState
     public struct State: Equatable {
-        public var selectedTab: TabModel = .projects
+        public var selectedTab: TabModel = .home
         public var home = iOSHomeFeature.State()
         public var projects = iOSProjectsFeature.State()
         public var library = iOSLibraryFeature.State()
@@ -33,6 +34,7 @@ public struct iOSMainFeature {
         case projects(iOSProjectsFeature.Action)
         case library(iOSLibraryFeature.Action)
         case settings(iOSSettingsFeature.Action)
+        case quickAppAction(QuickAppAction)
         
         case delegate(Delegate)
         
@@ -72,11 +74,23 @@ public struct iOSMainFeature {
                 return .none
             case .library(_):
                 return .none
-            case .settings(.signoutTapped):
+            case .settings(_):
                 return .none
             case .delegate(_):
                 return .none
             case .home(_):
+                return .none
+            case .quickAppAction(let action):
+                switch action {
+                case .newProject:
+                    return .send(.home(.quickAction(.addProject)))
+                case .projects:
+                    break
+                case .createMockup:
+                    break
+                case .exportPortfolio:
+                    break
+                }
                 return .none
             }
         }

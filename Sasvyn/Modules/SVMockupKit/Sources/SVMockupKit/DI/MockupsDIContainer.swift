@@ -47,6 +47,7 @@ public final class MockupsDIContainer{
     
     public func register(_ values: inout DependencyValues) {
         values.mockupsClient = client
+        values.photosClient = PhotosClient.liveValue
     }
     
 }

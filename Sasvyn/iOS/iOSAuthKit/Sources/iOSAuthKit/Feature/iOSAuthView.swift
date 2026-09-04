@@ -10,20 +10,7 @@ import SwiftUI
 import SafariServices
 import ComposableArchitecture
 import AuthenticationServices
-
-enum AuthURLType: String, CaseIterable, Identifiable{
-    case termsOfService = "Terms of Service"
-    case privacyPolicy = "Privacy Policy"
-    
-    var id: String { rawValue }
-    
-    var url: String {
-        switch self {
-        case .termsOfService: "https://www.apple.com"
-        case .privacyPolicy: "https://www.apple.com"
-        }
-    }
-}
+import SVDesignSystem
 
 public struct iOSAuthView: View {
     let store: StoreOf<iOSAuthFeature>
@@ -35,89 +22,88 @@ public struct iOSAuthView: View {
     @Environment(\.colorScheme)
     private var colorScheme
     
-    @State private var clickedURL: AuthURLType?
+    @State private var clickedItem: WebItem?
+    
     public var body: some View {
-        VStack(spacing: 15) {
-            VStack(spacing: 15){
-                Image(systemName: "s.circle.fill")
-                    .font(.system(size: 100))
-                    .foregroundStyle(.white, .purple.gradient)
-                Text("What's New in \nSasvyn")
-                    .font(.largeTitle.bold())
-                    .multilineTextAlignment(.center)
-            }
-            .padding(.vertical, 20)
-            
-            VStack(alignment: .leading, spacing: 25) {
-                PointView(
-                    title: "Build Your Portfolio",
-                    image: "person.text.rectangle",
-                    description: "Create your professional developer profile."
-                )
-                
-                PointView(
-                    title: "Showcase Your Work",
-                    image: "briefcase.fill",
-                    description: "Present your projects, skills, and experience."
-                )
-                
-                PointView(
-                    title: "Share Your Profile",
-                    image: "link",
-                    description: "Give recruiters and clients one place to know your work."
-                )
-            }
-            .padding(.horizontal, 25)
-            
-            Spacer(minLength: 0)
-            
-            Section {
-                SignInWithAppleButton { request in
-                    
-                } onCompletion: { result in
-                    store.send(.delegate(.loginSucceeded))
+        NavigationStack{
+            VStack(spacing: 15) {
+                VStack(spacing: 15){
+                    Image(systemName: "s.circle.fill")
+                        .font(.system(size: 100))
+                        .foregroundStyle(.white, Color.accentColor.gradient)
+                    Text("What's New in \nSasvyn")
+                        .font(.largeTitle.bold())
+                        .multilineTextAlignment(.center)
                 }
-                .signInWithAppleButtonStyle(.white)
-                .frame(height: 55)
-                .clipShape(.capsule)
+                .padding(.vertical, 20)
                 
-            } header: {
-                VStack(spacing: 4) {
-                    Text("Sign in with Apple")
-                        .font(.headline)
+                VStack(alignment: .leading, spacing: 25) {
+                    PointView(
+                        title: "Build Your Portfolio",
+                        image: "person.text.rectangle",
+                        description: "Create your professional developer profile."
+                    )
                     
-                    Text("Use your Apple ID to sign in directly to Sasvyn.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    PointView(
+                        title: "Showcase Your Work",
+                        image: "briefcase.fill",
+                        description: "Present your projects, skills, and experience."
+                    )
+                    
+                    PointView(
+                        title: "Share Your Profile",
+                        image: "link",
+                        description: "Give recruiters and clients one place to know your work."
+                    )
                 }
-                .textCase(nil)
-            } footer: {
-                RichTextView(
-                    configuration: .init(
-                        text: "By signing in, you agree to our Terms of Service and Privacy Policy.",
-                        links: [
-                            .init(text: "Terms of Service", link: "/termsOfService"),
-                            .init(text: "Privacy Policy.", link: "/privacyPolicy"),
-                        ],
-                        linkColor: .purple,
-                        font: .subheadline
-                    )) { clickedURL in
-                        switch clickedURL {
-                        case "/termsOfService":
-                            self.clickedURL = .termsOfService
-                        case "/privacyPolicy":
-                            self.clickedURL = .privacyPolicy
-                        default: break
-                        }
+                .padding(.horizontal, 25)
+                
+                Spacer(minLength: 0)
+                
+                Section {
+                    SignInWithAppleButton { request in
+                        
+                    } onCompletion: { result in
+                        store.send(.delegate(.loginSucceeded))
                     }
-                    .multilineTextAlignment(.center)
+                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+                    .frame(height: 55)
+                    .clipShape(.capsule)
+                    
+                } header: {
+                    VStack(spacing: 4) {
+                        Text("Sign in with Apple")
+                            .font(.headline)
+                        
+                        Text("Use your Apple ID to sign in directly to Sasvyn.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .textCase(nil)
+                } footer: {
+                    RichTextView(
+                        configuration: .init(
+                            text: "By signing in, you agree to our Terms of Service and Privacy Policy.",
+                            links: [
+                                .init(text: "Terms of Service", link: "/termsOfService"),
+                                .init(text: "Privacy Policy.", link: "/privacyPolicy"),
+                            ],
+                            linkColor: Color.accentColor,
+                            font: .subheadline
+                        )) { clickedURL in
+                            switch clickedURL {
+                            case "/termsOfService":
+                                self.clickedItem = .init(url: .init(string: "https://www.apple.com")!)
+                            case "/privacyPolicy":
+                                self.clickedItem = .init(url: .init(string: "https://www.apple.com")!)
+                            default: break
+                            }
+                        }
+                        .multilineTextAlignment(.center)
+                }
             }
-        }
-        .padding(15)
-        .sheet(item: $clickedURL) { url in
-            if let url = URL(string: url.url){
-                SafariView(url: url)
-            }
+            .padding(15)
+            .web($clickedItem)
         }
     }
     
@@ -130,7 +116,7 @@ public struct iOSAuthView: View {
         HStack(spacing: 15) {
             Image(systemName: image)
                 .font(.largeTitle)
-                .foregroundStyle(.purple)
+                .foregroundStyle(Color.accentColor)
             
             VStack(alignment: .leading, spacing: 6) {
                 Text(title)
@@ -226,28 +212,5 @@ public struct RichTextLink: Sendable, Hashable {
     ) {
         self.text = text
         self.link = link
-    }
-}
-
-public struct SafariView: UIViewControllerRepresentable {
-
-    private let url: URL
-
-    public init(url: URL) {
-        self.url = url
-    }
-
-    public func makeUIViewController(
-        context: Context
-    ) -> SFSafariViewController {
-        let controller = SFSafariViewController(url: url)
-        return controller
-    }
-
-    public func updateUIViewController(
-        _ viewController: SFSafariViewController,
-        context: Context
-    ) {
-        // Nothing to update.
     }
 }

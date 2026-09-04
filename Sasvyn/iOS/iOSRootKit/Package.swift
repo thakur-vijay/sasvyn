@@ -20,6 +20,8 @@ let package = Package(
         ),
         .package(path: "../iOSAuthKit"),
         .package(path: "../iOSMainKit"),
+        .package(path: "../iOSAppearanceKit"),
+        .package(path: "../../Modules/SVFoundation"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,6 +35,8 @@ let package = Package(
                 ),
                 .product(name: "iOSAuthKit", package: "iOSAuthKit"),
                 .product(name: "iOSMainKit", package: "iOSMainKit"),
+                .product(name: "iOSAppearanceKit", package: "iOSAppearanceKit"),
+                .product(name: "SVFoundation", package: "SVFoundation"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

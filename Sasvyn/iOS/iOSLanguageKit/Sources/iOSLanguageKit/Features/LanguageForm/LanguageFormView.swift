@@ -49,19 +49,14 @@ public struct LanguageFormView: View {
             .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
                 
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") {
-                        store.send(.saveTapped)
-                    }
-                    .tint(store.isDetailsReady ? .accentColor : .gray.opacity(0.3))
-                    .disabledWithOpacity(!store.isDetailsReady)
+                SVToolbarItem.check(store.isDetailsReady) {
+                    store.send(.saveTapped)
                 }
+                
             }
             .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
                 switch store.case {

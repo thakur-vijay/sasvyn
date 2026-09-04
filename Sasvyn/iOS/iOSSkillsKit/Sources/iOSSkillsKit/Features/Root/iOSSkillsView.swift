@@ -53,22 +53,17 @@ public struct iOSSKillsView: View {
         .navigationTitle("Skills")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("", systemImage: "plus") {
-                    store.send(.addSkillsTapped)
-                }
+            SVToolbarItem(symbol: SVSymbols.Add.plain, placement: .topBarTrailing) {
+                store.send(.addSkillsTapped)
             }
             
             if store.mode == .picker {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.cancelTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.cancelTapped)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") {
-                        store.send(.saveTapped)
-                    }
+                
+                SVToolbarItem.check {
+                    store.send(.saveTapped)
                 }
             }
         }
@@ -83,7 +78,7 @@ public struct iOSSKillsView: View {
             if store.skillGroups.isEmpty {
                 SVContentUnavailableView(
                     title: "No Skills Yet",
-                    systemImage: "wrench.and.screwdriver.fill",
+                    symbol: SVSymbols.skills,
                     description: "Add your skills to showcase your expertise."
                 )
             }

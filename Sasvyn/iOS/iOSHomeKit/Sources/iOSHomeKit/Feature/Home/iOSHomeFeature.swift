@@ -72,7 +72,7 @@ public struct iOSHomeFeature {
                     break
                 case .addProject:
                     state.destination = .projectDetail(.init(mode: .create, id: UUID().uuidString, viewMode: .sheet))
-                case .editPortfolio:
+                case .editAbout:
                     break
                 }
                 return .none

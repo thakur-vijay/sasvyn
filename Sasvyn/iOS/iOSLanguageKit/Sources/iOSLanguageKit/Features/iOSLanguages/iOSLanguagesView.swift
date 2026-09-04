@@ -43,7 +43,7 @@ public struct iOSLanguagesView: View {
             if store.languages.isEmpty {
                 SVContentUnavailableView(
                     title: "No Languages Added",
-                    systemImage: "character.bubble.fill",
+                    symbol: SVSymbols.language,
                     description: "Add the languages you speak to showcase your communication skills."
                 )
             }
@@ -51,13 +51,8 @@ public struct iOSLanguagesView: View {
         .navigationTitle("Languages")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    store.send(.addLanguageTapped)
-                } label: {
-                    Image(systemName: "plus")
-                }
-                .accessibilityLabel("Add Language")
+            SVToolbarItem(symbol: SVSymbols.Add.plain, placement: .topBarTrailing){
+                store.send(.addLanguageTapped)
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in

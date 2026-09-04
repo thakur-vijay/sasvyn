@@ -9,10 +9,11 @@ import SwiftUI
 import ComposableArchitecture
 import SVRemoteImage
 import SVProjectKit
+import SVDesignSystem
 
-enum GridType: String {
-    case two = "square.grid.2x2.fill"
-    case three = "rectangle.grid.3x2.fill"
+enum GridType {
+    case two
+    case three
     
     var count: Int {
         switch self {
@@ -25,6 +26,13 @@ enum GridType: String {
         switch self {
         case .two: .three
         case .three: .two
+        }
+    }
+    
+    var symbol: SVSymbol {
+        switch self {
+        case .two: SVSymbols.grid2x2
+        case .three: SVSymbols.grid3x2
         }
     }
 }
@@ -93,26 +101,21 @@ public struct ScreenshotsReorderView: View {
             .navigationTitle("Edit Screenshots")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark"){
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: gridType.next.rawValue){
-                        if self.scrollPhase == .idle {
-                            switch gridType {
-                            case .two: gridType = .three
-                            case .three: gridType = .two
-                            }
+                
+                SVToolbarItem(symbol: gridType.next.symbol, placement: .topBarTrailing){
+                    if self.scrollPhase == .idle {
+                        switch gridType {
+                        case .two: gridType = .three
+                        case .three: gridType = .two
                         }
                     }
                 }
                 
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark"){
-                        store.send(.checkTapped)
-                    }
+                SVToolbarItem.check {
+                    store.send(.checkTapped)
                 }
             }
             .animation(.smooth, value: gridType)

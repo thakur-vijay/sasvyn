@@ -86,7 +86,7 @@ public struct iOSMockupsView: View {
             if store.mockups.isEmpty {
                 SVContentUnavailableView(
                     title: "No Mockups",
-                    systemImage: "iphone",
+                    symbol: SVSymbols.Mockup.iphone,
                     description: "Create your first mockup to see it here."
                 )
             }
@@ -95,10 +95,8 @@ public struct iOSMockupsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if store.mode == .picker{
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
             }
             
@@ -117,11 +115,8 @@ public struct iOSMockupsView: View {
             }
             
             if store.mode == .picker && !store.isSingleSelection{
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") {
-                        store.send(.checkTapped)
-                    }
-                    .disabledWithOpacity(store.selectedMockupIds.isEmpty)
+                SVToolbarItem.check(store.selectedMockupIds.count > 0){
+                    store.send(.checkTapped)
                 }
             }
         }

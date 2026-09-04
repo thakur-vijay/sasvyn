@@ -25,6 +25,8 @@ public enum SVSymbols {
     public static let terms = SVSymbol("doc.plaintext.fill")
     public static let support = SVSymbol("questionmark.circle.fill")
     public static let logout = SVSymbol("iphone.and.arrow.forward.outward")
+    public static let `grid2x2` = SVSymbol("square.grid.2x2.fill")
+    public static let `grid3x2` = SVSymbol("rectangle.grid.3x2.fill")
 
     // MARK: - Add
 
@@ -61,7 +63,10 @@ public enum SVSymbols {
     // MARK: - Document
 
     public enum Document {
-        public static let add = SVSymbol("document.badge.plus.fill")
+        public enum Add{
+            public static let plain = SVSymbol("document.badge.plus")
+            public static let fill = SVSymbol("document.badge.plus.fill")
+        }
         public static let document = SVSymbol("doc.text.fill")
         public static let empty = SVSymbol("doc.text.magnifyingglass")
     }

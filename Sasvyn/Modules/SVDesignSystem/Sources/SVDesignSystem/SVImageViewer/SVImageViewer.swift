@@ -69,9 +69,7 @@ internal struct ImageViewer<Item: ImageViewerItem>: View {
             .navigationTitle("Preview")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark", action: onClose)
-                }
+                SVToolbarItem.close(action: onClose)
             }
         }
         .task {

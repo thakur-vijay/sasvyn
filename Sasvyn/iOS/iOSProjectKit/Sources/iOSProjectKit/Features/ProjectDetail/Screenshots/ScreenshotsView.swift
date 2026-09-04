@@ -44,7 +44,7 @@ struct ScreenshotsView: View {
             if store.screenshots.isEmpty {
                 SVContentUnavailableView(
                     title: "No Screenshots Yet",
-                    systemImage: "photo.on.rectangle.angled",
+                    symbol: SVSymbols.Photo.empty,
                     description: "Add screenshots to preview your project here."
                 ) {
                     SVButton(

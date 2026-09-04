@@ -30,7 +30,7 @@ public struct iOSExperiencesView: View {
             if store.experiences.isEmpty {
                 SVContentUnavailableView(
                     title: "No Experience Added",
-                    systemImage: "briefcase.fill",
+                    symbol: SVSymbols.experience,
                     description: "Add your work experience to showcase your professional journey."
                 )
             }
@@ -38,8 +38,8 @@ public struct iOSExperiencesView: View {
         .navigationTitle("Experience")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("", systemImage: "plus") { store.send(.addTapped) }
+            SVToolbarItem(symbol: SVSymbols.Add.plain, placement: .topBarTrailing) {
+                store.send(.addTapped)
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { destinationStore in

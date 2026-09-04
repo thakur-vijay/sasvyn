@@ -46,20 +46,18 @@ public struct iOSDocumentsView: View {
         .navigationTitle("Documents")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(
-                    "",
-                    systemImage: "document.badge.plus.fill"
-                ) {
-                    store.send(.addDocumentTapped)
-                }
+            SVToolbarItem(
+                symbol: SVSymbols.Document.Add.fill,
+                placement: .topBarTrailing
+            ) {
+                store.send(.addDocumentTapped)
             }
         }
         .overlay {
             if store.documents.isEmpty {
                 SVContentUnavailableView(
                     title: store.selectedDocumentCategory == nil ? "No Documents" : "No Documents in \("\(store.selectedDocumentCategory?.title ?? "")")",
-                    systemImage: "doc.text.magnifyingglass",
+                    symbol: SVSymbols.Document.empty,
                     description: "Add PDF documents to keep them ready for your portfolio."
                 )
             }

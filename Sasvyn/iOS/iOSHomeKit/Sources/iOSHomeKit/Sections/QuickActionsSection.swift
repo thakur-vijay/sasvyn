@@ -17,7 +17,7 @@ public struct QuickActionsSection: View {
         case addDocument
         case createMockup
         case addProject
-        case editPortfolio
+        case editAbout
         
         public var id: Self { self }
         
@@ -29,21 +29,17 @@ public struct QuickActionsSection: View {
                 "Create Mockup"
             case .addProject:
                 "Add Project"
-            case .editPortfolio:
-                "Edit Portfolio"
+            case .editAbout:
+                "Edit About"
             }
         }
         
         var systemImage: String {
             switch self {
-            case .addDocument:
-                "doc.badge.plus"
-            case .createMockup:
-                "rectangle.on.rectangle"
-            case .addProject:
-                "folder.badge.plus"
-            case .editPortfolio:
-                "person.text.rectangle"
+            case .addDocument: SVSymbols.Document.Add.plain.name
+            case .createMockup: SVSymbols.Mockup.create.name
+            case .addProject: SVSymbols.Project.Add.plain.name
+            case .editAbout: SVSymbols.about.name
             }
         }
     }
@@ -58,7 +54,7 @@ public struct QuickActionsSection: View {
                 
                 GridRow {
                     actionCard(.addProject)
-                    actionCard(.editPortfolio)
+                    actionCard(.editAbout)
                 }
             }
         }

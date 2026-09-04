@@ -9,7 +9,7 @@ import Foundation
 @_exported import GRDB
 
 public final class AppDatabase: @unchecked Sendable {
-
+    private static let appGroupIdentifier = "group.com.sasvyn.shared"
     public let dbQueue: DatabaseQueue
 
     public init(
@@ -38,17 +38,24 @@ public final class AppDatabase: @unchecked Sendable {
     }
 
     private static func databaseURL(
-        filename: String
-    ) throws -> URL {
-        guard let documentsURL = FileManager.default.urls(
-            for: .documentDirectory,
-            in: .userDomainMask
-        ).first else {
-            throw DatabaseError.documentsDirectoryNotFound
-        }
 
-        return documentsURL.appendingPathComponent(filename)
-    }
+            filename: String
+
+        ) throws -> URL {
+
+            guard let containerURL = FileManager.default.containerURL(
+
+                forSecurityApplicationGroupIdentifier: appGroupIdentifier
+
+            ) else {
+
+                throw DatabaseError.documentsDirectoryNotFound
+
+            }
+
+            return containerURL.appendingPathComponent(filename)
+
+        }
     
     public func read<T: Sendable>(
         _ block: @Sendable @escaping (SVDatabase) throws -> T

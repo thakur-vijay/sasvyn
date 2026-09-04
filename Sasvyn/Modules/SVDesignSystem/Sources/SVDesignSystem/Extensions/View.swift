@@ -20,7 +20,7 @@ public extension View {
     nonisolated func optionalGlassEffect<S: Shape & Sendable>(_ shape: S, isInteractive: Bool = false)-> some View {
         if #available(iOS 26.0, *) {
             self
-                .glassEffect(.clear.interactive(isInteractive), in: shape)
+                .glassEffect(.regular.interactive(isInteractive), in: shape)
         } else {
            self
                 .background(.ultraThinMaterial, in: shape)

@@ -38,7 +38,7 @@ public struct iOSEducationsView: View {
             if store.educations.isEmpty {
                 SVContentUnavailableView(
                     title: "No Education Added",
-                    systemImage: "graduationcap.fill",
+                    symbol: SVSymbols.education,
                     description: "Add your education history to showcase your academic background."
                 )
             }
@@ -46,10 +46,9 @@ public struct iOSEducationsView: View {
         .navigationTitle("Education")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("", systemImage: "plus"){
-                    store.send(.addTapped)
-                }
+            
+            SVToolbarItem(symbol: SVSymbols.Add.plain, placement: .topBarTrailing) {
+                store.send(.addTapped)
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in

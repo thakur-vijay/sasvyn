@@ -24,9 +24,8 @@ public struct iOSCreateMockupFeature {
         public var exportType: ExportQuality = .hd
         public var selectedItem: PhotosPickerItem?
         public var isMockupPhotoPickerPresented: Bool = false
-        
+        public var isDismissRequested = false
         public init(){
-            
         }
         
         @Presents
@@ -51,6 +50,7 @@ public struct iOSCreateMockupFeature {
         case applyToAllTapped
         case qualityTapped(ExportQuality)
         case delegate(Delegate)
+        case onItemProvidersLoaded([Data])
         
         public enum Delegate {
             case addMockup(MockupImage)
@@ -200,8 +200,10 @@ public struct iOSCreateMockupFeature {
             case .delegate(_):
                 return .none
             case .exportFinished:
+                state.isDismissRequested = true
                 return .send(.delegate(.exportFinished))
             case .closeTapped:
+                state.isDismissRequested = true
                 return .send(.delegate(.close))
             case .resizeTapped:
                 let next = state.selectedMockup?.imageResize.next ?? .fill
@@ -238,6 +240,21 @@ public struct iOSCreateMockupFeature {
             case .qualityTapped(let quality):
                 state.exportType = quality
                 return .none
+            case .onItemProvidersLoaded(let images):
+                print("from feature", images.count)
+                let selectedDevice = state.selectedDevice!
+                return .send(
+                    .mockupsReady(
+                        images.map {
+                            Mockup(
+                                id: UUID().uuidString,
+                                device: selectedDevice,
+                                imageData: $0,
+                                imageResize: .fill
+                            )
+                        }
+                    )
+                )
             }
         }
         .ifLet(\.$destination, action: \.destination)

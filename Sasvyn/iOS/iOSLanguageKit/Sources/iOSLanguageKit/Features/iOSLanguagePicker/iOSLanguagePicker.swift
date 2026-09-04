@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SVLanguageKit
+import SVDesignSystem
 
 public struct iOSLanguagePicker: View {
     @Bindable var store: StoreOf<iOSLanguagePickerFeature>
@@ -53,10 +54,8 @@ public struct iOSLanguagePicker: View {
             .navigationTitle("Select Language")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
             }
             .searchable(

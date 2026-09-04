@@ -37,6 +37,7 @@ public struct iOSHomeView: View {
             }
             //            .ignoresSafeArea(.container, edges: .top)
             .navigationTitle("Welcome")
+            .toolbarTitleDisplayMode(.inlineLarge)
             .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
                 switch store.case {
                 case .projectDetail(let store):

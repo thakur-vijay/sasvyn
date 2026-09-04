@@ -68,31 +68,20 @@ public struct iOSProjectDetailView: View {
         .animation(.smooth, value: store.mode)
         .toolbar {
             if store.viewMode == .sheet {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
             }
             if store.mode == .create {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") {
-                        store.send(.saveTapped)
-                    }
-                    .tint(store.isProjectReadyToAdd ? .blue : .gray.opacity(0.3))
-                    .disabledWithOpacity(!store.isProjectReadyToAdd)
+                SVToolbarItem.check(store.isProjectReadyToAdd){
+                    store.send(.saveTapped)
                 }
             } else {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        store.send(.toggleModeTapped)
-                    } label: {
-                        if store.mode == .edit {
-                            Image(systemName: "xmark")
-                        } else {
-                            Text("Edit")
-                        }
-                    }
+                SVToolbarItem(
+                    symbol: store.mode == .edit ? SVSymbols.close : SVSymbols.edit,
+                    placement: .topBarTrailing
+                ) {
+                    store.send(.toggleModeTapped)
                 }
             }
         }

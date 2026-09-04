@@ -18,8 +18,15 @@ public struct iOSRootView: View {
         self.store = store
     }
     
-    @AppStorage("appTint") private var appTint: AppTint = .blue
+    @AppStorage("appTint") private var appTint: AppTint = .blue {
+        didSet {
+            let customImage = UIImage(systemName: "chevron.left")?.withTintColor(.init(appTint.color), renderingMode: .alwaysOriginal)
+            UINavigationBar.appearance().backIndicatorImage = customImage
+            UINavigationBar.appearance().backIndicatorTransitionMaskImage = customImage
+        }
+    }
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
+    
     public var body: some View {
         switch store.state {
         case .auth:

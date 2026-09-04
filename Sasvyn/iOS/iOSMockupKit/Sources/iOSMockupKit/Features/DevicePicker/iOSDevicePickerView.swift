@@ -55,10 +55,8 @@ public struct iOSDevicePickerView: View {
             }
             .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
             }
         }

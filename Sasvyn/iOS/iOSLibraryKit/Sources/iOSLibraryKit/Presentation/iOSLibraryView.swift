@@ -48,6 +48,7 @@ public struct iOSLibraryView: View {
             }
             .listStyle(.plain)
             .navigationTitle("Library")
+            .toolbarTitleDisplayMode(.inlineLarge)
         } destination: { store in
             switch store.case {
             case .skills(let store):

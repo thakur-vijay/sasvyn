@@ -56,6 +56,7 @@ public struct iOSSettingsView: View {
             }
             .listStyle(.plain)
             .navigationTitle("Settings")
+            .toolbarTitleDisplayMode(.inlineLarge)
         } destination: { store in
             switch store.case {
             case .appearance(let store):

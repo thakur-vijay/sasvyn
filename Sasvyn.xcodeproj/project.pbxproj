@@ -7,12 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		184555E6304AD4C10012E98C /* SasvynShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 184555DC304AD4C10012E98C /* SasvynShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		184555ED304AD8170012E98C /* SVDatabaseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 184555EC304AD8170012E98C /* SVDatabaseKit */; };
+		184555EF304AD8210012E98C /* SVMockupKit in Frameworks */ = {isa = PBXBuildFile; productRef = 184555EE304AD8210012E98C /* SVMockupKit */; };
+		184555F1304AD8260012E98C /* iOSMockupKit in Frameworks */ = {isa = PBXBuildFile; productRef = 184555F0304AD8260012E98C /* iOSMockupKit */; };
+		184555F3304AD88E0012E98C /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 184555F2304AD88E0012E98C /* SVDIInfra */; };
 		1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1854B9BD301CA27700F2E614 /* macOSMainKit */; };
 		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
 		18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18C382A6303083BC008F2B81 /* iOSRootKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		184555E4304AD4C10012E98C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1854B949301BE27000F2E614 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 184555DB304AD4C10012E98C;
+			remoteInfo = SasvynShareExtension;
+		};
 		1854B95F301BE27200F2E614 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1854B949301BE27000F2E614 /* Project object */;
@@ -29,13 +41,33 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		184555E7304AD4C10012E98C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				184555E6304AD4C10012E98C /* SasvynShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		184555DC304AD4C10012E98C /* SasvynShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SasvynShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1854B951301BE27000F2E614 /* Sasvyn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sasvyn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1854B95E301BE27200F2E614 /* SasvynTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SasvynTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1854B968301BE27200F2E614 /* SasvynUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SasvynUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		184555EB304AD4C10012E98C /* Exceptions for "SasvynShareExtension" folder in "SasvynShareExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 184555DB304AD4C10012E98C /* SasvynShareExtension */;
+		};
 		1854B988301C744200F2E614 /* Exceptions for "Sasvyn" folder in "Sasvyn" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -82,6 +114,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		184555DD304AD4C10012E98C /* SasvynShareExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				184555EB304AD4C10012E98C /* Exceptions for "SasvynShareExtension" folder in "SasvynShareExtension" target */,
+			);
+			path = SasvynShareExtension;
+			sourceTree = "<group>";
+		};
 		1854B953301BE27000F2E614 /* Sasvyn */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -103,6 +143,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		184555D9304AD4C10012E98C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				184555ED304AD8170012E98C /* SVDatabaseKit in Frameworks */,
+				184555F1304AD8260012E98C /* iOSMockupKit in Frameworks */,
+				184555EF304AD8210012E98C /* SVMockupKit in Frameworks */,
+				184555F3304AD88E0012E98C /* SVDIInfra in Frameworks */,
+			);
+		};
 		1854B94E301BE27000F2E614 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -130,6 +179,7 @@
 				1854B953301BE27000F2E614 /* Sasvyn */,
 				1854B961301BE27200F2E614 /* SasvynTests */,
 				1854B96B301BE27200F2E614 /* SasvynUITests */,
+				184555DD304AD4C10012E98C /* SasvynShareExtension */,
 				1854B98C301C79D000F2E614 /* Frameworks */,
 				1854B952301BE27000F2E614 /* Products */,
 			);
@@ -141,6 +191,7 @@
 				1854B951301BE27000F2E614 /* Sasvyn.app */,
 				1854B95E301BE27200F2E614 /* SasvynTests.xctest */,
 				1854B968301BE27200F2E614 /* SasvynUITests.xctest */,
+				184555DC304AD4C10012E98C /* SasvynShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,6 +206,30 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		184555DB304AD4C10012E98C /* SasvynShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 184555EA304AD4C10012E98C /* Build configuration list for PBXNativeTarget "SasvynShareExtension" */;
+			buildPhases = (
+				184555D8304AD4C10012E98C /* Sources */,
+				184555D9304AD4C10012E98C /* Frameworks */,
+				184555DA304AD4C10012E98C /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				184555DD304AD4C10012E98C /* SasvynShareExtension */,
+			);
+			name = SasvynShareExtension;
+			packageProductDependencies = (
+				184555EC304AD8170012E98C /* SVDatabaseKit */,
+				184555EE304AD8210012E98C /* SVMockupKit */,
+				184555F0304AD8260012E98C /* iOSMockupKit */,
+				184555F2304AD88E0012E98C /* SVDIInfra */,
+			);
+			productName = SasvynShareExtension;
+			productReference = 184555DC304AD4C10012E98C /* SasvynShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1854B950301BE27000F2E614 /* Sasvyn */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1854B970301BE27200F2E614 /* Build configuration list for PBXNativeTarget "Sasvyn" */;
@@ -162,8 +237,12 @@
 				1854B94D301BE27000F2E614 /* Sources */,
 				1854B94E301BE27000F2E614 /* Frameworks */,
 				1854B94F301BE27000F2E614 /* Resources */,
+				184555E7304AD4C10012E98C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
+			);
+			dependencies = (
+				184555E5304AD4C10012E98C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1854B953301BE27000F2E614 /* Sasvyn */,
@@ -230,6 +309,9 @@
 				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
+					184555DB304AD4C10012E98C = {
+						CreatedOnToolsVersion = 27.0;
+					};
 					1854B950301BE27000F2E614 = {
 						CreatedOnToolsVersion = 27.0;
 					};
@@ -260,11 +342,17 @@
 				1854B950301BE27000F2E614 /* Sasvyn */,
 				1854B95D301BE27200F2E614 /* SasvynTests */,
 				1854B967301BE27200F2E614 /* SasvynUITests */,
+				184555DB304AD4C10012E98C /* SasvynShareExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		184555DA304AD4C10012E98C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
 		1854B94F301BE27000F2E614 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
@@ -283,6 +371,11 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		184555D8304AD4C10012E98C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 		1854B94D301BE27000F2E614 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -301,6 +394,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		184555E5304AD4C10012E98C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 184555DB304AD4C10012E98C /* SasvynShareExtension */;
+			targetProxy = 184555E4304AD4C10012E98C /* PBXContainerItemProxy */;
+		};
 		1854B960301BE27200F2E614 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1854B950301BE27000F2E614 /* Sasvyn */;
@@ -314,6 +412,73 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		184555E8304AD4C10012E98C /* Debug configuration for PBXNativeTarget "SasvynShareExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SasvynShareExtension/SasvynShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9BQY66D558;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SasvynShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SasvynShareExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thakurvijay.sasvyn.SasvynShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		184555E9304AD4C10012E98C /* Release configuration for PBXNativeTarget "SasvynShareExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SasvynShareExtension/SasvynShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9BQY66D558;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SasvynShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SasvynShareExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thakurvijay.sasvyn.SasvynShareExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		1854B96E301BE27200F2E614 /* Debug configuration for PBXProject "Sasvyn" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -436,6 +601,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Sasvyn/Sasvyn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -487,6 +653,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = Sasvyn/Sasvyn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -637,6 +804,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		184555EA304AD4C10012E98C /* Build configuration list for PBXNativeTarget "SasvynShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				184555E8304AD4C10012E98C /* Debug configuration for PBXNativeTarget "SasvynShareExtension" */,
+				184555E9304AD4C10012E98C /* Release configuration for PBXNativeTarget "SasvynShareExtension" */,
+			);
+			defaultConfigurationName = Release;
+		};
 		1854B94C301BE27000F2E614 /* Build configuration list for PBXProject "Sasvyn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -672,6 +847,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		184555EC304AD8170012E98C /* SVDatabaseKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SVDatabaseKit;
+		};
+		184555EE304AD8210012E98C /* SVMockupKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SVMockupKit;
+		};
+		184555F0304AD8260012E98C /* iOSMockupKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSMockupKit;
+		};
+		184555F2304AD88E0012E98C /* SVDIInfra */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SVDIInfra;
+		};
 		1854B9BD301CA27700F2E614 /* macOSMainKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = macOSMainKit;

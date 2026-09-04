@@ -25,10 +25,8 @@ public struct iOSAddSkillsSheet: View {
                 SkillsView()
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.check {
+                    store.send(.closeTapped)
                 }
             }
             .categoryPicker(
@@ -105,7 +103,7 @@ public struct iOSAddSkillsSheet: View {
             if store.skills.isEmpty{
                 SVContentUnavailableView(
                     title: "No Skills Yet",
-                    systemImage: "wrench.and.screwdriver.fill",
+                    symbol: SVSymbols.skills,
                     description: "Add new skills to see here."
                 )
             }else {

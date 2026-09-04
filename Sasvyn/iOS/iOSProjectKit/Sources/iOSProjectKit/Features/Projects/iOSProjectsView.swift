@@ -47,18 +47,17 @@ public struct iOSProjectsView: View {
                 if store.projects.isEmpty {
                     SVContentUnavailableView(
                         title: "No Projects Yet",
-                        systemImage: "square.stack.3d.up",
+                        symbol: SVSymbols.Project.empty,
                         description: "Create a project to start building your portfolio."
                     )
                 }
             }
             .searchable(text: $store.search, placement: .toolbar, prompt: Text("Search projects..."))
             .navigationTitle("Projects")
+            .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "folder.badge.plus"){
-                        store.send(.createProjectTapped)
-                    }
+                SVToolbarItem(symbol: SVSymbols.Project.Add.fill, placement: .topBarTrailing) {
+                    store.send(.createProjectTapped)
                 }
             }
             .alert($store.scope(\.alert, action: \.alert))

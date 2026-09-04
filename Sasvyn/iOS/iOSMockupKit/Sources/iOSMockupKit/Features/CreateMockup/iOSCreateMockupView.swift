@@ -14,8 +14,14 @@ import SVDesignSystem
 public struct iOSCreateMockupView: View {
     @Bindable var store: StoreOf<iOSCreateMockupFeature>
     
-    public init(store: StoreOf<iOSCreateMockupFeature>) {
+    private let onDismiss: () -> Void
+
+    public init(
+        store: StoreOf<iOSCreateMockupFeature>,
+        onDismiss: @escaping () -> Void = {}
+    ) {
         self.store = store
+        self.onDismiss = onDismiss
     }
     
     @State private var isPhotosPickerPresented: Bool = false
@@ -124,16 +130,12 @@ public struct iOSCreateMockupView: View {
             .navigationTitle("Create Mockups")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") {
-                        store.send(.closeTapped)
-                    }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
                 
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "square.and.arrow.up") {
-                        store.send(.exportTapped)
-                    }
+                SVToolbarItem(symbol: SVSymbols.Mockup.export, placement: .topBarTrailing){
+                    store.send(.exportTapped)
                 }
             }
             .photosPicker(
@@ -154,6 +156,11 @@ public struct iOSCreateMockupView: View {
             case .devicePicker(let store):
                 iOSDevicePickerView(store: store)
                     .interactiveDismissDisabled()
+            }
+        }
+        .onChange(of: store.isDismissRequested) { _, shouldDismiss in
+            if shouldDismiss {
+                onDismiss()
             }
         }
     }

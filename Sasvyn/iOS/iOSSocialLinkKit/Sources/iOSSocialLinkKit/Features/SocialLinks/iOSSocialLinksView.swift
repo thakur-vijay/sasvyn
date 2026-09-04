@@ -58,7 +58,7 @@ public struct iOSSocialLinksView: View {
             if store.links.isEmpty {
                 SVContentUnavailableView(
                     title: "No Links Added",
-                    systemImage: "link",
+                    symbol: SVSymbols.Link.link,
                     description: "Add links to your portfolio, GitHub, LinkedIn, or other professional profiles."
                 )
             }
@@ -66,12 +66,8 @@ public struct iOSSocialLinksView: View {
         .navigationTitle("Social Links")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    store.send(.addTapped)
-                } label: {
-                    Image(systemName: "link.badge.plus")
-                }
+            SVToolbarItem(symbol: SVSymbols.Link.add, placement: .topBarTrailing) {
+                store.send(.addTapped)
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in

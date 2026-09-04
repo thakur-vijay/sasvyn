@@ -66,12 +66,11 @@ internal struct ExperienceFormView: View {
             .navigationTitle(store.mode == .create ? "Add Experience" : "Edit Experience")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "xmark") { store.send(.closeTapped) }
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "checkmark") { store.send(.saveTapped) }
-                        .disabled(!store.isDetailsReady)
+                SVToolbarItem.check(store.isDetailsReady) {
+                    store.send(.saveTapped)
                 }
             }
         }

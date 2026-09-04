@@ -17,6 +17,10 @@ import SVSocialLinkKit
 
 public final class SVDatabaseContainer {
     
+    public init(){
+        
+    }
+    
     public lazy var appDatabase: AppDatabase = {
         do {
             let migrator = DatabaseMigrator()

@@ -11,17 +11,17 @@ public struct SVContentUnavailableView<Actions: View>: View {
 
     private let title: String
     private let description: String
-    private let systemImage: String
+    private let symbol: SVSymbol
     private let actions: Actions
 
     public init(
         title: String,
-        systemImage: String,
+        symbol: SVSymbol,
         description: String,
         @ViewBuilder actions: () -> Actions
     ) {
         self.title = title
-        self.systemImage = systemImage
+        self.symbol = symbol
         self.description = description
         self.actions = actions()
     }
@@ -31,7 +31,7 @@ public struct SVContentUnavailableView<Actions: View>: View {
             Label {
                 Text(title)
             } icon: {
-                Image(systemName: systemImage)
+                symbol.image
                     .foregroundStyle(Color.accentColor)
             }
 
@@ -47,12 +47,12 @@ public extension SVContentUnavailableView where Actions == EmptyView {
 
     init(
         title: String,
-        systemImage: String,
+        symbol: SVSymbol,
         description: String
     ) {
         self.init(
             title: title,
-            systemImage: systemImage,
+            symbol: symbol,
             description: description
         ) {
             EmptyView()

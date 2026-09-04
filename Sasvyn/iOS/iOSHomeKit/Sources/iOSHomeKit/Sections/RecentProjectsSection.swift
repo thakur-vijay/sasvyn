@@ -44,11 +44,11 @@ internal struct RecentProjectsSection: View {
                 GroupBox {
                     SVContentUnavailableView(
                         title: "Add Your First Project",
-                        systemImage: "folder",
+                        symbol: SVSymbols.Project.projects,
                         description: "Showcase your best work and bring your portfolio to life.") {
                             SVButton(
                                 "Add Project",
-                                systemImage: "folder.badge.plus",
+                                systemImage: SVSymbols.Project.Add.plain.name,
                                 width: .intrinsic
                             ) {
                                 store.send(.addProjectTapped)

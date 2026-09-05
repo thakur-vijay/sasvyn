@@ -108,6 +108,7 @@
 				Modules/SVRemoteImage,
 				Modules/SVSkillsKit,
 				Modules/SVSocialLinkKit,
+				Modules/SVSpotlightKit,
 			);
 			target = 1854B950301BE27000F2E614 /* Sasvyn */;
 		};

@@ -14,6 +14,7 @@ import SVEducationKit
 import SVExperienceKit
 import SVLanguageKit
 import SVSocialLinkKit
+import SVSpotlightKit
 
 public final class SVAppDIContainer {
     
@@ -56,6 +57,10 @@ public final class SVAppDIContainer {
         SocialLinksDIContainer(database: databaseContainer.appDatabase)
     }()
     
+    lazy var spotlightDIContainer: SpotlightDIContainer = {
+        SpotlightDIContainer()
+    }()
+    
     public lazy var rootDIContainer: RootDIContainer = {
         RootDIContainer(
             skillsDIContainer: skillsDIContainer,
@@ -65,7 +70,8 @@ public final class SVAppDIContainer {
             educationsDIContainer: educationsDIContainer,
             experiencesDIContainer: experiencesDIContainer,
             languagesDIContainer: languagesDIContainer,
-            socialLinksDIContainer: socialLinksDIContianer
+            socialLinksDIContainer: socialLinksDIContianer,
+            spotlightDIContainer: spotlightDIContainer
         )
     }()
 }

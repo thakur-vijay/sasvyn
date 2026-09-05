@@ -9,6 +9,8 @@ import UIKit
 import SVFoundation
 import SVDIInfra
 import iOSRootKit
+import CoreSpotlight
+import SVSpotlightKit
 
 final class SceneDelegate: NSObject, UIWindowSceneDelegate {
     
@@ -29,6 +31,10 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         if let shortcutItem = connectionOptions.shortcutItem {
             handleQuickAction(shortcutItem)
         }
+        
+        if let userActivity = connectionOptions.userActivities.first(where: { $0.activityType == CSSearchableItemActionType }) {
+            handleSpotlight(userActivity)
+        }
     }
     
     private func handleQuickAction(
@@ -40,5 +46,31 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         Task { @MainActor in
             AppDelegate.rootDIContainer?.send(.quickAppAction(action))
         }
+    }
+    
+    private func handleSpotlight(
+        _ userActivity: NSUserActivity
+    ) {
+        guard let identifier = userActivity.userInfo?[
+            CSSearchableItemActivityIdentifier
+        ] as? String,
+        let destination = SVSpotlightDestination(
+            identifier: identifier
+        ) else {
+            return
+        }
+
+        Task { @MainActor in
+            AppDelegate.rootDIContainer?.send(
+                .spotlightAction(destination)
+            )
+        }
+    }
+    
+    func scene(
+        _ scene: UIScene,
+        continue userActivity: NSUserActivity
+    ) {
+        handleSpotlight(userActivity)
     }
 }

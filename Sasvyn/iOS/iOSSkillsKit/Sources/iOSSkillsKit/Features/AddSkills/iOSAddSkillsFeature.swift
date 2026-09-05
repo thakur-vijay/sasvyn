@@ -8,12 +8,16 @@
 import ComposableArchitecture
 import SVSkillsKit
 import Foundation
+import SVSpotlightKit
 
 @Reducer
 public struct iOSAddSkillsFeature {
     
     @Dependency(\.skillsClient)
     private var client
+    
+    @Dependency(\.spotlightClient)
+    private var spotlightClient
     
     @ObservableState
     public struct State: Equatable {
@@ -56,7 +60,9 @@ public struct iOSAddSkillsFeature {
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
-        Reduce { state, action in
+        Reduce {
+            state,
+            action in
             switch action {
             case .onTask:
                 return .run { send in
@@ -71,13 +77,34 @@ public struct iOSAddSkillsFeature {
                 return .none
             case .addSkillsTapped:
                 let category = state.skillCategory ?? .languages
-                let newSkills = state.skillNames.map { Skill(id: UUID().uuidString, skill: $0, category: category)}
+
+                let newSkills = state.skillNames.map {
+                    Skill(
+                        id: UUID().uuidString,
+                        skill: $0,
+                        category: category
+                    )
+                }
+
+                let spotlightItems = newSkills.map {
+                    SVSpotlightItem(
+                        destination: .skill(id: $0.id),
+                        title: $0.skill,
+                        description: category.title,
+                        keywords: [$0.skill, category.rawValue],
+                        domainIdentifier: "skills"
+                    )
+                }
+
                 state.skills.append(contentsOf: newSkills)
-                return .run {[client] send in
+
+                return .run { [client, spotlightClient] send in
                     do {
                         try await client.add(newSkills)
+                        try await spotlightClient.indexMany(spotlightItems)
+
                         await send(.skillsAdded(category, newSkills))
-                    }catch {
+                    } catch {
                         await send(.skillsFailedToAdd)
                     }
                 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import SVDIInfra
+import CoreSpotlight
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     static var rootDIContainer: RootDIContainer?
@@ -25,4 +26,5 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
         return configuration
     }
+
 }

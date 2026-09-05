@@ -9,6 +9,7 @@ import ComposableArchitecture
 import iOSAuthKit
 import iOSMainKit
 import SVFoundation
+import SVSpotlightKit
 
 @Reducer
 public struct iOSRootFeature {
@@ -28,6 +29,7 @@ public struct iOSRootFeature {
         case auth(iOSAuthFeature.Action)
         case main(iOSMainFeature.Action)
         case quickAppAction(QuickAppAction)
+        case spotlightAction(SVSpotlightDestination)
     }
 
     public init() {}
@@ -51,8 +53,9 @@ public struct iOSRootFeature {
             case .main:
                 return .none
             case .quickAppAction(let action):
-                print("Called", action)
                 return .send(.main(.quickAppAction(action)))
+            case .spotlightAction(let action):
+                return .send(.main(.spotlightAction(action)))
             }
         }
         .ifCaseLet(\.auth, action: \.auth) {

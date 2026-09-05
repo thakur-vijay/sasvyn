@@ -11,6 +11,7 @@ import iOSProjectKit
 import iOSLibraryKit
 import iOSSettingsKit
 import SVFoundation
+import SVSpotlightKit
 
 @Reducer
 public struct iOSMainFeature {
@@ -35,6 +36,7 @@ public struct iOSMainFeature {
         case library(iOSLibraryFeature.Action)
         case settings(iOSSettingsFeature.Action)
         case quickAppAction(QuickAppAction)
+        case spotlightAction(SVSpotlightDestination)
         
         case delegate(Delegate)
         
@@ -89,6 +91,25 @@ public struct iOSMainFeature {
                 case .createMockup:
                     break
                 case .exportPortfolio:
+                    break
+                }
+                return .none
+            case .spotlightAction(let action):
+                switch action {
+                case .skill(id: let id):
+                    state.selectedTab = .library
+                    return .send(.library(.pathTapped(.skills)))
+                case .project(id: let id):
+                    break
+                case .experience(id: let id):
+                    break
+                case .education(id: let id):
+                    break
+                case .language(id: let id):
+                    break
+                case .socialLink(id: let id):
+                    break
+                case .document(id: let id):
                     break
                 }
                 return .none

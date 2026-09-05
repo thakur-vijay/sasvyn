@@ -43,47 +43,49 @@ internal struct CategoryPicker<T: SVCategory>: View {
     var onDismiss: ()->()
     @State private var height: CGFloat = 0
     @State private var selectedCategory: T?
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 25){
-            HStack {
-                Text(title)
-                    .font(.title2.bold())
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Button {
-                    onDismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                        .frame(width: 40, height: 40)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 25){
+                HStack {
+                    Text(title)
+                        .font(.title2.bold())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Button {
+                        onDismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .frame(width: 40, height: 40)
+                    }
+                    .optionalGlassEffect(.circle)
                 }
-                .optionalGlassEffect(.circle)
-            }
-            ChipLayoutUI(alignment: .leading, spacing: 12){
-                ForEach(categories) { category in
-                    SVChip(
-                        model: .init(id: category.id, text: category.title),
-                        isSelected: selectedCategory?.id == category.id) {
-                            selectedCategory = category
-                        }
+                ChipLayoutUI(alignment: .leading, spacing: 12){
+                    ForEach(categories) { category in
+                        SVChip(
+                            model: .init(id: category.id, text: category.title),
+                            isSelected: selectedCategory?.id == category.id) {
+                                selectedCategory = category
+                            }
+                    }
                 }
-            }
-            
-            SVButton(
-                buttonTitle,
-                systemImage: SVSymbols.Add.plain.name
-            ) {
-                if let selectedCategory {
-                    add(selectedCategory)
+                
+                SVButton(
+                    buttonTitle,
+                    systemImage: SVSymbols.Add.plain.name
+                ) {
+                    if let selectedCategory {
+                        add(selectedCategory)
+                    }
                 }
+                .disabledWithOpacity(selectedCategory.isNull)
             }
-            .allowsTightening(!selectedCategory.isNull)
-
-        }
-        .safeAreaPadding(.horizontal, 20)
-        .safeAreaPadding(.vertical, 15)
-        .onGeometryChange(for: CGFloat.self) {
-            $0.size.height
-        } action: { newValue in
-            height = newValue
+            .safeAreaPadding(.horizontal, 20)
+            .safeAreaPadding(.vertical, 15)
+            .onGeometryChange(for: CGFloat.self) {
+                $0.size.height
+            } action: { newValue in
+                height = newValue
+            }
         }
         .presentationDetents([.height(height)])
     }

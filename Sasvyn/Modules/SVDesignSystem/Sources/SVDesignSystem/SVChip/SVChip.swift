@@ -32,7 +32,7 @@ public struct SVChip: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(
-                isSelected ? Color.accentColor : Color(.secondarySystemBackground),
+                isSelected ? .accentColor : Color(.secondarySystemBackground),
                 in: .capsule
             )
             .optionalGlassEffect(.capsule)

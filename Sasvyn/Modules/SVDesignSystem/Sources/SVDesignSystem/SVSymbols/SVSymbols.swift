@@ -10,7 +10,7 @@ import Foundation
 public enum SVSymbols {
 
     // MARK: - Common
-
+    public static let appSymbol = SVSymbol("s.circle.fill")
     public static let close = SVSymbol("xmark")
     public static let home = SVSymbol("house")
     public static let trash = SVSymbol("trash")
@@ -27,11 +27,16 @@ public enum SVSymbols {
     public static let logout = SVSymbol("iphone.and.arrow.forward.outward")
     public static let `grid2x2` = SVSymbol("square.grid.2x2.fill")
     public static let `grid3x2` = SVSymbol("rectangle.grid.3x2.fill")
+    public static let show = SVSymbol("eye")
+    public static let settings = SVSymbol("gear")
+    public static let library = SVSymbol("rectangle.stack.fill")
+    public static let `3Dots` = SVSymbol("ellipsis")
 
     // MARK: - Add
 
     public enum Add {
         public static let plain = SVSymbol("plus")
+        public static let circle = SVSymbol("plus.circle.fill")
     }
 
     // MARK: - Check
@@ -46,6 +51,7 @@ public enum SVSymbols {
     public enum Photo {
         public static let add = SVSymbol("photo.badge.plus")
         public static let empty = SVSymbol("photo.on.rectangle.angled")
+        public static let plain = SVSymbol("photo")
     }
 
     // MARK: - Project
@@ -69,6 +75,7 @@ public enum SVSymbols {
         }
         public static let document = SVSymbol("doc.text.fill")
         public static let empty = SVSymbol("doc.text.magnifyingglass")
+        public static let placeholder = SVSymbol("doc.richtext")
     }
 
     // MARK: - Mockup

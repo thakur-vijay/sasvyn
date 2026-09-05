@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Combine
+import SVDesignSystem
 
 
 public enum AppearanceMode: String, CaseIterable, Identifiable {
@@ -42,7 +43,7 @@ public enum AppearanceMode: String, CaseIterable, Identifiable {
 public struct iOSAppearanceView: View {
     let store: StoreOf<iOSAppearanceFeature>
 
-    @AppStorage("appTint") private var appTint: AppTint = .blue
+    @AppStorage("appTint") private var appTint: AppTint = .azure
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
 
     public init(store: StoreOf<iOSAppearanceFeature>) {
@@ -63,7 +64,7 @@ public struct iOSAppearanceView: View {
                             
                             HStack(spacing: 8) {
                                 if appearanceMode == mode {
-                                    Image(systemName: "checkmark.circle.fill")
+                                    SVSymbols.Check.circle.image
                                         .foregroundStyle(Color.accentColor)
                                 }
                                 Text(mode.rawValue.uppercased())
@@ -95,7 +96,7 @@ public struct iOSAppearanceView: View {
                             Spacer()
 
                             if appTint == tint {
-                                Image(systemName: "checkmark")
+                                SVSymbols.Check.plain.image
                                     .foregroundStyle(appTint.color)
                             }
                         }
@@ -143,10 +144,6 @@ public struct iOSAppearanceView: View {
                             Rectangle()
                                 .frame(width: proxy.size.width / 2)
                         }
-                }
-                .overlay {
-                    Rectangle()
-                        .frame(width: 0.4)
                 }
             }
         }

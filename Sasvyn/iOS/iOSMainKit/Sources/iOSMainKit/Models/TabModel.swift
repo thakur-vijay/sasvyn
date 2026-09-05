@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SVDesignSystem
 
 public enum TabModel: String, CaseIterable, Hashable{
     case home = "Home"
@@ -13,12 +14,12 @@ public enum TabModel: String, CaseIterable, Hashable{
     case library = "Library"
     case settings = "Settings"
     
-    var symbol: String {
+    var symbol: SVSymbol {
         switch self {
-        case .home: "house"
-        case .projects: "folder"
-        case .library: "rectangle.stack.fill"
-        case .settings: "gear"
+        case .home: SVSymbols.home
+        case .projects: SVSymbols.Project.projects
+        case .library: SVSymbols.library
+        case .settings: SVSymbols.settings
         }
     }
 }

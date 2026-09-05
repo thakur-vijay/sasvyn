@@ -46,7 +46,7 @@ public struct iOSCreateMockupView: View {
                         }
                         .overlay {
                             if store.selectedMockup?.imageData == nil{
-                                Image(systemName: "plus.circle.fill")
+                                SVSymbols.Add.circle.image
                                     .font(.largeTitle.bold())
                                     .foregroundStyle(Color.accentColor)
                                     .allowsHitTesting(false)
@@ -55,11 +55,11 @@ public struct iOSCreateMockupView: View {
                     }
                     
                     HStack(spacing: 15) {
-                        ActionButton("iphone", title: "Change Device") {
+                        ActionButton(SVSymbols.Mockup.iphone, title: "Change Device") {
                             store.send(.changeDeviceTapped)
                         }
                         
-                        ActionButton("square.on.square", title: "Apply to all") {
+                        ActionButton(SVSymbols.Mockup.applyToAll, title: "Apply to all") {
                             store.send(.applyToAllTapped)
                         }
                     }
@@ -80,7 +80,7 @@ public struct iOSCreateMockupView: View {
                                 }
                                 .overlay {
                                     if store.selectedMockup?.id == mockup.id {
-                                        Image(systemName: "checkmark.circle.fill")
+                                        SVSymbols.Check.circle.image
                                             .font(.headline)
                                             .foregroundStyle(Color.accentColor)
                                     }
@@ -97,7 +97,7 @@ public struct iOSCreateMockupView: View {
                                     isPhotosPickerPresented.toggle()
                                 }
                                 .overlay {
-                                   Image(systemName: "plus.circle.fill")
+                                    SVSymbols.Add.circle.image
                                         .font(.headline)
                                         .foregroundStyle(Color.accentColor)
                                 }
@@ -166,11 +166,11 @@ public struct iOSCreateMockupView: View {
     }
     
     @ViewBuilder
-    func ActionButton(_ icon: String, title: String, action: @escaping ()->())-> some View {
+    func ActionButton(_ symbol: SVSymbol, title: String, action: @escaping ()->())-> some View {
         Button {
             action()
         } label: {
-            Label(title, systemImage: icon)
+            Label(title, systemImage: symbol.name)
                 .padding(12)
         }
         .buttonStyle(.plain)

@@ -8,6 +8,7 @@
 import SwiftUI
 import SVRemoteImage
 import SVProjectKit
+import SVDesignSystem
 
 public struct RecentProjectCard: View {
     private let project: Project
@@ -33,11 +34,11 @@ public struct RecentProjectCard: View {
             )
             .contentShape(.contextMenuPreview, .rect(cornerRadius: 24, style: .continuous))
             .contextMenu {
-                Button("Edit", systemImage: "pencil"){
+                Button("Edit", systemImage: SVSymbols.edit.name){
                     onTap(.edit)
                 }
                 
-                Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
+                Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive, action: onDelete)
             }
             Text(project.name)
                 .font(.subheadline)

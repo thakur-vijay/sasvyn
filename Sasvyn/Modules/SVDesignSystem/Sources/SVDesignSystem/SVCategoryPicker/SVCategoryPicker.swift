@@ -69,7 +69,7 @@ internal struct CategoryPicker<T: SVCategory>: View {
             
             SVButton(
                 buttonTitle,
-                systemImage: "plus"
+                systemImage: SVSymbols.Add.plain.name
             ) {
                 if let selectedCategory {
                     add(selectedCategory)

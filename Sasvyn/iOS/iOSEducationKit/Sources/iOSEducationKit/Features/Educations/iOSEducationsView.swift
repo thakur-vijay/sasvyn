@@ -22,11 +22,11 @@ public struct iOSEducationsView: View {
                 ForEach(store.educations) { education in
                     EducationCard(education)
                         .contextMenu {
-                            Button("Edit", systemImage: "pencil") {
+                            Button("Edit", systemImage: SVSymbols.edit.name) {
                                 store.send(.editTapped(education))
                             }
                             
-                            Button("Delete", systemImage: "trash", role: .destructive){
+                            Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive){
                                 store.send(.deleteTapped(education))
                             }
                         }

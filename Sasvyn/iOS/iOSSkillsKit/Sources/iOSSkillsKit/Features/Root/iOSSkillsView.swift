@@ -36,7 +36,7 @@ public struct iOSSKillsView: View {
                                     }
                                 }
                                 .optionalContextMenu(store.mode == .screen, isPreviewHidden: true) {
-                                    Button("Delete", systemImage: "trash") {
+                                    Button("Delete", systemImage: SVSymbols.trash.name) {
                                         store.send(.deleteSkillTapped(groupIndex, skill))
                                     }
                                 } preview: {

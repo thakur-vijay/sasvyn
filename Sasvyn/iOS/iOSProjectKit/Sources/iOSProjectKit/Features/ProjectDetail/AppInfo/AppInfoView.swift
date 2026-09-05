@@ -39,15 +39,11 @@ internal struct AppInfoView: View {
                     )
 
                     if isEditable {
-                        Image(systemName: "photo.badge.plus")
+                        SVSymbols.Photo.add.image
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.primary)
                             .padding(7)
-                            .background(.regularMaterial, in: Circle())
-                            .overlay {
-                                Circle()
-                                    .strokeBorder(.white.opacity(0.25), lineWidth: 0.5)
-                            }
+                            .optionalGlassEffect(.circle, isInteractive: true)
                             .padding(6)
                     }
                 }

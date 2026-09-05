@@ -45,7 +45,7 @@ public struct iOSSocialLinkFormView: View {
                         } label: {
                             LabeledContent {
                                 if store.link.type == type {
-                                    Image(systemName: "checkmark")
+                                    SVSymbols.Check.plain.image
                                         .foregroundStyle(Color.accentColor)
                                 }
                             } label: {

@@ -46,7 +46,10 @@ public struct iOSSettingsView: View {
                         store.send(.destinationTapped(destination))
                     } label: {
                         NavigationLink(value: destination) {
-                            Label(destination.rawValue, systemImage: destination.symbol)
+                            Label(
+                                destination.rawValue,
+                                systemImage: destination.symbol.name
+                            )
                         }
                         .allowsHitTesting(false)
                         .navigationLinkIndicatorVisibility(destination.navigationLinkIndicatorVisibility)

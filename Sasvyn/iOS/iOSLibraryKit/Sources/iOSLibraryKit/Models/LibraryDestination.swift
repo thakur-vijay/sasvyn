@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SVDesignSystem
 
 public enum LibraryDestination: String, Identifiable, Hashable {
     
@@ -19,16 +20,16 @@ public enum LibraryDestination: String, Identifiable, Hashable {
     case documents = "Documents"
     case mockups = "Mockups"
     
-    var symbol: String {
+    var symbol: SVSymbol {
         switch self {
-        case .experience: "briefcase.fill"
-        case .education: "graduationcap.fill"
-        case .skills: "wrench.and.screwdriver.fill"
-        case .languages: "character.bubble.fill"
-        case .about: "person.text.rectangle.fill"
-        case .socialLinks: "link"
-        case .documents: "doc.text.fill"
-        case .mockups: "iphone"
+        case .experience: SVSymbols.experience
+        case .education: SVSymbols.education
+        case .skills: SVSymbols.skills
+        case .languages: SVSymbols.language
+        case .about: SVSymbols.about
+        case .socialLinks: SVSymbols.Link.link
+        case .documents: SVSymbols.Document.document
+        case .mockups: SVSymbols.Mockup.iphone
         }
     }
     

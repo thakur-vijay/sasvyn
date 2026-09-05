@@ -18,13 +18,14 @@ public struct iOSRootView: View {
         self.store = store
     }
     
-    @AppStorage("appTint") private var appTint: AppTint = .blue {
-        didSet {
-            let customImage = UIImage(systemName: "chevron.left")?.withTintColor(.init(appTint.color), renderingMode: .alwaysOriginal)
-            UINavigationBar.appearance().backIndicatorImage = customImage
-            UINavigationBar.appearance().backIndicatorTransitionMaskImage = customImage
-        }
-    }
+    @AppStorage("appTint") private var appTint: AppTint = .azure
+//    {
+//        didSet {
+//            let customImage = UIImage(systemName: "chevron.left")?.withTintColor(.init(appTint.color), renderingMode: .alwaysOriginal)
+//            UINavigationBar.appearance().backIndicatorImage = customImage
+//            UINavigationBar.appearance().backIndicatorTransitionMaskImage = customImage
+//        }
+//    }
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     
     public var body: some View {
@@ -40,9 +41,6 @@ public struct iOSRootView: View {
                 iOSMainView(store: store)
                     .tint(appTint.color)
                     .preferredColorScheme(appearanceMode.colorScheme())
-                    .onChange(of: UITraitCollection.current.userInterfaceStyle) { _, newValue in
-                        print(newValue)
-                    }
             }
         }
     }

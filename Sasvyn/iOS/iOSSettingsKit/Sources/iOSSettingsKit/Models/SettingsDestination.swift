@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SVDesignSystem
 
 public enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
     
@@ -17,20 +18,20 @@ public enum SettingsDestination: String, CaseIterable, Identifiable, Hashable {
     case helpAndSupport = "Help & Support"
     case signOut = "Sign Out"
     
-    var symbol: String {
+    var symbol: SVSymbol {
         switch self {
         case .personalInformation:
-            return "person.text.rectangle.fill"
+            return SVSymbols.about
         case .appearance:
-            return "circle.lefthalf.filled"
+            return SVSymbols.appearance
         case .privacy:
-            return "lock.shield.fill"
+            return SVSymbols.privacy
         case .termsOfService:
-            return "doc.plaintext.fill"
+            return SVSymbols.terms
         case .helpAndSupport:
-            return "questionmark.circle.fill"
+            return SVSymbols.support
         case .signOut:
-            return "iphone.and.arrow.forward.outward"
+            return SVSymbols.logout
         }
     }
    

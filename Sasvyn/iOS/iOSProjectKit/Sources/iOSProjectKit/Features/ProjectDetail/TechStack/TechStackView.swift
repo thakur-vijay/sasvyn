@@ -27,7 +27,7 @@ internal struct TechStackView: View {
                             
                         }
                         .contextMenu(isEnabled: store.mode.isEditable, shape: .capsule) {
-                            Button("Delete", systemImage: "trash") {
+                            Button("Delete", systemImage: SVSymbols.trash.name) {
                                 store.send(.deleteStackTapped(stack))
                             }
                         }

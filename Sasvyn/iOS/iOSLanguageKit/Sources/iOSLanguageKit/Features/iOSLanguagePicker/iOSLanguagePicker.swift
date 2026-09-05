@@ -26,8 +26,8 @@ public struct iOSLanguagePicker: View {
                             ForEach(group.value) { language in
                                 LabeledContent {
                                     if language.code == store.selection {
-                                        Image(systemName: "checkmark")
-                                            .foregroundStyle(.blue)
+                                        SVSymbols.Check.plain.image
+                                            .foregroundStyle(Color.accentColor)
                                     }
                                 } label: {
                                     Text(language.name)

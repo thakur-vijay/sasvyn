@@ -34,12 +34,12 @@ public struct QuickActionsSection: View {
             }
         }
         
-        var systemImage: String {
+        var symbol: SVSymbol {
             switch self {
-            case .addDocument: SVSymbols.Document.Add.plain.name
-            case .createMockup: SVSymbols.Mockup.create.name
-            case .addProject: SVSymbols.Project.Add.plain.name
-            case .editAbout: SVSymbols.about.name
+            case .addDocument: SVSymbols.Document.Add.plain
+            case .createMockup: SVSymbols.Mockup.create
+            case .addProject: SVSymbols.Project.Add.plain
+            case .editAbout: SVSymbols.about
             }
         }
     }
@@ -70,10 +70,10 @@ public struct QuickActionsSection: View {
                     .font(.callout.weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
             } label: {
-                Image(systemName: action.systemImage)
+                action.symbol.image
                     .font(.title2)
+                    .foregroundStyle(Color.accentColor)
                     .frame(width: 30, height: 30)
-                
             }
         }
         .buttonStyle(.plain)

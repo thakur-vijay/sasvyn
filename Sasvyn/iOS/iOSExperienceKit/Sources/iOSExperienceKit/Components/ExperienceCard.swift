@@ -1,5 +1,6 @@
 import SVExperienceKit
 import SwiftUI
+import SVDesignSystem
 
 internal struct ExperienceCard: View {
     let experience: Experience
@@ -8,7 +9,7 @@ internal struct ExperienceCard: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "briefcase.fill")
+            SVSymbols.experience.image
                 .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(.blue)
                 .frame(width: 30)

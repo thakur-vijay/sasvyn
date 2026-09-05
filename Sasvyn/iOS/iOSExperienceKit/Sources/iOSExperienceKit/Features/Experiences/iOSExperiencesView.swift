@@ -14,11 +14,11 @@ public struct iOSExperiencesView: View {
                     .listRowSeparator(.hidden, edges: .top)
                     .listRowSeparator(.visible, edges: .bottom)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button("", systemImage: "pencil") {
+                        Button("", systemImage: SVSymbols.edit.name) {
                             store.send(.editTapped(experience))
                         }
                         .tint(.blue)
-                        Button("", systemImage: "trash") {
+                        Button("", systemImage: SVSymbols.trash.name) {
                             store.send(.deleteTapped(experience))
                         }
                         .tint(.red)

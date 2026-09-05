@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SVEducationKit
-import SQLite3
+import SVDesignSystem
 
 internal struct EducationCard: View {
     let education: Education
@@ -17,7 +17,7 @@ internal struct EducationCard: View {
     }
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "graduationcap.fill")
+            SVSymbols.education.image
                 .font(.system(size: 24))
                 .fontWeight(.bold)
                 .foregroundStyle(.blue)

@@ -28,7 +28,7 @@ public struct iOSAuthView: View {
         NavigationStack{
             VStack(spacing: 15) {
                 VStack(spacing: 15){
-                    Image(systemName: "s.circle.fill")
+                    SVSymbols.appSymbol.image
                         .font(.system(size: 100))
                         .foregroundStyle(.white, Color.accentColor.gradient)
                     Text("What's New in \nSasvyn")
@@ -40,19 +40,19 @@ public struct iOSAuthView: View {
                 VStack(alignment: .leading, spacing: 25) {
                     PointView(
                         title: "Build Your Portfolio",
-                        image: "person.text.rectangle",
+                        symbol: SVSymbols.about,
                         description: "Create your professional developer profile."
                     )
                     
                     PointView(
                         title: "Showcase Your Work",
-                        image: "briefcase.fill",
+                        symbol: SVSymbols.experience,
                         description: "Present your projects, skills, and experience."
                     )
                     
                     PointView(
                         title: "Share Your Profile",
-                        image: "link",
+                        symbol: SVSymbols.Link.link,
                         description: "Give recruiters and clients one place to know your work."
                     )
                 }
@@ -110,11 +110,11 @@ public struct iOSAuthView: View {
     @ViewBuilder
     private func PointView(
         title: String,
-        image: String,
+        symbol: SVSymbol,
         description: String
     )-> some View {
         HStack(spacing: 15) {
-            Image(systemName: image)
+            symbol.image
                 .font(.largeTitle)
                 .foregroundStyle(Color.accentColor)
             

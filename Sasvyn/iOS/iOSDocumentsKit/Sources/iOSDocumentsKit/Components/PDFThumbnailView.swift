@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PDFKit
+import SVDesignSystem
 
 struct PDFThumbnailView: View {
     
@@ -27,20 +28,20 @@ struct PDFThumbnailView: View {
                     .contextMenu {
                         Button(
                             "Quick Look",
-                            systemImage: "eye",
+                            systemImage: SVSymbols.show.name,
                             action: quickLook
                         )
                         Divider()
                         Button(
                             "Delete",
-                            systemImage: "trash",
+                            systemImage: SVSymbols.trash.name,
                             role: .destructive,
                             action: onDelete
                         )
                     }
                     .onTapGesture(perform: quickLook)
             } else {
-                Image(systemName: "doc.richtext")
+                SVSymbols.Document.placeholder.image
                     .font(.largeTitle)
                     .foregroundStyle(.secondary)
                     .frame(width: documentSize.width, height: documentSize.height)

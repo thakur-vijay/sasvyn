@@ -21,7 +21,7 @@ public struct iOSMainView: View {
     
     public var body: some View {
         TabView(selection: $store.selectedTab) {
-            Tab(TabModel.home.rawValue, systemImage: TabModel.home.symbol, value: .home) {
+            Tab(TabModel.home.rawValue, systemImage: TabModel.home.symbol.name, value: .home) {
                 iOSHomeView(
                     store: store.scope(
                         \.home,
@@ -30,7 +30,7 @@ public struct iOSMainView: View {
                 )
             }
             
-            Tab(TabModel.projects.rawValue, systemImage: TabModel.projects.symbol, value: .projects) {
+            Tab(TabModel.projects.rawValue, systemImage: TabModel.projects.symbol.name, value: .projects) {
                 iOSProjectsView(
                     store: store.scope(
                         \.projects,
@@ -39,7 +39,7 @@ public struct iOSMainView: View {
                 )
             }
             
-            Tab(TabModel.library.rawValue, systemImage: TabModel.library.symbol, value: .library) {
+            Tab(TabModel.library.rawValue, systemImage: TabModel.library.symbol.name, value: .library) {
                 iOSLibraryView(
                     store: store.scope(
                         \.library,
@@ -48,7 +48,7 @@ public struct iOSMainView: View {
                 )
             }
             
-            Tab(TabModel.settings.rawValue, systemImage: TabModel.settings.symbol, value: .settings) {
+            Tab(TabModel.settings.rawValue, systemImage: TabModel.settings.symbol.name, value: .settings) {
                 iOSSettingsView(
                     store: store.scope(
                         \.settings,

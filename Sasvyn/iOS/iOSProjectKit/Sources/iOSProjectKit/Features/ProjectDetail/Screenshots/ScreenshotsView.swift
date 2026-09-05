@@ -49,7 +49,7 @@ struct ScreenshotsView: View {
                 ) {
                     SVButton(
                         "Add Screenshots",
-                        systemImage: "plus",
+                        systemImage: SVSymbols.Add.plain.name,
                         size: .medium,
                         width: .intrinsic) {
                             store.send(.addPreviewsTapped)
@@ -81,7 +81,10 @@ struct ScreenshotsView: View {
                             .optionalContextMenu(
                                 store.mode.isEditable,
                                 isPreviewHidden: true) {
-                                    Button("Delete", systemImage: "trash") {
+                                    Button(
+                                        "Delete",
+                                        systemImage: SVSymbols.trash.name
+                                    ) {
                                         store.send(.deleteScreenshotTapped(screenshot))
                                     }
                                 } preview: {
@@ -97,8 +100,9 @@ struct ScreenshotsView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: screenshotWidth, height: screenshotWidth / (last.aspectRatio))
                                     .overlay {
-                                        Image(systemName: "plus.circle.fill")
+                                        SVSymbols.Add.circle.image
                                             .font(.title)
+                                            .foregroundStyle(Color.accentColor)
                                     }
                                     .contentShape(.rect)
                                     .onTapGesture {

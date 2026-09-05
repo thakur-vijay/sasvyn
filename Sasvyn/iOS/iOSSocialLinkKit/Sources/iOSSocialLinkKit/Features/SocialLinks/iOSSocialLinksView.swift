@@ -42,10 +42,10 @@ public struct iOSSocialLinksView: View {
                     .listRowSeparator(.visible, edges: .bottom)
                     .listRowSeparator(.hidden, edges: .top)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button("", systemImage: "applepencil.gen1"){
+                        Button("", systemImage: SVSymbols.edit.name){
                             store.send(.editLinkTapped(link))
                         }
-                        Button("", systemImage: "trash") {
+                        Button("", systemImage: SVSymbols.trash.name) {
                             store.send(.deleteLinkTapped(link))
                         }
                         .tint(.red)

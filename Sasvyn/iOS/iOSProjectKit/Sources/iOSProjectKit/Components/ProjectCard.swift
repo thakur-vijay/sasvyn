@@ -8,6 +8,7 @@
 import SwiftUI
 import SVRemoteImage
 import SVProjectKit
+import SVDesignSystem
 
 public struct ProjectCard: View {
     private let project: Project
@@ -46,13 +47,13 @@ public struct ProjectCard: View {
             
             Menu {
                     
-                Button("Edit", systemImage: "pencil"){
+                Button("Edit", systemImage: SVSymbols.edit.name){
                     onTap(.edit)
                 }
                 
-                Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
+                Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive, action: onDelete)
             } label: {
-                Image(systemName: "ellipsis")
+                SVSymbols.`3Dots`.image
                     .font(.subheadline)
                     .foregroundStyle(Color(.systemGray))
                     .frame(width: 30, height: 30, alignment: .trailing)

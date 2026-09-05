@@ -34,7 +34,7 @@ public struct iOSMockupsView: View {
                     .aspectRatio(imageContentMode == .fit ? mockup.aspectRatio : 1, contentMode: .fit)
                     .overlay(alignment: .bottomTrailing){
                         if store.selectedMockupIds.contains(mockup.id) || (store.selection == mockup.id){
-                            Image(systemName: "checkmark.circle.fill")
+                            SVSymbols.Check.circle.image
                                 .font(.title3)
                                 .foregroundStyle(.white, .blue)
                                 .padding(12)
@@ -52,18 +52,18 @@ public struct iOSMockupsView: View {
                                     item: Image(uiImage: uiImage),
                                     preview: SharePreview("Mockup", image: Image(uiImage: uiImage))
                                 ) {
-                                    Label("Share", systemImage: "square.and.arrow.up")
+                                    Label("Share", systemImage: SVSymbols.Mockup.export.name)
                                 }
                             }
                             
-                            Button("Save to Photos", systemImage: "photo") {
+                            Button("Save to Photos", systemImage: SVSymbols.Photo.plain.name) {
                                 store.send(.saveToPhotosTapped(mockup))
                             }
-                            Button("Delete", systemImage: "trash", role: .destructive) {
+                            Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive) {
                                 store.send(.deleteTapped(mockup))
                             }
                         }else {
-                            Button("Select", systemImage: "checkmark.circle") {
+                            Button("Select", systemImage: SVSymbols.Check.circle.name) {
                                 store.send(.mockupTapped(mockup))
                             }
                         }
@@ -100,17 +100,15 @@ public struct iOSMockupsView: View {
                 }
             }
             
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button("", systemImage: "plus") {
-                    store.send(.addTapped)
-                }
-                
-                Button("", systemImage: "rectangle.expand.vertical") {
-                    if imageContentMode == .fit {
-                        imageContentMode = .fill
-                    }else {
-                        imageContentMode = .fit
-                    }
+            SVToolbarItem(symbol: SVSymbols.Add.plain, placement: .topBarTrailing) {
+                store.send(.addTapped)
+            }
+            
+            SVToolbarItem(symbol: SVSymbols.Mockup.layout, placement: .topBarTrailing) {
+                if imageContentMode == .fit {
+                    imageContentMode = .fill
+                }else {
+                    imageContentMode = .fit
                 }
             }
             

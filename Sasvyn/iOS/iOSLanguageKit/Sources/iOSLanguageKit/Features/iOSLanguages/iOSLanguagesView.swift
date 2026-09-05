@@ -27,11 +27,18 @@ public struct iOSLanguagesView: View {
                         Text(spokenLanguage.language)
                     }
                     .contextMenu {
-                        Button("Edit", systemImage: "pencil") {
+                        Button(
+                            "Edit",
+                            systemImage: SVSymbols.edit.name
+                        ) {
                             store.send(.editLanguageTapped(spokenLanguage))
                         }
                         
-                        Button("Delete", systemImage: "trash", role: .destructive){
+                        Button(
+                            "Delete",
+                            systemImage: SVSymbols.trash.name,
+                            role: .destructive
+                        ){
                             store.send(.deleteLanguageTapped(spokenLanguage))
                         }
                     }

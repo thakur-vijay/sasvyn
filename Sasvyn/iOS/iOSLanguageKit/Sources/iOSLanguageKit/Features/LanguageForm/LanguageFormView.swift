@@ -33,7 +33,7 @@ public struct LanguageFormView: View {
                     ForEach(LanguageProficiency.allCases, id: \.self) { proficiency in
                         LabeledContent {
                             if store.spokenLanguage.proficiency == proficiency {
-                                Image(systemName: "checkmark")
+                                SVSymbols.Check.plain.image
                                     .foregroundStyle(Color.accentColor)
                             }
                         } label: {

@@ -31,11 +31,11 @@ public struct iOSProjectsView: View {
                         }
                         .contentShape(.contextMenuPreview, .rect)
                         .contextMenu {
-                            Button("Edit", systemImage: "pencil") {
+                            Button("Edit", systemImage: SVSymbols.edit.name) {
                                 store.send(.projectTapped(project, .edit))
                             }
                             
-                            Button("Delete", systemImage: "trash", role: .destructive){
+                            Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive){
                                 store.send(.deleteProjectTapped(project))
                             }
                         }

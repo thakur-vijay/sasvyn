@@ -117,7 +117,7 @@ public struct iOSAddSkillsSheet: View {
                             .foregroundStyle(.secondary)
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button("", systemImage: "trash") {
+                        Button("", systemImage: SVSymbols.trash.name) {
                             store.send(.deleteSkillTapped(skill))
                         }
                     }

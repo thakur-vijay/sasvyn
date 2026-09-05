@@ -36,7 +36,7 @@ public struct iOSLibraryView: View {
                                 NavigationLink(value: row) {
                                     Label(
                                         row.rawValue,
-                                        systemImage: row.symbol
+                                        systemImage: row.symbol.name
                                     )
                                 }
                                 .allowsHitTesting(false)

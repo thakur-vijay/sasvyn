@@ -60,7 +60,14 @@ internal struct ExperienceFormView: View {
                         )
                     }
                     .onDelete { store.send(.deleteResponsibility($0)) }
-                    Button("Add Responsibility", systemImage: "plus") { store.send(.addResponsibilityTapped) }
+                    Button(
+                        "Add Responsibility",
+                        systemImage: SVSymbols.Add.plain.name
+                    ) {
+                        store.send(
+                            .addResponsibilityTapped
+                        )
+                    }
                 }
             }
             .navigationTitle(store.mode == .create ? "Add Experience" : "Edit Experience")

@@ -31,7 +31,7 @@ public struct iOSDevicePickerView: View {
                                 .aspectRatio(uiImage.size.width / uiImage.size.height, contentMode: .fit)
                                 .overlay {
                                     VStack(spacing: 15){
-                                        Image(systemName: "plus.circle.fill")
+                                        SVSymbols.Add.circle.image
                                             .font(.largeTitle.bold())
                                         Text(device.finish)
                                             .font(.subheadline)

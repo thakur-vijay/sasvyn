@@ -19,13 +19,7 @@ public struct iOSRootView: View {
     }
     
     @AppStorage("appTint") private var appTint: AppTint = .azure
-//    {
-//        didSet {
-//            let customImage = UIImage(systemName: "chevron.left")?.withTintColor(.init(appTint.color), renderingMode: .alwaysOriginal)
-//            UINavigationBar.appearance().backIndicatorImage = customImage
-//            UINavigationBar.appearance().backIndicatorTransitionMaskImage = customImage
-//        }
-//    }
+
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     
     public var body: some View {

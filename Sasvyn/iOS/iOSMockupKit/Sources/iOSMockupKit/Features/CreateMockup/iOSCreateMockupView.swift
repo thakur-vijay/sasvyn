@@ -10,6 +10,7 @@ import ComposableArchitecture
 import SVMockupKit
 import PhotosUI
 import SVDesignSystem
+import iOSAppearanceKit
 
 public struct iOSCreateMockupView: View {
     @Bindable var store: StoreOf<iOSCreateMockupFeature>
@@ -25,7 +26,7 @@ public struct iOSCreateMockupView: View {
     }
     
     @State private var isPhotosPickerPresented: Bool = false
-    
+    @AppStorage("appTint") private var appTint: AppTint = .azure
     public var body: some View {
         let selectedDevice = store.selectedMockup?.device ?? store.selectedDevice
         NavigationStack {
@@ -150,6 +151,16 @@ public struct iOSCreateMockupView: View {
             .onChange(of: store.selectedItem) { oldValue, newValue in
                 store.send(.onMockupPhotoItemChange(newValue))
             }
+            .progressAlert(
+                config: .init(tint: appTint.color, title: "Exporting", message: "Please wait until all export finishes!"),
+                isPresented: $store.isExporting,
+                progress: $store.exportProgress,
+                actions: {
+                    Button("Cancel", role: .cancel) {
+                        store.send(.cancelExportTapped)
+                    }
+                }
+            )
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
             switch store.case {

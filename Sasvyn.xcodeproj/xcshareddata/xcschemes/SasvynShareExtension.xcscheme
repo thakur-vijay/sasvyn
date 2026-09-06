@@ -18,6 +18,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "184555DB304AD4C10012E98C"
                BuildableName = "SasvynShareExtension.appex"
+               BlueprintName = "SasvynShareExtension"
                ReferencedContainer = "container:Sasvyn.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

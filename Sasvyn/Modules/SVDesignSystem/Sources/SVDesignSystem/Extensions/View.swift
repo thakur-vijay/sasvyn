@@ -57,4 +57,14 @@ public extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func clearListStyle()-> some View {
+        self
+            .listStyle(.plain)
+            .listRowInsets(.init())
+            .listRowSeparator(.hidden)
+            .listRowBackground(EmptyView())
+            .frame(maxWidth: .infinity)
+    }
 }

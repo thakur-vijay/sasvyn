@@ -11,13 +11,13 @@ import UIKit
 import UniformTypeIdentifiers
 
 @available(iOS 18.0, *)
-public enum ExportQuality: String, CaseIterable {
+public enum ExportQuality: String, CaseIterable, Sendable{
     case hd = "HD"
     case fullHD = "Full HD"
     case twoK = "2K"
     case fourK = "4K"
-    case sixK = "6K"
-    case eightK = "8K"
+//    case sixK = "6K"
+//    case eightK = "8K"
 
     var longSide: CGFloat {
         switch self {
@@ -33,11 +33,11 @@ public enum ExportQuality: String, CaseIterable {
         case .fourK:
             return 3840
 
-        case .sixK:
-            return 6144
-
-        case .eightK:
-            return 7680
+//        case .sixK:
+//            return 6144
+//
+//        case .eightK:
+//            return 7680
         }
     }
 }
@@ -69,7 +69,6 @@ extension ExportQuality {
 
 @available(iOS 18.0, *)
 public enum Exporter {
-
     @MainActor
     public static func renderMockup(
         imageData: Data?,
@@ -77,7 +76,7 @@ public enum Exporter {
         device: Device,
         quality: ExportQuality,
         action: @escaping () -> Void = {}
-    ) -> Data? {
+    ) -> CGImage? {
 
         guard let deviceImage = device.uiImage else {
             return nil
@@ -99,15 +98,41 @@ public enum Exporter {
             action: action
         )
 
-        let renderer = ImageRenderer(
-            content: view
-        )
+        let renderer = ImageRenderer(content: view)
 
         renderer.scale = 1
         renderer.isOpaque = false
         renderer.colorMode = .nonLinear
 
-        return renderer.uiImage?.pngData()
+        return renderer.cgImage
+    }
+    
+    public static func encodePNG(
+        _ image: CGImage
+    ) -> Data? {
+
+        let output = NSMutableData()
+
+        guard let destination = CGImageDestinationCreateWithData(
+            output,
+            UTType.png.identifier as CFString,
+            1,
+            nil
+        ) else {
+            return nil
+        }
+
+        CGImageDestinationAddImage(
+            destination,
+            image,
+            nil
+        )
+
+        guard CGImageDestinationFinalize(destination) else {
+            return nil
+        }
+
+        return output as Data
     }
     
     public static func downsample(

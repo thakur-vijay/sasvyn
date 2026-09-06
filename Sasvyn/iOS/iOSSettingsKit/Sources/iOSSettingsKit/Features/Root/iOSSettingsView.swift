@@ -9,6 +9,8 @@ import SwiftUI
 import ComposableArchitecture
 import SVRemoteImage
 import iOSAppearanceKit
+import iOSPersonalInformationKit
+import SVDesignSystem
 
 public struct iOSSettingsView: View {
     @Bindable var store: StoreOf<iOSSettingsFeature>
@@ -35,11 +37,7 @@ public struct iOSSettingsView: View {
                         .foregroundStyle(.gray)
                         .tint(.gray)
                 }
-                .listStyle(.plain)
-                .listRowInsets(.init())
-                .listRowSeparator(.hidden)
-                .listRowBackground(EmptyView())
-                .frame(maxWidth: .infinity)
+                .clearListStyle()
                 .padding(.vertical, 20)
                 ForEach(SettingsDestination.allCases) { destination in
                     Button {
@@ -64,6 +62,8 @@ public struct iOSSettingsView: View {
             switch store.case {
             case .appearance(let store):
                 iOSAppearanceView(store: store)
+            case .personalInformation(let store):
+                iOSPersonalInfomationView(store: store)
             }
         }
         .alert($store.scope(\.alert, action: \.alert))

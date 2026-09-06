@@ -7,8 +7,10 @@
 
 import SwiftUI
 import SVDesignSystem
+import iOSAppearanceKit
 
 internal struct CreatePortfolioSection: View {
+    @AppStorage("appTint") private var appTint: AppTint = .azure
     var body: some View {
         ContentUnavailableView {
             VStack {
@@ -17,9 +19,9 @@ internal struct CreatePortfolioSection: View {
                 SVGradientText(
                     text: "Professional Portfolio",
                     colors: [
-                        .blue,
-                        .red,
-                        .pink,
+                        appTint.color,
+                        AppTint.azure.color,
+                        AppTint.cyan.color
                     ],
                 )
                 .font(.title.bold())

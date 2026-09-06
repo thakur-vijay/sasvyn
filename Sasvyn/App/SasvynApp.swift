@@ -22,6 +22,12 @@ struct SasvynApp: App {
     
     init() {
         AppDelegate.rootDIContainer = appDIContainer.rootDIContainer
+        let customImage = UIImage(
+            systemName: "chevron.left",
+            withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)
+        )?.withTintColor(.init(.accentColor), renderingMode: .alwaysOriginal)
+        UINavigationBar.appearance().backIndicatorImage = customImage
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = customImage
     }
 
     var body: some Scene {

@@ -23,6 +23,7 @@ public struct iOSMockupsFeature {
         public var selectedMockup: MockupImage?
         public var mode: MockupsPresentationMode
         public var isSingleSelection: Bool
+        public var lastMockupID: String?
         public init(
             mode: MockupsPresentationMode,
             selectedMockupIds: Set<String> = .init(),
@@ -112,8 +113,11 @@ public struct iOSMockupsFeature {
             case .destination(.presented(.iOSCreateMockup(.delegate(.addMockup(let newMockup))))):
                 state.mockups.append(newMockup)
                 return .none
-            case .destination(.presented(.iOSCreateMockup(.delegate(.exportFinished)))),
-                 .destination(.presented(.iOSCreateMockup(.delegate(.close)))):
+            case .destination(.presented(.iOSCreateMockup(.delegate(.exportFinished)))):
+                state.lastMockupID = state.mockups.last?.id
+                state.destination = nil
+                return .none
+            case .destination(.presented(.iOSCreateMockup(.delegate(.close)))):
                 state.destination = nil
                 return .none
             case .destination:

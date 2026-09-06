@@ -14,6 +14,7 @@ import SVEducationKit
 import SVExperienceKit
 import SVLanguageKit
 import SVSocialLinkKit
+import SVAboutKit
 
 public final class SVDatabaseContainer {
     
@@ -32,6 +33,7 @@ public final class SVDatabaseContainer {
             migrator.register(ExperiencesDatabaseModule.self)
             migrator.register(SpokenLanguagesDatabaseModule.self)
             migrator.register(SocialLinksDatabaseModule.self)
+            migrator.register(AboutDatabaseModule.self)
 
             let database = try AppDatabase(
                 migrator: migrator

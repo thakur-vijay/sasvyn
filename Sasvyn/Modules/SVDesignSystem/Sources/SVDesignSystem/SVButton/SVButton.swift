@@ -130,9 +130,7 @@ public struct SVButton: View {
         .frame(height: size.height)
         .padding(.horizontal, size.horizontalPadding)
         .foregroundStyle(foregroundColor)
-        .background {
-            background
-        }
+        .background(background)
         .clipShape(shape.shape)
     }
 
@@ -151,20 +149,20 @@ public struct SVButton: View {
         }
     }
 
-    @ViewBuilder
-    private var background: some View {
+//    @ViewBuilder
+    private var background: AnyGradient {
         switch variant {
         case .primary:
-            Color.accentColor
+            Color.accentColor.gradient
 
         case .secondary:
-            Color.secondary.opacity(0.12)
+            Color.secondary.opacity(0.12).gradient
 
         case .destructive:
-            Color.red
+            Color.red.gradient
 
         case .plain:
-            Color.clear
+            Color.clear.gradient
         }
     }
 }

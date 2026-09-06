@@ -25,6 +25,10 @@ public struct iOSCreateMockupFeature {
         public var selectedItem: PhotosPickerItem?
         public var isMockupPhotoPickerPresented: Bool = false
         public var isDismissRequested = false
+        public var isExporting = false
+        public var isExportCancelled = false
+        public var exportProgress: CGFloat = 0
+        public var exportCount: Int = 0
         public init(){
         }
         
@@ -51,6 +55,7 @@ public struct iOSCreateMockupFeature {
         case qualityTapped(ExportQuality)
         case delegate(Delegate)
         case onItemProvidersLoaded([Data])
+        case cancelExportTapped
         
         public enum Delegate {
             case addMockup(MockupImage)
@@ -66,6 +71,10 @@ public struct iOSCreateMockupFeature {
     
     public init(){
         
+    }
+    
+    private enum CancelID {
+        case export
     }
     
     public var body: some ReducerOf<Self> {
@@ -136,71 +145,70 @@ public struct iOSCreateMockupFeature {
                 return .none
             case .exportTapped:
                 let mockups = state.mockups
+                let type = state.exportType
+
+                state.isExporting = true
+                state.isExportCancelled = false
+                state.exportCount = mockups.count
+ 
                 return .run { [client] send in
-                    try await withThrowingTaskGroup(of: Void.self) { group in
-                        for mockup in mockups {
-                            group.addTask {
-                                guard let newData = await Exporter.renderMockup(
-                                    imageData: mockup.imageData,
-                                    scaleResize: mockup.imageResize,
-                                    device: mockup.device,
-                                    quality: .fourK
-                                ) else {
-                                    return
-                                }
+                    for mockup in mockups {
+                        try Task.checkCancellation()
 
-                                let id = UUID().uuidString
-
-                                let mockupURL = try MockupStorage.mockupURL(for: id)
-                                try newData.write(to: mockupURL)
-
-                                // Generate thumbnail
-                                guard let thumbnailData = Exporter.downsample(
-                                    imageData: newData,
-                                    maxPixelSize: 512
-                                ) else {
-                                    return
-                                }
-
-                                let thumbnailURL = try MockupStorage.thumbnailURL(for: id)
-                                try thumbnailData.write(to: thumbnailURL)
-
-                                let values = try mockupURL.resourceValues(
-                                    forKeys: [
-                                        .fileSizeKey,
-                                        .contentModificationDateKey
-                                    ]
-                                )
-                                let aspectRatio = (mockup.device.uiImage?.size.width ?? 0) / (mockup.device.uiImage?.size.height ?? 0)
-                                let mockupModel = MockupModel(
-                                    id: id,
-                                    url: mockupURL,
-                                    thumbnail: thumbnailURL,
-                                    size: Int64(values.fileSize ?? 0),
-                                    device: mockup.device.assetName,
-                                    aspectRatio: aspectRatio,
-                                    createdAt: .now,
-                                    updatedAt: .now
-                                )
-
-                                try await client.add(mockupModel)
-
-                                let image = MockupImageMapper.map(mockupModel)
-
-                                await send(.mockupModelAdded(image))
-                            }
+                        let cgImage = await MainActor.run {
+                            Exporter.renderMockup(
+                                imageData: mockup.imageData,
+                                scaleResize: mockup.imageResize,
+                                device: mockup.device,
+                                quality: type
+                            )
                         }
 
-                        try await group.waitForAll()
+                        try Task.checkCancellation()
+
+                        let newData: Data? = autoreleasepool {
+                            guard let cgImage else {
+                                return nil
+                            }
+
+                            return Exporter.encodePNG(cgImage)
+                        }
+
+                        try Task.checkCancellation()
+
+                        guard let newData else {
+                            continue
+                        }
+
+                        guard let mockupModel = try client.prepare(
+                            newData,
+                            mockup
+                        ) else {
+                            continue
+                        }
+
+                        try Task.checkCancellation()
+
+                        try await client.add(mockupModel)
+
+                        let image = MockupImageMapper.map(mockupModel)
+
+                        await send(.mockupModelAdded(image))
                     }
+
                     await send(.exportFinished)
                 }
+                .cancellable(id: CancelID.export)
             case .mockupModelAdded(let mockup):
+                state.mockups.removeAll { $0.id == mockup.id }
+                let addedCount = state.exportCount - state.mockups.count
+                state.exportProgress = CGFloat(addedCount) / CGFloat(state.exportCount)
                 return .send(.delegate(.addMockup(mockup)))
             case .delegate(_):
                 return .none
             case .exportFinished:
                 state.isDismissRequested = true
+                state.isExporting = false
                 return .send(.delegate(.exportFinished))
             case .closeTapped:
                 state.isDismissRequested = true
@@ -255,6 +263,10 @@ public struct iOSCreateMockupFeature {
                         }
                     )
                 )
+            case .cancelExportTapped:
+                state.isExportCancelled = true
+                state.isExporting = false
+                return .cancel(id: CancelID.export)
             }
         }
         .ifLet(\.$destination, action: \.destination)

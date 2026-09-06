@@ -8,11 +8,11 @@
 import Foundation
 import SVDatabaseKit
 
-public enum SkillsDatabaseModule: DatabaseModule {
+public enum AboutDatabaseModule: DatabaseModule {
 
     public static func register(
         on migrator: DatabaseMigrator
     ) {
-        migrator.add(CreateSkillsMigration())
+        migrator.add(CreateAboutMigration())
     }
 }

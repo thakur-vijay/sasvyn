@@ -20,6 +20,7 @@ let package = Package(
         ),
         .package(path: "../../Modules/SVMockupKit"),
         .package(path: "../../Modules/SVDesignSystem"),
+        .package(path: "../iOSAppearanceKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,6 +34,7 @@ let package = Package(
                 ),
                 .product(name: "SVMockupKit", package: "SVMockupKit"),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),
+                .product(name: "iOSAppearanceKit", package: "iOSAppearanceKit"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

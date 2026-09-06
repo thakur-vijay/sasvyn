@@ -20,6 +20,7 @@ let package = Package(
         ),
         .package(path: "../iOSPortfolioKit"),
         .package(path: "../iOSProjectKit"),
+        .package(path: "../iOSAppearanceKit"),
         .package(path: "../../Modules/SVProjectKit"),
         .package(path: "../../Modules/SVFoundation"),
         .package(path: "../../Modules/SVDesignSystem")
@@ -36,6 +37,7 @@ let package = Package(
                 ),
                 .product(name: "iOSPortfolioKit", package: "iOSPortfolioKit"),
                 .product(name: "iOSProjectKit", package: "iOSProjectKit"),
+                .product(name: "iOSAppearanceKit", package: "iOSAppearanceKit"),
                 .product(name: "SVProjectKit", package: "SVProjectKit"),
                 .product(name: "SVFoundation", package: "SVFoundation"),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),

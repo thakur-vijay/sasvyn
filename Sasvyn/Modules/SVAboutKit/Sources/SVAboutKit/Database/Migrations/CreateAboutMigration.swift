@@ -7,15 +7,14 @@
 
 import SVDatabaseKit
 
-struct CreateSkillsMigration: DatabaseMigration {
+struct CreateAboutMigration: DatabaseMigration {
 
-    let identifier = "create_skills"
+    let identifier = "create_about"
 
     func migrate(_ db: SVDatabase) throws {
-        try db.createTable("skills", ifNotExists: true) { table in
-            table.text("id").primaryKey()
-            table.text("skill").notNull()
-            table.text("category").notNull()
+        try db.createTable(AboutRecord.databaseTableName, ifNotExists: true) { table in
+            table.text("user_id").primaryKey()
+            table.text("content").notNull()
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
         }

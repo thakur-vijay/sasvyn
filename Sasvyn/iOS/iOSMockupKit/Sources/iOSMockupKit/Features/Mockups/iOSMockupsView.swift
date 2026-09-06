@@ -22,6 +22,7 @@ public struct iOSMockupsView: View {
     
     @AppStorage("imageContentMode") private var imageContentMode: ImageContentMode = .fill
     @Namespace private var animation
+    @State private var scrollPosition: ScrollPosition = .init()
     
     public var body: some View {
         ScrollView {
@@ -77,10 +78,13 @@ public struct iOSMockupsView: View {
                         )
                     }
                     .disabledWithOpacity(isUserInteractionDisabled)
+                    .id(mockup.id)
                 }
             }
             .padding(imageContentMode.padding)
+            .scrollTargetLayout()
         }
+        .scrollPosition($scrollPosition)
         .animation(.snappy(duration: 0.25), value: imageContentMode)
         .overlay {
             if store.mockups.isEmpty {
@@ -129,6 +133,9 @@ public struct iOSMockupsView: View {
         .isASheet(store.mode == .picker)
         .task {
             await store.send(.onTask).finish()
+        }
+        .onChange(of: store.lastMockupID) { _, newValue in
+            self.scrollPosition = .init(id: newValue, anchor: .bottom)
         }
     }
     

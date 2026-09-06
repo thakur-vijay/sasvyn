@@ -18,6 +18,7 @@ import SVExperienceKit
 import SVLanguageKit
 import SVSocialLinkKit
 import SVSpotlightKit
+import SVAboutKit
 
 @available(iOS 17.0, *)
 public final class RootDIContainer {
@@ -30,6 +31,7 @@ public final class RootDIContainer {
     private let languagesDIContainer: LanguagesDIContainer
     private let socialLinksDIContainer: SocialLinksDIContainer
     private let spotlightDIContainer: SpotlightDIContainer
+    private let aboutDIContainer: AboutDIContainer
     public init(
         skillsDIContainer: SkillsDIContainer,
         documentsDIContainer: DocumentsDIContainer,
@@ -39,7 +41,8 @@ public final class RootDIContainer {
         experiencesDIContainer: ExperiencesDIContainer,
         languagesDIContainer: LanguagesDIContainer,
         socialLinksDIContainer: SocialLinksDIContainer,
-        spotlightDIContainer: SpotlightDIContainer
+        spotlightDIContainer: SpotlightDIContainer,
+        aboutDIContainer: AboutDIContainer
     ) {
         self.skillsDIContainer = skillsDIContainer
         self.documentsDIContainer = documentsDIContainer
@@ -50,6 +53,7 @@ public final class RootDIContainer {
         self.languagesDIContainer = languagesDIContainer
         self.socialLinksDIContainer = socialLinksDIContainer
         self.spotlightDIContainer = spotlightDIContainer
+        self.aboutDIContainer = aboutDIContainer
     }
     
     @MainActor
@@ -65,6 +69,7 @@ public final class RootDIContainer {
         self.languagesDIContainer.register(&$0)
         self.socialLinksDIContainer.register(&$0)
         self.spotlightDIContainer.register(&$0)
+        self.aboutDIContainer.register(&$0)
     }
 
     @MainActor public func makeView() -> some View {

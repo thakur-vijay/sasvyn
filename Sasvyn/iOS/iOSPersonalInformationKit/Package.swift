@@ -19,6 +19,7 @@ let package = Package(
             from: "1.26.0"
         ),
         .package(path: "../../Modules/SVDesignSystem"),
+        .package(path: "../../Modules/SVRemoteImage"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -31,6 +32,7 @@ let package = Package(
                     package: "swift-composable-architecture"
                 ),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),
+                .product(name: "SVRemoteImage", package: "SVRemoteImage"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

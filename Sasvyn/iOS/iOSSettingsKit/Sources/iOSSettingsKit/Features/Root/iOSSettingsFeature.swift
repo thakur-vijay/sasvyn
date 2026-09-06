@@ -45,6 +45,7 @@ public struct iOSSettingsFeature {
     
     @Reducer
     public enum Path {
+        case personalInformation(iOSPersonalInfomationFeature)
         case appearance(iOSAppearanceFeature)
     }
     
@@ -82,7 +83,7 @@ public struct iOSSettingsFeature {
                         )
                     }
                 case .personalInformation:
-                    break
+                    state.path.append(.personalInformation(.init()))
                 case .appearance:
                     state.path.append(.appearance(.init()))
                 case .privacy:

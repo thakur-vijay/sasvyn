@@ -16,11 +16,11 @@ internal struct EducationCard: View {
         self.education = education
     }
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
             SVSymbols.education.image
-                .font(.system(size: 24))
+                .font(.system(size: 22))
                 .fontWeight(.bold)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.accentColor)
                 .frame(width: 30, height: 30)
             
             VStack(alignment: .leading, spacing: 4) {

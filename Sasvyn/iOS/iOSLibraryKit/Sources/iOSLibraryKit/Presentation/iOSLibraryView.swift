@@ -30,23 +30,13 @@ public struct iOSLibraryView: View {
                 ForEach(LibrarySectionModel.sections) { section in
                     Section(section.title) {
                         ForEach(section.rows) { row in
-                            Button {
+                            SVListRow(row.rawValue, leadingImage: row.symbol.name) {
                                 store.send(.pathTapped(row))
-                            } label: {
-                                NavigationLink(value: row) {
-                                    Label(
-                                        row.rawValue,
-                                        systemImage: row.symbol.name
-                                    )
-                                }
-                                .allowsHitTesting(false)
                             }
-
                         }
                     }
                 }
             }
-            .listStyle(.plain)
             .navigationTitle("Library")
             .toolbarTitleDisplayMode(.inlineLarge)
         } destination: { store in

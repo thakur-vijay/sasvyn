@@ -17,22 +17,19 @@ public struct iOSEducationsView: View {
     }
     
     public var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(store.educations) { education in
-                    EducationCard(education)
-                        .contextMenu {
-                            Button("Edit", systemImage: SVSymbols.edit.name) {
-                                store.send(.editTapped(education))
-                            }
-                            
-                            Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive){
-                                store.send(.deleteTapped(education))
-                            }
+        List {
+            ForEach(store.educations) { education in
+                EducationCard(education)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button("", systemImage: SVSymbols.edit.name) {
+                            store.send(.editTapped(education))
                         }
-                }
+                        Button("", systemImage: SVSymbols.trash.name) {
+                            store.send(.deleteTapped(education))
+                        }
+                        .tint(.red)
+                    }
             }
-            .padding(20)
         }
         .overlay {
             if store.educations.isEmpty {

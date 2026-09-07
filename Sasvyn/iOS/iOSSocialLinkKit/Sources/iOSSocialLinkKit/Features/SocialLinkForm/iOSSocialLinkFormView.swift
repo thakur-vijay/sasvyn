@@ -39,28 +39,24 @@ public struct iOSSocialLinkFormView: View {
                 }
                 Section("Link Type") {
                     ForEach(LinkType.allCases, id: \.self) { type in
-                        
-                        Button {
-                            store.send(.onLinkTypeChanged(type))
-                        } label: {
-                            LabeledContent {
+                        SVListRow(
+                            type.rawValue.capitalized,
+                            leading: {
+                                type.icon
+                                    .frame(width: 24, height: 24)
+                            },
+                            trailing: {
                                 if store.link.type == type {
                                     SVSymbols.Check.plain.image
                                         .foregroundStyle(Color.accentColor)
                                 }
-                            } label: {
-                                Label {
-                                    Text(type.rawValue.capitalized)
-                                } icon: {
-                                    type.icon
-                                        .frame(width: 24, height: 24)
-                                }
+                            },
+                            showsDisclosureIndicator: false) {
+                                store.send(.onLinkTypeChanged(type))
                             }
-                        }
                     }
                 }
             }
-            .listStyle(.plain)
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)

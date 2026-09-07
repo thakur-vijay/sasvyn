@@ -11,13 +11,10 @@ public struct iOSExperiencesView: View {
         List {
             ForEach(store.experiences) { experience in
                 ExperienceCard(experience)
-                    .listRowSeparator(.hidden, edges: .top)
-                    .listRowSeparator(.visible, edges: .bottom)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button("", systemImage: SVSymbols.edit.name) {
                             store.send(.editTapped(experience))
                         }
-                        .tint(.blue)
                         Button("", systemImage: SVSymbols.trash.name) {
                             store.send(.deleteTapped(experience))
                         }
@@ -25,7 +22,6 @@ public struct iOSExperiencesView: View {
                     }
             }
         }
-        .listStyle(.plain)
         .overlay {
             if store.experiences.isEmpty {
                 SVContentUnavailableView(

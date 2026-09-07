@@ -22,40 +22,38 @@ public struct iOSSettingsView: View {
     public var body: some View {
         NavigationStack(path: $store.scope(\.path, action: \.path)){
             List {
-                VStack {
-                    SVRemoteImage(
-                        url: .init(
-                            string: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                        ),
-                        size: .init(width: 120, height: 120),
-                        shape: .circle
-                    )
-                    Text("Vijay Thakur")
-                        .font(.largeTitle.bold())
-                    Text("thakurvijay0006@gmail.com")
-                        .font(.headline)
-                        .foregroundStyle(.gray)
-                        .tint(.gray)
-                }
-                .clearListStyle()
-                .padding(.vertical, 20)
-                ForEach(SettingsDestination.allCases) { destination in
-                    Button {
-                        store.send(.destinationTapped(destination))
-                    } label: {
-                        NavigationLink(value: destination) {
-                            Label(
-                                destination.rawValue,
-                                systemImage: destination.symbol.name
-                            )
-                        }
-                        .allowsHitTesting(false)
-                        .navigationLinkIndicatorVisibility(destination.navigationLinkIndicatorVisibility)
+                Section {
+                    VStack {
+                        SVRemoteImage(
+                            url: .init(
+                                string: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+                            ),
+                            size: .init(width: 120, height: 120),
+                            shape: .circle
+                        )
+                        Text("Vijay Thakur")
+                            .font(.largeTitle.bold())
+                        Text("thakurvijay0006@gmail.com")
+                            .font(.headline)
+                            .foregroundStyle(.gray)
+                            .tint(.gray)
                     }
-
+                    .clearListStyle()
+                }
+                
+                Section {
+                    ForEach(SettingsDestination.allCases) { destination in
+                        SVListRow(
+                            destination.rawValue,
+                            leadingImage: destination.symbol.name,
+                            isDestructive: destination.isDestructive
+                        ) {
+                            store.send(.destinationTapped(destination))
+                        }
+                    }
                 }
             }
-            .listStyle(.plain)
+            .listSectionSpacing(.custom(20))
             .navigationTitle("Settings")
             .toolbarTitleDisplayMode(.inlineLarge)
         } destination: { store in

@@ -85,16 +85,16 @@ internal struct EducationFormView: View {
 
     private var durationSection: some View {
         Section {
-            DatePicker(
+            SVDatePicker(
                 "Start Date",
                 selection: $store.education.startDate,
-                displayedComponents: .date
+                displayedComponents: .date,
             )
 
-            DatePicker(
+            SVDatePicker(
                 "End Date",
                 selection: $store.education.endDate,
-                displayedComponents: .date
+                displayedComponents: .date,
             )
         } header: {
             Text("Duration")

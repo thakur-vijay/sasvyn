@@ -11,7 +11,7 @@ internal struct ExperienceCard: View {
         HStack(alignment: .top, spacing: 12) {
             SVSymbols.experience.image
                 .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.accentColor)
                 .frame(width: 30)
             VStack(alignment: .leading, spacing: 5) {
                 HStack {

@@ -83,28 +83,43 @@ public struct iOSAppearanceView: View {
 
             Section("App Tint") {
                 ForEach(AppTint.allCases) { tint in
-                    Button {
-                        appTint = tint
-                    } label: {
-                        HStack(spacing: 16) {
+                    SVListRow(
+                        tint.rawValue.capitalized,
+                        leading: {
                             Circle()
                                 .fill(tint.color)
                                 .frame(width: 30, height: 30)
-
-                            Text(tint.rawValue.capitalized)
-
-                            Spacer()
-
+                        },
+                        trailing: {
                             if appTint == tint {
                                 SVSymbols.Check.plain.image
                                     .foregroundStyle(appTint.color)
                             }
+                        },
+                        showsDisclosureIndicator: false) {
+                            appTint = tint
                         }
-                    }
+//                    Button {
+//                        appTint = tint
+//                    } label: {
+//                        HStack(spacing: 16) {
+//                            Circle()
+//                                .fill(tint.color)
+//                                .frame(width: 30, height: 30)
+//
+//                            Text(tint.rawValue.capitalized)
+//
+//                            Spacer()
+//
+//                            if appTint == tint {
+//                                SVSymbols.Check.plain.image
+//                                    .foregroundStyle(appTint.color)
+//                            }
+//                        }
+//                    }
                 }
             }
         }
-        .listStyle(.plain)
         .navigationTitle("Appearance")
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -107,7 +107,6 @@ public struct SVButton: View {
         Button(action: action) {
             label
         }
-        .buttonStyle(.plain)
         .optionalGlassEffect(shape.shape, isInteractive: true)
     }
 

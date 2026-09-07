@@ -39,8 +39,7 @@ public struct iOSSocialLinksView: View {
                         }
                         .allowsHitTesting(false)
                     }
-                    .listRowSeparator(.visible, edges: .bottom)
-                    .listRowSeparator(.hidden, edges: .top)
+                    .tint(.primary)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button("", systemImage: SVSymbols.edit.name){
                             store.send(.editLinkTapped(link))
@@ -53,7 +52,6 @@ public struct iOSSocialLinksView: View {
                 }
             }
         }
-        .listStyle(.plain)
         .overlay {
             if store.links.isEmpty {
                 SVContentUnavailableView(

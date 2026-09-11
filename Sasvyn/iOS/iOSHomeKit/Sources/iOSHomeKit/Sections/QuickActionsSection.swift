@@ -48,14 +48,14 @@ public struct QuickActionsSection: View {
         SVSection(title: "Quick Actions"){
             Grid(horizontalSpacing: 12, verticalSpacing: 12) {
                 GridRow {
-                    actionCard(.addDocument)
+                    actionCard(.addProject)
                     actionCard(.createMockup)
                 }
                 
-                GridRow {
-                    actionCard(.addProject)
-                    actionCard(.editAbout)
-                }
+//                GridRow {
+//                    actionCard(.addProject)
+//                    actionCard(.editAbout)
+//                }
             }
         }
         .padding(.horizontal, 20)

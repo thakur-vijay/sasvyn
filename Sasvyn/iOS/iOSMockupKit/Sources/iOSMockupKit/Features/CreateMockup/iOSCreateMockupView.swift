@@ -110,23 +110,24 @@ public struct iOSCreateMockupView: View {
                     .scrollIndicators(.hidden)
                     .scrollClipDisabled()
                     .frame(height: 100)
-                    .padding(.horizontal, 20)
+                    .padding(20)
+                    .background(.ultraThinMaterial)
                 }
-                
-                ChipLayoutUI(alignment: .center, spacing: 8) {
-                    ForEach(ExportQuality.allCases, id: \.rawValue) { quality in
-                        SVChip(
-                            model: .init(
-                                id: quality.rawValue,
-                                text:  quality.rawValue
-                            ),
-                            isSelected: store.exportType == quality) {
-                                store.send(.qualityTapped(quality))
-                            }
-                    }
-                }
-                .padding(20)
-                .background(.ultraThinMaterial)
+//                
+//                ChipLayoutUI(alignment: .center, spacing: 8) {
+//                    ForEach(ExportQuality.allCases, id: \.rawValue) { quality in
+//                        SVChip(
+//                            model: .init(
+//                                id: quality.rawValue,
+//                                text:  quality.rawValue
+//                            ),
+//                            isSelected: store.exportType == quality) {
+//                                store.send(.qualityTapped(quality))
+//                            }
+//                    }
+//                }
+//                .padding(20)
+//                .background(.ultraThinMaterial)
             }
             .navigationTitle("Create Mockups")
             .navigationBarTitleDisplayMode(.inline)

@@ -7,7 +7,9 @@
 
 import ComposableArchitecture
 import SVProjectKit
+import SVMockupKit
 import iOSProjectKit
+import iOSMockupKit
 import Foundation
 
 @Reducer
@@ -28,11 +30,17 @@ public struct iOSHomeFeature {
         case destination(PresentationAction<Destination.Action>)
         case recentProjects(RecentProjectsFeature.Action)
         case quickAction(QuickActionsSection.QuickAction)
+        case delegate(Delegate)
+        
+        public enum Delegate {
+            case addMockup(MockupImage)
+        }
     }
     
     @Reducer
     public enum Destination {
         case projectDetail(iOSProjectDetailFeature)
+        case createMockup(iOSCreateMockupFeature)
     }
     
     public init(){
@@ -54,6 +62,18 @@ public struct iOSHomeFeature {
                 return .none
             case .recentProjects(_):
                 return .none
+            case .quickAction(let action):
+                switch action {
+                case .addDocument:
+                    break
+                case .createMockup:
+                    state.destination = .createMockup(.init())
+                case .addProject:
+                    state.destination = .projectDetail(.init(mode: .create, id: UUID().uuidString, viewMode: .sheet))
+                case .editAbout:
+                    break
+                }
+                return .none
             case .destination(.presented(.projectDetail(.delegate(.projectAdded(let project))))):
                 state.destination = nil
                 return .send(.recentProjects(.updateProject(project)))
@@ -62,19 +82,17 @@ public struct iOSHomeFeature {
             case .destination(.presented(.projectDetail(.delegate(.close)))):
                 state.destination = nil
                 return .none
+            case .destination(.presented(.createMockup(.delegate(.exportFinished)))):
+                state.destination = nil
+                return .none
+            case .destination(.presented(.createMockup(.delegate(.close)))):
+                state.destination = nil
+                return .none
+            case .destination(.presented(.createMockup(.delegate(.addMockup(let mockupImage))))):
+                return .send(.delegate(.addMockup(mockupImage)))
             case .destination(_):
                 return .none
-            case .quickAction(let action):
-                switch action {
-                case .addDocument:
-                    break
-                case .createMockup:
-                    break
-                case .addProject:
-                    state.destination = .projectDetail(.init(mode: .create, id: UUID().uuidString, viewMode: .sheet))
-                case .editAbout:
-                    break
-                }
+            case .delegate(_):
                 return .none
             }
         }

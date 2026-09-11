@@ -80,6 +80,8 @@ public struct iOSMainFeature {
                 return .none
             case .delegate(_):
                 return .none
+            case .home(.delegate(.addMockup(let image))):
+                return .none
             case .home(_):
                 return .none
             case .quickAppAction(let action):
@@ -89,23 +91,23 @@ public struct iOSMainFeature {
                 case .projects:
                     break
                 case .createMockup:
-                    break
+                    return .send(.home(.quickAction(.createMockup)))
                 case .exportPortfolio:
                     break
                 }
                 return .none
             case .spotlightAction(let action):
                 switch action {
-                case .skill(id: let id):
+                case .skill:
                     state.selectedTab = .library
                     return .send(.library(.pathTapped(.skills)))
-                case .project(id: let id):
+                case .project(_):
                     break
-                case .experience(id: let id):
+                case .experience(_):
                     break
-                case .education(id: let id):
+                case .education(_):
                     break
-                case .language(id: let id):
+                case .language(_):
                     break
                 case .socialLink(id: let id):
                     break

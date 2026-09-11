@@ -11,9 +11,11 @@ import SVDIInfra
 import iOSRootKit
 import CoreSpotlight
 import SVSpotlightKit
+import AppIntents
+import SVShortcutsKit
 
-final class SceneDelegate: NSObject, UIWindowSceneDelegate {
-    
+final class SceneDelegate: NSObject, UIWindowSceneDelegate, AppIntentSceneDelegate{
+   
     func windowScene(
         _ windowScene: UIWindowScene,
         performActionFor shortcutItem: UIApplicationShortcutItem,
@@ -34,6 +36,10 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         
         if let userActivity = connectionOptions.userActivities.first(where: { $0.activityType == CSSearchableItemActionType }) {
             handleSpotlight(userActivity)
+        }
+        
+        if let appIntent = connectionOptions.appIntent {
+            handleAppIntent(appIntent)
         }
     }
     
@@ -67,10 +73,27 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         }
     }
     
+    private func handleAppIntent(_ appIntent: any UISceneAppIntent) {
+        if appIntent is CreateProjectIntent {
+            AppDelegate.rootDIContainer?.send(
+                .quickAppAction(.newProject)
+            )
+        }
+        
+        if appIntent is CreateMockupIntent {
+            AppDelegate.rootDIContainer?.send(.quickAppAction(.createMockup))
+        }
+    }
+    
     func scene(
         _ scene: UIScene,
         continue userActivity: NSUserActivity
     ) {
         handleSpotlight(userActivity)
     }
+    
+    func scene(_ scene: UIScene, willPerformAppIntent appIntent: any UISceneAppIntent) {
+        handleAppIntent(appIntent)
+    }
+    
 }

@@ -48,8 +48,6 @@ public struct iOSPersonalInfomationFeature {
             switch action {
             case .binding(_):
                 return .none
-            case .destination(_):
-                return .none
             case .destinationTapped(let destination):
                 switch destination {
                 case .name:
@@ -75,6 +73,22 @@ public struct iOSPersonalInfomationFeature {
                 return .none
             case .changeProfilePicTapped:
                 state.isPhotosPickerPresented = true
+                return .none
+            case .destination(.presented(.nameEditor(.delegate(.close)))):
+                state.destination = nil
+                return .none
+            case let .destination(.presented(.nameEditor(.delegate(.update(userId, firstName, lastName))))):
+                print(userId, firstName, lastName)
+                state.destination = nil
+                return .none
+            case .destination(.presented(.dateOfBirthEditor(.delegate(.close)))):
+                state.destination = nil
+                return .none
+            case let .destination(.presented(.dateOfBirthEditor(.delegate(.update(userId, dateOfBirth))))):
+                print(userId, dateOfBirth)
+                state.destination = nil
+                return .none
+            case .destination(_):
                 return .none
             }
         }

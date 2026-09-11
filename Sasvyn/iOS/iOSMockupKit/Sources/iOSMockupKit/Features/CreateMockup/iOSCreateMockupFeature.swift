@@ -21,7 +21,7 @@ public struct iOSCreateMockupFeature {
         public var selectedMockup: Mockup? = nil
         public var selectedDevice: Device? = Devices.all.first { $0.screen.isNotEmpty }
         public var selectedItems: [PhotosPickerItem] = []
-        public var exportType: ExportQuality = .hd
+        public var exportType: ExportQuality = .fullHD
         public var selectedItem: PhotosPickerItem?
         public var isMockupPhotoPickerPresented: Bool = false
         public var isDismissRequested = false
@@ -86,13 +86,10 @@ public struct iOSCreateMockupFeature {
             case .binding(_):
                 return .none
             case .destination(.presented(.devicePicker(.delegate(.deviceSelected(let device))))):
-                if state.selectedMockup == nil {
-                    state.selectedDevice = device
-                }else {
-                    if let index = state.mockups.firstIndex(where: { $0.id == state.selectedMockup?.id }){
-                        state.mockups[index].device = device
-                        state.selectedMockup = state.mockups[index]
-                    }
+                state.selectedDevice = device
+                if let index = state.mockups.firstIndex(where: { $0.id == state.selectedMockup?.id }){
+                    state.mockups[index].device = device
+                    state.selectedMockup = state.mockups[index]
                 }
                 state.destination = nil
                 return .none

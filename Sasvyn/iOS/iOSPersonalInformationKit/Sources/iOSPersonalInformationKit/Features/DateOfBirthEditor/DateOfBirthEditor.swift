@@ -18,18 +18,22 @@ public struct DateOfBirthEditor: View {
     
     public var body: some View {
         List {
-            SVListRow(
-                "Date of birth",
-                value: store.dateOfBirth.formatted(date: .abbreviated, time: .omitted),
-                showsDisclosureIndicator: false
-            )
-            
-            SVDatePicker(
-                "",
-                selection: $store.dateOfBirth,
-                displayedComponents: .date,
-                style: .graphical
-            )
+            Section {
+                SVListRow(
+                    "Date of birth",
+                    value: store.dateOfBirth.formatted(date: .abbreviated, time: .omitted),
+                    showsDisclosureIndicator: false
+                )
+                
+            }
+            Section {
+                SVDatePicker(
+                    "",
+                    selection: $store.dateOfBirth,
+                    displayedComponents: .date,
+                    style: .graphical
+                )
+            }
         }
         .listSectionSpacing(.compact)
         .toolbar {

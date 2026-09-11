@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1854B9BD301CA27700F2E614 /* macOSMainKit */; };
+		18A64C913052BF5A006EA12A /* SVShortcutsKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A64C903052BF5A006EA12A /* SVShortcutsKit */; };
 		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
 		18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18C382A6303083BC008F2B81 /* iOSRootKit */; };
 /* End PBXBuildFile section */
@@ -85,6 +86,7 @@
 				Modules/SVPortfolioKit,
 				Modules/SVProjectKit,
 				Modules/SVRemoteImage,
+				Modules/SVShortcutsKit,
 				Modules/SVSkillsKit,
 				Modules/SVSocialLinkKit,
 				Modules/SVSpotlightKit,
@@ -120,6 +122,7 @@
 			files = (
 				18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */,
 				1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */,
+				18A64C913052BF5A006EA12A /* SVShortcutsKit in Frameworks */,
 				18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */,
 			);
 		};
@@ -186,6 +189,7 @@
 				1854B9BD301CA27700F2E614 /* macOSMainKit */,
 				18C382A6303083BC008F2B81 /* iOSRootKit */,
 				18A7808E3033006E007DA2CF /* SVDIInfra */,
+				18A64C903052BF5A006EA12A /* SVShortcutsKit */,
 			);
 			productName = Sasvyn;
 			productReference = 1854B951301BE27000F2E614 /* Sasvyn.app */;
@@ -472,7 +476,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
@@ -524,7 +528,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
@@ -690,6 +694,10 @@
 		1854B9BD301CA27700F2E614 /* macOSMainKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = macOSMainKit;
+		};
+		18A64C903052BF5A006EA12A /* SVShortcutsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SVShortcutsKit;
 		};
 		18A7808E3033006E007DA2CF /* SVDIInfra */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -33,7 +33,7 @@ public struct SVSection<Content: View, Trailing: View>: View {
             HStack {
                 Text(title)
                     .font(.title3)
-                    .fontWeight(.heavy)
+                    .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 trailing
             }

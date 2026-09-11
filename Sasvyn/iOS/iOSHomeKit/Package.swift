@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "iOSHomeKit",
-    platforms: [.iOS(.v18)],
+    platforms: [.iOS(.v26)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -21,9 +21,11 @@ let package = Package(
         .package(path: "../iOSPortfolioKit"),
         .package(path: "../iOSProjectKit"),
         .package(path: "../iOSAppearanceKit"),
+        .package(path: "../iOSMockupKit"),
         .package(path: "../../Modules/SVProjectKit"),
+        .package(path: "../../Modules/SVMockupKit"),
         .package(path: "../../Modules/SVFoundation"),
-        .package(path: "../../Modules/SVDesignSystem")
+        .package(path: "../../Modules/SVDesignSystem"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -38,7 +40,9 @@ let package = Package(
                 .product(name: "iOSPortfolioKit", package: "iOSPortfolioKit"),
                 .product(name: "iOSProjectKit", package: "iOSProjectKit"),
                 .product(name: "iOSAppearanceKit", package: "iOSAppearanceKit"),
+                .product(name: "iOSMockupKit", package: "iOSMockupKit"),
                 .product(name: "SVProjectKit", package: "SVProjectKit"),
+                .product(name: "SVMockupKit", package: "SVMockupKit"),
                 .product(name: "SVFoundation", package: "SVFoundation"),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),
             ],

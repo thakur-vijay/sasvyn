@@ -10,6 +10,7 @@ import ComposableArchitecture
 import iOSPortfolioKit
 import SVFoundation
 import iOSProjectKit
+import iOSMockupKit
 
 public struct iOSHomeView: View {
     @Bindable var store: StoreOf<iOSHomeFeature>
@@ -42,6 +43,9 @@ public struct iOSHomeView: View {
                 switch store.case {
                 case .projectDetail(let store):
                     iOSProjectDetailView(store: store)
+                        .interactiveDismissDisabled()
+                case .createMockup(let store):
+                    iOSCreateMockupView(store: store)
                         .interactiveDismissDisabled()
                 }
             }

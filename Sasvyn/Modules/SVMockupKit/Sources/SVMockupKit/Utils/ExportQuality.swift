@@ -7,7 +7,6 @@
 
 
 import SwiftUI
-import UIKit
 import UniformTypeIdentifiers
 
 @available(iOS 18.0, *)

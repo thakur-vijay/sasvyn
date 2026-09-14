@@ -23,13 +23,13 @@ public enum SVColors {
     // MARK: - Background
 
     /// Primary app background.
-    public static let background = Color(.systemBackground)
+//    public static let background = Color(.systemBackground)
 
     /// Secondary background for grouped/content surfaces.
-    public static let secondaryBackground = Color(.secondarySystemBackground)
+//    public static let secondaryBackground = Color(.secondarySystemBackground)
 
     /// Tertiary background for nested surfaces.
-    public static let tertiaryBackground = Color(.tertiarySystemBackground)
+//    public static let tertiaryBackground = Color(.tertiarySystemBackground)
 
     // MARK: - Fill
 
@@ -48,7 +48,7 @@ public enum SVColors {
     // MARK: - Separator
 
     /// Standard system separator.
-    public static let separator = Color(.separator)
+//    public static let separator = Color(.separator)
 
     // MARK: - Status
 

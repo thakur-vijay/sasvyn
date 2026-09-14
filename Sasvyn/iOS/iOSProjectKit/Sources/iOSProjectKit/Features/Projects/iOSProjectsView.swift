@@ -20,29 +20,27 @@ public struct iOSProjectsView: View {
     @Namespace private var namespace
     public var body: some View {
         NavigationStack(path: $store.scope(\.path, action: \.path)){
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(store.projects){ project in
-                        
-                        ProjectCard(project: project) { mode in
-                            store.send(.projectTapped(project, mode))
-                        } onDelete: {
+            List {
+                ForEach(store.projects){ project in
+                    ProjectCard(project: project) { mode in
+                        store.send(.projectTapped(project, mode))
+                    } onDelete: {
+                        store.send(.deleteProjectTapped(project))
+                    }
+                    .listRowSeparator(.visible, edges: .bottom)
+                    .listRowSeparator(.hidden, edges: .top)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button("", systemImage: SVSymbols.edit.name) {
+                            store.send(.projectTapped(project, .edit))
+                        }
+                        Button("", systemImage: SVSymbols.trash.name) {
                             store.send(.deleteProjectTapped(project))
                         }
-                        .contentShape(.contextMenuPreview, .rect)
-                        .contextMenu {
-                            Button("Edit", systemImage: SVSymbols.edit.name) {
-                                store.send(.projectTapped(project, .edit))
-                            }
-                            
-                            Button("Delete", systemImage: SVSymbols.trash.name, role: .destructive){
-                                store.send(.deleteProjectTapped(project))
-                            }
-                        }
+                        .tint(.red)
                     }
                 }
-                .padding()
             }
+            .listStyle(.plain)
             .overlay {
                 if store.projects.isEmpty {
                     SVContentUnavailableView(

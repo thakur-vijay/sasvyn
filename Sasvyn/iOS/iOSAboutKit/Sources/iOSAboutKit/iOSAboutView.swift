@@ -9,11 +9,13 @@
 import SwiftUI
 import ComposableArchitecture
 import InfomaniakRichHTMLEditor
+#if os(iOS)
+import UIKit
+#endif
 
 public struct iOSAboutView: View {
 
-    @Bindable
-    var store: StoreOf<iOSAboutFeature>
+    @Bindable var store: StoreOf<iOSAboutFeature>
 
     public init(store: StoreOf<iOSAboutFeature>) {
         self.store = store
@@ -22,28 +24,37 @@ public struct iOSAboutView: View {
     @StateObject private var textAttributes: TextAttributes = .init()
     @State private var debounceTask: Task<Void, Never>?
     public var body: some View {
-        RichHTMLEditor(html: $store.about.content, textAttributes: textAttributes)
-            .editorScrollable(true)
-            .editorInputAccessoryView(EditorSwiftUIToolbar(textAttributes: textAttributes))
-            .padding(20)
-            .scrollDismissesKeyboard(.interactively)
-            .navigationTitle("About")
-            .navigationBarTitleDisplayMode(.inline)
-            .task {
-                await store.send(.onTask).finish()
-            }
-            .onChange(of: store.about.content) { _, newValue in
-                debounceTask?.cancel()
-                debounceTask = Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(500))
-                    guard !Task.isCancelled else { return }
-                    store.send(.onContentChange)
+        GeometryReader {
+            let screenSize = $0.size
+            RichHTMLEditor(html: $store.about.content, textAttributes: textAttributes)
+                .editorScrollable(true)
+                .editorInputAccessoryView(
+                    EditorSwiftUIToolbar(
+                        screenWidth: screenSize.width,
+                        textAttributes: textAttributes
+                    )
+                )
+                .padding(20)
+                .scrollDismissesKeyboard(.interactively)
+                .navigationTitle("About")
+                .navigationBarTitleDisplayMode(.inline)
+                .task {
+                    textAttributes.setBackgroundColor(.clear)
+                    await store.send(.onTask).finish()
                 }
-            }
+                .onChange(of: store.about.content) { _, newValue in
+                    debounceTask?.cancel()
+                    debounceTask = Task { @MainActor in
+                        try? await Task.sleep(for: .milliseconds(500))
+                        guard !Task.isCancelled else { return }
+                        store.send(.onContentChange)
+                    }
+                }
+        }
     }
 
 }
-
+//
 struct EditorSwiftUIToolbarContent: View {
     @ObservedObject var textAttributes: TextAttributes
 
@@ -66,16 +77,24 @@ struct EditorSwiftUIToolbarContent: View {
                     systemImage: "textformat.size.smaller",
                     isActive: false
                 ) {
-                    guard let size = textAttributes.fontSize else { return }
-                    textAttributes.setFontSize(max(size - 1, 8))
+                    let currentSize = textAttributes.fontSize ?? 1
+                    if currentSize == 1 {
+                        textAttributes.setFontSize(1)
+                    }else {
+                        textAttributes.setFontSize(currentSize - 1)
+                    }
                 }
 
                 EditorToolbarButton(
                     systemImage: "textformat.size.larger",
                     isActive: false
                 ) {
-                    guard let size = textAttributes.fontSize else { return }
-                    textAttributes.setFontSize(min(size + 1, 72))
+                    let currentSize = textAttributes.fontSize ?? 1
+                    if currentSize == 7 {
+                        textAttributes.setFontSize(7)
+                    }else {
+                        textAttributes.setFontSize(currentSize + 1)
+                    }
                 }
                 
                 Divider()
@@ -144,12 +163,12 @@ final class EditorSwiftUIToolbar: UIView {
         CGSize(width: UIView.noIntrinsicMetric, height: 44)
     }
 
-    init(textAttributes: TextAttributes) {
+    init(screenWidth: CGFloat, textAttributes: TextAttributes) {
         hostingController = UIHostingController(rootView: EditorSwiftUIToolbarContent(textAttributes: textAttributes))
         hostingController.view.backgroundColor = .clear
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
 
-        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        super.init(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 44))
         autoresizingMask = .flexibleWidth
 
         addSubview(hostingController.view)

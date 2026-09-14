@@ -43,6 +43,11 @@ internal struct TruncationTextRenderer: TextRenderer {
         context.draw(line)
     }
     
+    #if os(iOS)
+    typealias SVFont = UIFont
+    #else
+    typealias SVFont = NSFont
+#endif
     func drawMoreTextAtEnd(line: Text.Layout.Element, context: inout GraphicsContext){
         let runs = line.flatMap { $0 }
         let runsCount = runs.count
@@ -64,7 +69,7 @@ internal struct TruncationTextRenderer: TextRenderer {
         let run = runs[textRunIndex]
         let typography = run.typographicBounds
         let fontSize: CGFloat = typography.ascent
-        let font: UIFont = UIFont.systemFont(ofSize: fontSize)
+        let font: SVFont = SVFont.systemFont(ofSize: fontSize)
         let spacing: CGFloat = NSString(string: moreText).size(withAttributes: [
             .font: font
         ]).width / 2
@@ -78,5 +83,5 @@ internal struct TruncationTextRenderer: TextRenderer {
         context.opacity = 1 - progress
         context.draw(swiftUIText, at: origin )
     }
-    
+
 }

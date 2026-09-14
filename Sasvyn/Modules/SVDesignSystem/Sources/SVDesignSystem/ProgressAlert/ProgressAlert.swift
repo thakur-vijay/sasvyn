@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if os(iOS)
 public struct ProgressAlertConfig {
     public var tint: Color
     public var title: String
@@ -305,3 +306,5 @@ private extension CGFloat {
         Swift.min(Swift.max(self, 0), 1)
     }
 }
+
+#endif

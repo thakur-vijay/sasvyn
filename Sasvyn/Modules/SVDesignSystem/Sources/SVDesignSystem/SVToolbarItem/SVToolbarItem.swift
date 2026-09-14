@@ -49,6 +49,7 @@ public struct SVToolbarItem: ToolbarContent {
     }
 }
 
+#if os(iOS)
 public extension SVToolbarItem {
 
     static func close(
@@ -84,5 +85,4 @@ public extension SVToolbarItem {
         )
     }
 }
-
-
+#endif

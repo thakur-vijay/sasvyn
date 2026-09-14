@@ -67,10 +67,12 @@ internal struct ImageViewer<Item: ImageViewerItem>: View {
                 }
             }
             .navigationTitle("Preview")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 SVToolbarItem.close(action: onClose)
             }
+#endif
         }
         .task {
             scrollPosition = .init(id: selection.id, anchor: .center)

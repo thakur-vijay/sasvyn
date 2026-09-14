@@ -5,6 +5,7 @@
 //  Created by Vijay Thakur on 05/09/26.
 //
 
+#if os(iOS)
 import UIKit
 import SVFoundation
 import SVDIInfra
@@ -97,3 +98,6 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate, AppIntentSceneDelega
     }
     
 }
+
+#endif
+

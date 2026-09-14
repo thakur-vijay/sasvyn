@@ -6,9 +6,18 @@
 //
 
 import Foundation
+import SwiftUI
+
+#if os(iOS)
 import UIKit
+public typealias SVDeviceImage = UIImage
+#elseif os(macOS)
+import AppKit
+public typealias SVDeviceImage = NSImage
+#endif
 
 public struct Device: Identifiable, Hashable, Sendable {
+
     public let id: String
     public let generation: String
     public let variant: String
@@ -17,7 +26,7 @@ public struct Device: Identifiable, Hashable, Sendable {
     public let screen: String
     public let screenRadius: CGFloat?
     public let screenSize: CGSize
-    
+
     public init(
         id: String,
         generation: String,
@@ -37,19 +46,133 @@ public struct Device: Identifiable, Hashable, Sendable {
         self.screenRadius = screenRadius
         self.screenSize = screenSize
     }
-    
-    public var uiImage: UIImage? {
-        .init(named: assetName, in: .module, with: .none)
+
+    public var uiImage: SVDeviceImage? {
+        #if os(iOS)
+
+        return UIImage(
+            named: assetName,
+            in: .module,
+            compatibleWith: nil
+        )
+
+        #elseif os(macOS)
+
+        guard let url = Bundle.module.url(
+            forResource: assetName,
+            withExtension: nil
+        ) else {
+            return nil
+        }
+
+        return NSImage(contentsOf: url)
+
+        #endif
     }
-    
-    public var screenUIImage: UIImage? {
-        .init(named: screen, in: .module, with: .none)
+
+    public var screenUIImage: SVDeviceImage? {
+        guard !screen.isEmpty else {
+            return nil
+        }
+
+        #if os(iOS)
+
+        return UIImage(
+            named: screen,
+            in: .module,
+            compatibleWith: nil
+        )
+
+        #elseif os(macOS)
+
+        guard let url = Bundle.module.url(
+            forResource: screen,
+            withExtension: nil
+        ) else {
+            return nil
+        }
+
+        return NSImage(contentsOf: url)
+
+        #endif
     }
 }
 
 public enum Devices {
     
     public static let all: [Device] = [
+        Device(
+            id: "iphone-18-black",
+            generation: "iPhone 18",
+            variant: "Pro",
+            finish: "Black",
+            assetName: "iPhone 18 Pro - Black - Portrait",
+            screen: "iPhone 18 Pro - Screen",
+            screenSize: .init(width: 1206, height: 2622)
+        ),
+        Device(
+            id: "iphone-18-burgundy",
+            generation: "iPhone 18",
+            variant: "Pro",
+            finish: "Burgundy",
+            assetName: "iPhone 18 Pro - Burgundy - Portrait",
+            screen: "iPhone 18 Pro - Screen",
+            screenSize: .init(width: 1206, height: 2622)
+        ),
+        Device(
+            id: "iphone-18-glacier",
+            generation: "iPhone 18",
+            variant: "Pro",
+            finish: "Glacier",
+            assetName: "iPhone 18 Pro - Glacier - Portrait",
+            screen: "iPhone 18 Pro - Screen",
+            screenSize: .init(width: 1206, height: 2622)
+        ),
+        Device(
+            id: "iphone-18-silver",
+            generation: "iPhone 18",
+            variant: "Pro",
+            finish: "Silver",
+            assetName: "iPhone 18 Pro - Silver - Portrait",
+            screen: "iPhone 18 Pro - Screen",
+            screenSize: .init(width: 1206, height: 2622)
+        ),
+        Device(
+            id: "iphone-18-pro-max-black",
+            generation: "iPhone 18",
+            variant: "Pro Max",
+            finish: "Black",
+            assetName: "iPhone 18 Pro Max - Black - Portrait",
+            screen: "iPhone 18 Pro Max - Screen",
+            screenSize: .init(width: 1320, height: 2868)
+        ),
+        Device(
+            id: "iphone-18-pro-max-burgundy",
+            generation: "iPhone 18",
+            variant: "Pro Max",
+            finish: "Burgundy",
+            assetName: "iPhone 18 Pro Max - Burgundy - Portrait",
+            screen: "iPhone 18 Pro Max - Screen",
+            screenSize: .init(width: 1320, height: 2868)
+        ),
+        Device(
+            id: "iphone-18-pro-max-glacier",
+            generation: "iPhone 18",
+            variant: "Pro Max",
+            finish: "Glacier",
+            assetName: "iPhone 18 Pro Max - Glacier - Portrait",
+            screen: "iPhone 18 Pro Max - Screen",
+            screenSize: .init(width: 1320, height: 2868)
+        ),
+        Device(
+            id: "iphone-18-pro-max-silver",
+            generation: "iPhone 18",
+            variant: "Pro Max",
+            finish: "Silver",
+            assetName: "iPhone 18 Pro Max - Silver - Portrait",
+            screen: "iPhone 18 Pro Max - Screen",
+            screenSize: .init(width: 1320, height: 2868)
+        ),
         Device(
             id: "iphone-17-black",
             generation: "iPhone 17",

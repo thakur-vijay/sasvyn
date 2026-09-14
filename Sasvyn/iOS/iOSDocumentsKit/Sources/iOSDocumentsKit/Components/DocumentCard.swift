@@ -10,7 +10,7 @@ import SVDocumentKit
 import SVDesignSystem
 
 internal struct DocumentCard: View {
-    let document: Document
+    let document: SVDocumentKit.Document
     let quickLook: ()->()
     let onDelete: ()->()
     

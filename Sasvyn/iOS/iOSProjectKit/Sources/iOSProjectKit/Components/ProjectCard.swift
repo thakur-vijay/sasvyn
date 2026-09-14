@@ -61,12 +61,6 @@ public struct ProjectCard: View {
             }
 
         }
-        .padding(.vertical, 16)
-        .background(.background)
-        .overlay(alignment: .bottom) {
-            Divider()
-                .padding(.leading, 102)
-        }
         .contentShape(.rect)
         .onTapGesture {
             onTap(.view)

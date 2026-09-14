@@ -7,18 +7,28 @@
 
 import SwiftUI
 import ImageIO
+#if os(iOS)
 import UIKit
+#else
+import AppKit
+#endif
+
+#if os(iOS)
+typealias SVImage = UIImage
+#else
+typealias SVImage = NSImage
+#endif
 
 public struct MockupPreview: View {
-
+    
     @Environment(\.displayScale) private var displayScale
-
+    
     private let imageData: Data?
     private let scaleResize: ImageScaleResize
     private let selectedDevice: Device
     private let renderMode: MockupRenderMode
     private let action: () -> Void
-
+    
     public init(
         imageData: Data?,
         scaleResize: ImageScaleResize,
@@ -32,7 +42,7 @@ public struct MockupPreview: View {
         self.renderMode = renderMode
         self.action = action
     }
-
+    
     public var body: some View {
         Group {
             if let deviceImage = selectedDevice.uiImage{
@@ -48,18 +58,18 @@ public struct MockupPreview: View {
             }
         }
     }
-
+    
     @ViewBuilder
     private func content(
-        deviceImage: UIImage,
-        screenImage: UIImage?,
+        deviceImage: SVImage,
+        screenImage: SVImage?,
         screenRadius: CGFloat?
     ) -> some View {
-
+        
         switch renderMode {
-
+            
         case .preview:
-
+            
             GeometryReader { proxy in
                 mockupContent(
                     deviceImage: deviceImage,
@@ -69,9 +79,9 @@ public struct MockupPreview: View {
                     pixelScale: displayScale
                 )
             }
-
+            
         case .export(let size):
-
+            
             mockupContent(
                 deviceImage: deviceImage,
                 screenImage: screenImage,
@@ -85,123 +95,124 @@ public struct MockupPreview: View {
             )
         }
     }
-
+    
     @ViewBuilder
     private func mockupContent(
-        deviceImage: UIImage,
-        screenImage: UIImage?,
+        deviceImage: SVImage,
+        screenImage: SVImage?,
         screenRadius: CGFloat?,
         canvasSize: CGSize,
         pixelScale: CGFloat
     ) -> some View {
-
+        
         let deviceWidth = deviceImage.size.width
         let deviceHeight = deviceImage.size.height
-
+        
         let screenWidthRatio =
-            selectedDevice.screenSize.width / deviceWidth
-
+        selectedDevice.screenSize.width / deviceWidth
+        
         let screenHeightRatio =
-            selectedDevice.screenSize.height / deviceHeight
-
+        selectedDevice.screenSize.height / deviceHeight
+        
         let targetSize = CGSize(
             width: canvasSize.width * screenWidthRatio,
             height: canvasSize.height * screenHeightRatio
         )
-
+        
         let targetPixelSize = CGSize(
             width: targetSize.width * pixelScale,
             height: targetSize.height * pixelScale
         )
-
+        
         ZStack {
-
+            
             if let imageData,
                let image = downsample(
-                    imageData,
-                    to: targetPixelSize
+                imageData,
+                to: targetPixelSize
                ) {
-
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledTo(scaleResize)
+                
+                SVImageView(image: image, scaleResize: scaleResize)
                     .frame(
                         width: targetSize.width,
                         height: targetSize.height
                     )
-                    .background(Color(.secondarySystemBackground))
+//                    .background(Color(.secondarySystemBackground))
                     .clipShape(.rect(cornerRadius: screenRadius ?? 0, style: .continuous))
                     .optionalMask(screenImage != nil){
                         if let screenImage{
-                            Image(uiImage: screenImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(
-                                    width: targetSize.width,
-                                    height: targetSize.height
-                                )
+                            SVImageView(
+                                image: screenImage,
+                                scaleResize: .fit
+                            )
+                            .frame(
+                                width: targetSize.width,
+                                height: targetSize.height
+                            )
                         }
                     }
             }else {
-                Image(uiImage: deviceImage)
-                    .resizable()
-                    .scaledToFit()
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        action()
-                    }
-            }
-            Image(uiImage: deviceImage)
-                .resizable()
-                .scaledToFit()
-                .contentShape(Rectangle())
+                SVImageView(
+                    image: deviceImage,
+                    scaleResize: .fill
+                )
+                .contentShape(.rect)
                 .onTapGesture {
                     action()
                 }
+            }
+            SVImageView(
+                image: deviceImage,
+                scaleResize: .fill
+            )
+            .contentShape(.rect)
+            .onTapGesture {
+                action()
+            }
         }
     }
-
+    
     private func downsample(
         _ data: Data,
         to targetPixelSize: CGSize
-    ) -> UIImage? {
-
+    ) -> SVImage? {
+        
         guard
             targetPixelSize.width > 0,
             targetPixelSize.height > 0
-        else {
+                else {
             return nil
         }
-
+        
         let sourceOptions: [CFString: Any] = [
             kCGImageSourceShouldCache: false
         ]
-
+        
         guard let source = CGImageSourceCreateWithData(
             data as CFData,
             sourceOptions as CFDictionary
         ) else {
             return nil
         }
-
+        
         let properties = CGImageSourceCopyPropertiesAtIndex(
             source,
             0,
             nil
         ) as? [CFString: Any]
-
+        
         let sourceWidth =
-            (properties?[kCGImagePropertyPixelWidth] as? NSNumber)?
+        (properties?[kCGImagePropertyPixelWidth] as? NSNumber)?
             .intValue ?? 0
-
+        
         let sourceHeight =
-            (properties?[kCGImagePropertyPixelHeight] as? NSNumber)?
+        (properties?[kCGImagePropertyPixelHeight] as? NSNumber)?
             .intValue ?? 0
-
+        
         guard sourceWidth > 0, sourceHeight > 0 else {
             return nil
         }
-
+        
         let maxPixelSize = Int(
             ceil(
                 max(
@@ -210,58 +221,102 @@ public struct MockupPreview: View {
                 )
             )
         )
-
-        // Don't downsample when the source is already
-        // smaller than or equal to the required resolution.
+        
         let sourceMaxPixelSize = max(
             sourceWidth,
             sourceHeight
         )
-
+        
+        let cgImage: CGImage
+        
         if sourceMaxPixelSize <= maxPixelSize {
-
+            
             let imageOptions: [CFString: Any] = [
                 kCGImageSourceShouldCache: true
             ]
-
-            guard let cgImage = CGImageSourceCreateImageAtIndex(
+            
+            guard let image = CGImageSourceCreateImageAtIndex(
                 source,
                 0,
                 imageOptions as CFDictionary
             ) else {
                 return nil
             }
-
-            return UIImage(
-                cgImage: cgImage,
-                scale: 1,
-                orientation: .up
-            )
+            
+            cgImage = image
+            
+        } else {
+            
+            let thumbnailOptions: [CFString: Any] = [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
+                kCGImageSourceShouldCache: false,
+                kCGImageSourceShouldCacheImmediately: false
+            ]
+            
+            guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(
+                source,
+                0,
+                thumbnailOptions as CFDictionary
+            ) else {
+                return nil
+            }
+            
+            cgImage = thumbnail
         }
-
-        let thumbnailOptions: [CFString: Any] = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
-            kCGImageSourceShouldCache: false,
-            kCGImageSourceShouldCacheImmediately: false
-        ]
-
-        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(
-            source,
-            0,
-            thumbnailOptions as CFDictionary
-        ) else {
-            return nil
-        }
-
+        
+#if os(iOS)
+        
         return UIImage(
             cgImage: cgImage,
             scale: 1,
             orientation: .up
         )
+        
+#elseif os(macOS)
+        
+        return NSImage(
+            cgImage: cgImage,
+            size: NSSize(
+                width: cgImage.width,
+                height: cgImage.height
+            )
+        )
+        
+#endif
     }
 }
+
+internal struct SVImageView: View {
+
+    private let image: SVImage
+    private let scaleResize: ImageScaleResize
+
+    init(
+        image: SVImage,
+        scaleResize: ImageScaleResize
+    ) {
+        self.image = image
+        self.scaleResize = scaleResize
+    }
+
+    var body: some View {
+        imageView
+            .resizable()
+            .scaledTo(scaleResize)
+    }
+
+    @ViewBuilder
+    private var imageView: Image {
+        #if os(iOS)
+        Image(uiImage: image)
+        #elseif os(macOS)
+        Image(nsImage: image)
+        #endif
+    }
+}
+
 
 public enum ImageScaleResize: Sendable{
     case fit
@@ -281,6 +336,7 @@ public enum ImageScaleResize: Sendable{
         }
     }
 }
+
 fileprivate extension View {
     @ViewBuilder
     func scaledTo(_ scale: ImageScaleResize)-> some View {

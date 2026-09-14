@@ -20,19 +20,20 @@ public struct iOSMockupsView: View {
         self.store = store
     }
     
-    @AppStorage("imageContentMode") private var imageContentMode: ImageContentMode = .fill
-    @Namespace private var animation
+//    @AppStorage("imageContentMode")
+    private let imageContentMode: ImageContentMode = .fit
+//    @Namespace private var animation
     @State private var scrollPosition: ScrollPosition = .init()
     
     public var body: some View {
         ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(spacing: 1, alignment: .top), count: 4), spacing: 1) {
+            LazyVGrid(columns: Array(repeating: GridItem(spacing: 1, alignment: .top), count: 5), spacing: 1) {
                 ForEach(store.mockups) { mockup in
                     let isUserInteractionDisabled = (store.mode == .picker) && (store.maxSelection == store.selectedMockupIds.count) && (!store.selectedMockupIds.contains(mockup.id))
                     GeometryReader {
                         SVRemoteImage(url: mockup.thumbnail, size: $0.size, shape: .rect)
                     }
-                    .aspectRatio(imageContentMode == .fit ? mockup.aspectRatio : 1, contentMode: .fit)
+                    .aspectRatio(mockup.aspectRatio, contentMode: .fit)
                     .overlay(alignment: .bottomTrailing){
                         if store.selectedMockupIds.contains(mockup.id) || (store.selection == mockup.id){
                             SVSymbols.Check.circle.image
@@ -41,7 +42,7 @@ public struct iOSMockupsView: View {
                                 .padding(12)
                         }
                     }
-                    .matchedGeometryEffect(id: mockup.id, in: animation)
+//                    .matchedGeometryEffect(id: mockup.id, in: animation)
                     .contentShape(.rect)
                     .onTapGesture {
                         store.send(.mockupTapped(mockup))
@@ -81,11 +82,11 @@ public struct iOSMockupsView: View {
                     .id(mockup.id)
                 }
             }
-            .padding(imageContentMode.padding)
+            .padding(SVSpacing.screen)
             .scrollTargetLayout()
         }
         .scrollPosition($scrollPosition)
-        .animation(.snappy(duration: 0.25), value: imageContentMode)
+//        .animation(.snappy(duration: 0.25), value: imageContentMode)
         .overlay {
             if store.mockups.isEmpty {
                 SVContentUnavailableView(
@@ -108,13 +109,13 @@ public struct iOSMockupsView: View {
                 store.send(.addTapped)
             }
             
-            SVToolbarItem(symbol: SVSymbols.Mockup.layout, placement: .topBarTrailing) {
-                if imageContentMode == .fit {
-                    imageContentMode = .fill
-                }else {
-                    imageContentMode = .fit
-                }
-            }
+//            SVToolbarItem(symbol: SVSymbols.Mockup.layout, placement: .topBarTrailing) {
+//                if imageContentMode == .fit {
+//                    imageContentMode = .fill
+//                }else {
+//                    imageContentMode = .fit
+//                }
+//            }
             
             if store.mode == .picker && !store.isSingleSelection{
                 SVToolbarItem.check(store.selectedMockupIds.count > 0){

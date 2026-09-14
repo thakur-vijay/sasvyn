@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "SVDIInfra",
-    platforms: [.iOS(.v26), .macOS(.v15)],
+    platforms: [.iOS(.v26), .macOS(.v26)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -25,7 +25,6 @@ let package = Package(
         .package(path: "../SVSocialLinkKit"),
         .package(path: "../SVSpotlightKit"),
         .package(path: "../SVAboutKit"),
-        .package(path: "../../iOS/iOSRootKit"),
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.26.0"
@@ -48,7 +47,6 @@ let package = Package(
                 .product(name: "SVSocialLinkKit", package: "SVSocialLinkKit"),
                 .product(name: "SVSpotlightKit", package: "SVSpotlightKit"),
                 .product(name: "SVAboutKit", package: "SVAboutKit"),
-                .product(name: "iOSRootKit", package: "iOSRootKit"),
                 .product(
                     name: "ComposableArchitecture",
                     package: "swift-composable-architecture"

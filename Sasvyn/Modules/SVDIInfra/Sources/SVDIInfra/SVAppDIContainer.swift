@@ -16,6 +16,7 @@ import SVLanguageKit
 import SVSocialLinkKit
 import SVSpotlightKit
 import SVAboutKit
+import ComposableArchitecture
 
 public final class SVAppDIContainer {
     
@@ -66,18 +67,31 @@ public final class SVAppDIContainer {
         AboutDIContainer(database: databaseContainer.appDatabase)
     }()
     
-    public lazy var rootDIContainer: RootDIContainer = {
-        RootDIContainer(
-            skillsDIContainer: skillsDIContainer,
-            documentsDIContainer: documentsDIContainer,
-            projectsDIContainer: projectsDIContainer,
-            mockupsDIContainer: mockupsDIContainer,
-            educationsDIContainer: educationsDIContainer,
-            experiencesDIContainer: experiencesDIContainer,
-            languagesDIContainer: languagesDIContainer,
-            socialLinksDIContainer: socialLinksDIContianer,
-            spotlightDIContainer: spotlightDIContainer,
-            aboutDIContainer: aboutDIContainer
-        )
-    }()
+//    public lazy var rootDIContainer: RootDIContainer = {
+//        RootDIContainer(
+//            skillsDIContainer: skillsDIContainer,
+//            documentsDIContainer: documentsDIContainer,
+//            projectsDIContainer: projectsDIContainer,
+//            mockupsDIContainer: mockupsDIContainer,
+//            educationsDIContainer: educationsDIContainer,
+//            experiencesDIContainer: experiencesDIContainer,
+//            languagesDIContainer: languagesDIContainer,
+//            socialLinksDIContainer: socialLinksDIContianer,
+//            spotlightDIContainer: spotlightDIContainer,
+//            aboutDIContainer: aboutDIContainer
+//        )
+//    }()
+    
+    public func addDependencies(_ to: inout DependencyValues) {
+        skillsDIContainer.register(&to)
+        documentsDIContainer.register(&to)
+        projectsDIContainer.register(&to)
+        mockupsDIContainer.register(&to)
+        educationsDIContainer.register(&to)
+        experiencesDIContainer.register(&to)
+        languagesDIContainer.register(&to)
+        socialLinksDIContianer.register(&to)
+        spotlightDIContainer.register(&to)
+        aboutDIContainer.register(&to)
+    }
 }

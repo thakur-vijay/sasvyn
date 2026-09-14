@@ -24,7 +24,9 @@ public struct iOSHomeView: View {
             ScrollView {
                 VStack(spacing: 20){
                     //                    FeaturedPortfolioCardView()
-                    CreatePortfolioSection()
+                    CreatePortfolioSection {
+                        store.send(.createPortfolioTapped)
+                    }
                     QuickActionsSection { action in
                         store.send(.quickAction(action))
                     }
@@ -38,6 +40,7 @@ public struct iOSHomeView: View {
             }
             //            .ignoresSafeArea(.container, edges: .top)
             .navigationTitle("Welcome")
+            .navigationSubtitle("")
             .toolbarTitleDisplayMode(.inlineLarge)
             .sheet(item: $store.scope(\.destination, action: \.destination)) { store in
                 switch store.case {
@@ -46,6 +49,9 @@ public struct iOSHomeView: View {
                         .interactiveDismissDisabled()
                 case .createMockup(let store):
                     iOSCreateMockupView(store: store)
+                        .interactiveDismissDisabled()
+                case .createPortfolio(let store):
+                    iOSPortfolioView(store: store)
                         .interactiveDismissDisabled()
                 }
             }

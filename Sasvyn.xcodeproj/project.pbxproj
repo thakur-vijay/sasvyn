@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1854B9BD301CA27700F2E614 /* macOSMainKit */; };
+		1858C8FE30571A3B006DFC41 /* macOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1858C8FD30571A3B006DFC41 /* macOSRootKit */; };
+		1858C90030572536006DFC41 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 1858C8FF30572536006DFC41 /* iOSRootKit */; };
 		18A64C913052BF5A006EA12A /* SVShortcutsKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A64C903052BF5A006EA12A /* SVShortcutsKit */; };
-		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
-		18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18C382A6303083BC008F2B81 /* iOSRootKit */; };
+		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +72,7 @@
 				iOS/iOSSocialLinkKit,
 				macOS/macOSAuthKit,
 				macOS/macOSMainKit,
+				macOS/macOSRootKit,
 				Modules/AuthKit,
 				Modules/SVAboutKit,
 				Modules/SVDatabaseKit,
@@ -91,6 +92,9 @@
 				Modules/SVSocialLinkKit,
 				Modules/SVSpotlightKit,
 			);
+			platformFiltersByRelativePath = {
+				"Launch Screen.storyboard" = (ios, );
+			};
 			target = 1854B950301BE27000F2E614 /* Sasvyn */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -121,9 +125,9 @@
 			isa = PBXFrameworksBuildPhase;
 			files = (
 				18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */,
-				1854B9BE301CA27700F2E614 /* macOSMainKit in Frameworks */,
+				1858C90030572536006DFC41 /* iOSRootKit in Frameworks */,
+				1858C8FE30571A3B006DFC41 /* macOSRootKit in Frameworks */,
 				18A64C913052BF5A006EA12A /* SVShortcutsKit in Frameworks */,
-				18C382A7303083BC008F2B81 /* iOSRootKit in Frameworks */,
 			);
 		};
 		1854B95B301BE27200F2E614 /* Frameworks */ = {
@@ -186,10 +190,10 @@
 			);
 			name = Sasvyn;
 			packageProductDependencies = (
-				1854B9BD301CA27700F2E614 /* macOSMainKit */,
-				18C382A6303083BC008F2B81 /* iOSRootKit */,
 				18A7808E3033006E007DA2CF /* SVDIInfra */,
 				18A64C903052BF5A006EA12A /* SVShortcutsKit */,
+				1858C8FD30571A3B006DFC41 /* macOSRootKit */,
+				1858C8FF30572536006DFC41 /* iOSRootKit */,
 			);
 			productName = Sasvyn;
 			productReference = 1854B951301BE27000F2E614 /* Sasvyn.app */;
@@ -460,7 +464,9 @@
 				DEVELOPMENT_TEAM = 9BQY66D558;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sasvyn/Info.plist;
@@ -479,7 +485,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 26;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 26;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.thakurvijay.sasvyn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -512,7 +518,9 @@
 				DEVELOPMENT_TEAM = 9BQY66D558;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sasvyn/Info.plist;
@@ -531,7 +539,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 26;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 26;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.thakurvijay.sasvyn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -691,9 +699,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1854B9BD301CA27700F2E614 /* macOSMainKit */ = {
+		1858C8FD30571A3B006DFC41 /* macOSRootKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = macOSMainKit;
+			productName = macOSRootKit;
+		};
+		1858C8FF30572536006DFC41 /* iOSRootKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = iOSRootKit;
 		};
 		18A64C903052BF5A006EA12A /* SVShortcutsKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -702,10 +714,6 @@
 		18A7808E3033006E007DA2CF /* SVDIInfra */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SVDIInfra;
-		};
-		18C382A6303083BC008F2B81 /* iOSRootKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = iOSRootKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

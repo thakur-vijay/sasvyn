@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+
+#if os(iOS)
 import SafariServices
 
 internal struct SafariView: UIViewControllerRepresentable {
@@ -32,4 +34,22 @@ internal struct SafariView: UIViewControllerRepresentable {
     }
 }
 
+#elseif os(macOS)
+import AppKit
 
+internal struct SafariView: View {
+
+    private let item: WebItem
+
+    init(item: WebItem) {
+        self.item = item
+    }
+
+    var body: some View {
+        Color.clear
+            .onAppear {
+                NSWorkspace.shared.open(item.url)
+            }
+    }
+}
+#endif

@@ -11,6 +11,7 @@ import iOSAppearanceKit
 
 internal struct CreatePortfolioSection: View {
     @AppStorage("appTint") private var appTint: AppTint = .azure
+    let onCreateTap: ()-> ()
     var body: some View {
         ContentUnavailableView {
             VStack {
@@ -35,9 +36,11 @@ internal struct CreatePortfolioSection: View {
             )
             .font(.callout)
         } actions: {
-            SVButton("Create Portfolio", systemImage: SVSymbols.Add.plain.name) {
-                
-            }
+            SVButton(
+                "Create Portfolio",
+                systemImage: SVSymbols.Add.plain.name,
+                action: onCreateTap
+            )
         }
     }
 }

@@ -11,6 +11,7 @@ import SVMockupKit
 import iOSProjectKit
 import iOSMockupKit
 import Foundation
+import iOSPortfolioKit
 
 @Reducer
 public struct iOSHomeFeature {
@@ -30,6 +31,9 @@ public struct iOSHomeFeature {
         case destination(PresentationAction<Destination.Action>)
         case recentProjects(RecentProjectsFeature.Action)
         case quickAction(QuickActionsSection.QuickAction)
+        
+        case createPortfolioTapped
+        
         case delegate(Delegate)
         
         public enum Delegate {
@@ -41,6 +45,7 @@ public struct iOSHomeFeature {
     public enum Destination {
         case projectDetail(iOSProjectDetailFeature)
         case createMockup(iOSCreateMockupFeature)
+        case createPortfolio(iOSPortfolioFeature)
     }
     
     public init(){
@@ -90,9 +95,18 @@ public struct iOSHomeFeature {
                 return .none
             case .destination(.presented(.createMockup(.delegate(.addMockup(let mockupImage))))):
                 return .send(.delegate(.addMockup(mockupImage)))
+            case .destination(.presented(.createPortfolio(.delegate(.close)))):
+                state.destination = nil
+                return .none
+            case .destination(.presented(.createPortfolio(.delegate(.save)))):
+                state.destination = nil
+                return .none
             case .destination(_):
                 return .none
             case .delegate(_):
+                return .none
+            case .createPortfolioTapped:
+                state.destination = .createPortfolio(.init())
                 return .none
             }
         }

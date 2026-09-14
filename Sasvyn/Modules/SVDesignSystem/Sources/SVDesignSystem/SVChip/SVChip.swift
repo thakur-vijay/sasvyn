@@ -24,7 +24,7 @@ public struct SVChip: View {
         self.isSelected = isSelected
         self.action = action
     }
-
+    
     public var body: some View {
         Text(model.text)
             .font(font)
@@ -32,15 +32,29 @@ public struct SVChip: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(
-                isSelected ? Color.accentColor.gradient : Color(.secondarySystemBackground).gradient,
+                isSelected
+                ? Color.accentColor.gradient
+                : Color.svSecondarySystemBackground.gradient,
                 in: .capsule
             )
             .optionalGlassEffect(.capsule)
             .contentShape(.rect)
+#if os(iOS)
             .contentShape(.contextMenuPreview, .capsule)
+#endif
             .id(model.id)
             .onTapGesture {
-               action()
+                action()
             }
+    }
+}
+
+public extension Color {
+    static var svSecondarySystemBackground: Color {
+#if os(iOS)
+        Color(.secondarySystemBackground)
+#elseif os(macOS)
+        Color(nsColor: .underPageBackgroundColor)
+#endif
     }
 }

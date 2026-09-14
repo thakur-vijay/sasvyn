@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import SVDatabaseKit
 
-@available(iOS 17.0, *)
+@available(iOS 26.0, macOS 15.0, *)
 public final class ExperiencesDIContainer {
     private let database: AppDatabase
 

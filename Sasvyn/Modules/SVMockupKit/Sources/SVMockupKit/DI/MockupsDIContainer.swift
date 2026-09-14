@@ -8,7 +8,7 @@
 import SVDatabaseKit
 import ComposableArchitecture
 
-@available(iOS 17.0, *)
+@available(iOS 26.0, macOS 15.0, *)
 public final class MockupsDIContainer{
 
     private let database: AppDatabase

@@ -31,6 +31,7 @@ public enum SVSymbols {
     public static let settings = SVSymbol("gear")
     public static let library = SVSymbol("rectangle.stack.fill")
     public static let `3Dots` = SVSymbol("ellipsis")
+    public static let rightArrow = SVSymbol("chevron.forward")
 
     // MARK: - Add
 

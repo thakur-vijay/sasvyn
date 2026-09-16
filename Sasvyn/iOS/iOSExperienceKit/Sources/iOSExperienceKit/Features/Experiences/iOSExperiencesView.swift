@@ -2,6 +2,11 @@ import ComposableArchitecture
 import SwiftUI
 import SVDesignSystem
 
+public enum ExperienceViewMode {
+    case screen
+    case picker
+}
+
 public struct iOSExperiencesView: View {
     @Bindable var store: StoreOf<iOSExperiencesFeature>
 
@@ -10,7 +15,14 @@ public struct iOSExperiencesView: View {
     public var body: some View {
         List {
             ForEach(store.experiences) { experience in
-                ExperienceCard(experience)
+                ExperienceCard(
+                    experience,
+                    mode: store.mode,
+                    isSelected: store.selectedExperiencesIDs.contains(experience.id)) {
+                        store.send(.editTapped(experience))
+                    } onDeleteTap: {
+                        store.send(.deleteTapped(experience))
+                    }
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button("", systemImage: SVSymbols.edit.name) {
                             store.send(.editTapped(experience))
@@ -34,8 +46,19 @@ public struct iOSExperiencesView: View {
         .navigationTitle("Experience")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            if store.mode == .picker {
+                SVToolbarItem.close {
+                    store.send(.closeTapped)
+                }
+            }
             SVToolbarItem(symbol: SVSymbols.Add.plain, placement: .topBarTrailing) {
                 store.send(.addTapped)
+            }
+            
+            if store.mode == .picker {
+                SVToolbarItem.check {
+                    store.send(.saveTapped)
+                }
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)) { destinationStore in
@@ -46,6 +69,7 @@ public struct iOSExperiencesView: View {
             }
         }
         .alert($store.scope(\.alert, action: \.alert))
+        .isASheet(store.mode == .picker)
         .task { await store.send(.onTask).finish() }
     }
 }

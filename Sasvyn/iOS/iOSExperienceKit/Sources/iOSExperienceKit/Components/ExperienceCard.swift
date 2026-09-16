@@ -2,13 +2,29 @@ import SVExperienceKit
 import SwiftUI
 import SVDesignSystem
 
-internal struct ExperienceCard: View {
+public struct ExperienceCard: View {
     let experience: Experience
+    let mode: ExperienceViewMode
+    let isSelected: Bool
+    let onEditTap: ()-> ()
+    let onDeleteTap: ()-> ()
 
-    init(_ experience: Experience) { self.experience = experience }
+    public init(
+        _ experience: Experience,
+        mode: ExperienceViewMode,
+        isSelected: Bool,
+        onEditTap: @escaping ()-> (),
+        onDeleteTap: @escaping ()-> ()
+    ) {
+        self.experience = experience
+        self.mode = mode
+        self.isSelected = isSelected
+        self.onEditTap = onEditTap
+        self.onDeleteTap = onDeleteTap
+    }
 
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+    public var body: some View {
+        HStack(spacing: 12) {
             SVSymbols.experience.image
                 .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(Color.accentColor)
@@ -45,8 +61,38 @@ internal struct ExperienceCard: View {
                 .padding(.top, 4)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            
+            if mode == .screen{
+                Menu {
+                    Button(
+                        "Edit",
+                        systemImage: SVSymbols.edit.name,
+                        action: onEditTap
+                    )
+                    Button(
+                        "Delete",
+                        systemImage: SVSymbols.trash.name,
+                        role: .destructive,
+                        action: onDeleteTap
+                    )
+                } label: {
+                    SVSymbols.`3Dots`.image
+                        .font(.subheadline)
+                        .foregroundStyle(Color(.systemGray))
+                        .frame(width: 30, height: 30, alignment: .trailing)
+                        .contentShape(.rect)
+                }
+            }else {
+                if isSelected {
+                    SVSymbols.Check.circle.image
+                        .font(.title2)
+                        .foregroundStyle(Color.accentColor)
+                }
+            }
         }
     }
 
-    private func formatted(_ date: Date) -> String { date.formatted(.dateTime.month(.abbreviated).year()) }
+    private func formatted(_ date: Date) -> String {
+        return date.formatted(.dateTime.month(.abbreviated).year())
+    }
 }

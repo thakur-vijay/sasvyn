@@ -19,6 +19,7 @@ public struct iOSPortfolioFeature {
         
         //sections
         var projects = ProjectsFeature.State()
+        var experiences = ExperiencesFeature.State()
     }
     
     public enum Action: BindableAction{
@@ -29,6 +30,7 @@ public struct iOSPortfolioFeature {
         
         //sections
         case projects(ProjectsFeature.Action)
+        case experiences(ExperiencesFeature.Action)
         
         case delegate(Delegate)
         
@@ -47,6 +49,9 @@ public struct iOSPortfolioFeature {
         Scope(\.projects, action: \.projects) {
             ProjectsFeature()
         }
+        Scope(\.experiences, action: \.experiences) {
+            ExperiencesFeature()
+        }
         Reduce { state, action in
             switch action {
             case .onSectionTap(let section):
@@ -54,7 +59,7 @@ public struct iOSPortfolioFeature {
                 return .none
             case .binding(_):
                 return .none
-            case .projects(_):
+            case .projects, .experiences:
                 return .none
             case .closeTapped:
                 return .send(.delegate(.close))

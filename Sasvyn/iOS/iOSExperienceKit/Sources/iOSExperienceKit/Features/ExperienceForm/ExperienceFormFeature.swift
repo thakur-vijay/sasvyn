@@ -12,7 +12,7 @@ public struct ExperienceFormFeature {
         let mode: ExperienceFormMode
         var experience: Experience
         
-        init(experience: Experience, mode: ExperienceFormMode) {
+        public init(experience: Experience, mode: ExperienceFormMode) {
             self.experience = experience
             self.mode = mode
         }
@@ -94,7 +94,7 @@ extension ExperienceFormFeature.State {
     }
 }
 
-enum ExperienceFormMode: Hashable, Sendable {
+public enum ExperienceFormMode: Hashable, Sendable {
     case create
     case edit
 }

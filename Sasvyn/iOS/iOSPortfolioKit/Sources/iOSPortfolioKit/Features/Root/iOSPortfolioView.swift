@@ -35,6 +35,15 @@ public struct iOSPortfolioView: View {
                         )
                         .id(section)
                         .containerRelativeFrame(.horizontal)
+                    case .experiences:
+                        ExperiencesView(
+                            store: store.scope(
+                                \.experiences,
+                                 action: \.experiences
+                            )
+                        )
+                        .id(section)
+                        .containerRelativeFrame(.horizontal)
                     default:
                         PortfolioTabContent(section: section)
                             .id(section)

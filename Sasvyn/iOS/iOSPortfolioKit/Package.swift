@@ -21,7 +21,9 @@ let package = Package(
         .package(path: "../../Modules/SVRemoteImage"),
         .package(path: "../../Modules/SVDesignSystem"),
         .package(path: "../../Modules/SVProjectKit"),
-        .package(path: "../iOSProjectKit")
+        .package(path: "../../Modules/SVExperienceKit"),
+        .package(path: "../iOSProjectKit"),
+        .package(path: "../iOSExperienceKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -36,7 +38,9 @@ let package = Package(
                 .product(name: "SVRemoteImage", package: "SVRemoteImage"),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),
                 .product(name: "SVProjectKit", package: "SVProjectKit"),
+                .product(name: "SVExperienceKit", package: "SVExperienceKit"),
                 .product(name: "iOSProjectKit", package: "iOSProjectKit"),
+                .product(name: "iOSExperienceKit", package: "iOSExperienceKit"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

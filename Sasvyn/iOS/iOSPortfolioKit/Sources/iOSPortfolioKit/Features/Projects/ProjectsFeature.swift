@@ -22,6 +22,9 @@ public struct ProjectsFeature {
         
         @Presents
         public var destination: Destination.State?
+        
+        @Presents
+        public var alert: AlertState<Action.Alert>?
     }
     
     public enum Action: BindableAction{
@@ -29,10 +32,15 @@ public struct ProjectsFeature {
         case onTask
         case onProjectsLoaded([Project])
         case destination(PresentationAction<Destination.Action>)
+        case alert(PresentationAction<Alert>)
         case onCreateProjectTap
         case onAddProjectsTap
         case onProjectTap(Project.ID, ProjectMode)
-        case onDeleteProjectTap(Project.ID)
+        case onDeleteProjectTap(Project)
+        
+        public enum Alert: Equatable{
+            case confirm(Project.ID)
+        }
         
     }
     
@@ -69,8 +77,25 @@ public struct ProjectsFeature {
             case let .onProjectTap(projectId, mode):
                 state.destination = .projectDetail(.init(mode: mode, id: projectId, viewMode: .sheet))
                 return .none
-            case .onDeleteProjectTap(let projectId):
-                state.projects.removeAll { $0.id == projectId }
+            case .onDeleteProjectTap(let project):
+                state.alert = AlertState {
+                    TextState("Remove Project?")
+                } actions: {
+                    ButtonState(
+                        role: .destructive,
+                        action: .confirm(project.id)
+                    ) {
+                        TextState("Remove")
+                    }
+
+                    ButtonState(role: .cancel) {
+                        TextState("Cancel")
+                    }
+                } message: {
+                    TextState(
+                        "Are you sure you want to remove \"\(project.name)\" from your portfolio? The project and its data will not be deleted and can be added back later."
+                    )
+                }
                 return .none
             case .destination(.presented(.projectDetail(.delegate(.close)))):
                 state.destination = nil
@@ -83,11 +108,17 @@ public struct ProjectsFeature {
                 if let index = state.projects.firstIndex(where: { $0.id == project.id }){
                     state.projects[index] = project
                 }
-                state.destination = nil
                 return .none
             case .destination(_):
                 return .none
             case .binding(_):
+                return .none
+            case .alert(.presented(.confirm(let projectId))):
+                state.alert = nil
+                state.projects.removeAll { $0.id == projectId }
+                return .none
+            case .alert(.dismiss):
+                state.alert = nil
                 return .none
             }
         }

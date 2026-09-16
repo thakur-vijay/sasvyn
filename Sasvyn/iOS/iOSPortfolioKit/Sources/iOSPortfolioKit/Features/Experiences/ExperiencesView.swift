@@ -2,28 +2,28 @@
 //  File.swift
 //  iOSPortfolioKit
 //
-//  Created by Vijay Thakur on 14/09/26.
+//  Created by Vijay Thakur on 15/09/26.
 //
 
 import SwiftUI
 import ComposableArchitecture
 import SVDesignSystem
-import iOSProjectKit
+import iOSExperienceKit
 
-internal struct ProjectsView: View {
-    @Bindable var store: StoreOf<ProjectsFeature>
+internal struct ExperiencesView: View {
+    @Bindable var store: StoreOf<ExperiencesFeature>
     
-    init(store: StoreOf<ProjectsFeature>) {
+    init(store: StoreOf<ExperiencesFeature>) {
         self.store = store
     }
     
     var body: some View {
         List {
-            ForEach(store.projects) { project in
-                ProjectCard(project: project) { mode in
-                    store.send(.onProjectTap(project.id, mode))
-                } onDelete: {
-                    store.send(.onDeleteProjectTap(project))
+            ForEach(store.experiences) { experience in
+                ExperienceCard(experience, mode: .screen, isSelected: false) {
+                    store.send(.onEditExperienceTap(experience))
+                } onDeleteTap: {
+                    store.send(.onDeleteExperienceTap(experience))
                 }
                 .listRowSeparator(.visible, edges: .bottom)
                 .listRowSeparator(.hidden, edges: .top)
@@ -31,39 +31,42 @@ internal struct ProjectsView: View {
         }
         .listStyle(.plain)
         .overlay {
-            if store.projects.isEmpty {
+            if store.experiences.isEmpty {
                 SVContentUnavailableView(
-                    title: "No Projects Yet",
-                    symbol: SVSymbols.Project.empty,
-                    description: "Create a project to start building your portfolio.") {
+                    title: "No Experiences Yet",
+                    symbol: SVSymbols.experience,
+                    description: "Add an experience to start building your portfolio.") {
                         SVButton(
-                            "Create Project",
+                            "Add Experience",
                             systemImage: SVSymbols.Add.plain.name,
                             size: .medium,
                             width: .intrinsic,
                             shape: .capsule) {
-                                store.send(.onCreateProjectTap)
+                                store.send(.onCreateExperienceTap)
                             }
                     }
             }
         }
         .sheet(item: $store.scope(\.destination, action: \.destination)){ store in
             switch store.case {
-            case .projectDetail(let store):
-                iOSProjectDetailView(store: store)
+            case .experienceForm(let store):
+                ExperienceFormView(store: store)
+                    .interactiveDismissDisabled()
+            case .experiencePicker(let store):
+                iOSExperiencesView(store: store)
                     .interactiveDismissDisabled()
             }
         }
         .alert($store.scope(\.alert, action: \.alert))
         .overlay(alignment: .bottomTrailing){
-            if !store.projects.isEmpty{
+            if !store.experiences.isEmpty{
                 SVButton(
-                    "Add",
+                    "Select",
                     systemImage: SVSymbols.Add.plain.name,
                     size: .medium,
                     width: .intrinsic,
                     shape: .capsule) {
-                        
+                        store.send(.onSelectExperiencesTap)
                     }
                     .padding(SVSpacing.screen)
             }

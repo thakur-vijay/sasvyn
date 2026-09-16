@@ -59,7 +59,6 @@ public struct ProjectCard: View {
                     .frame(width: 30, height: 30, alignment: .trailing)
                     .contentShape(.rect)
             }
-
         }
         .contentShape(.rect)
         .onTapGesture {

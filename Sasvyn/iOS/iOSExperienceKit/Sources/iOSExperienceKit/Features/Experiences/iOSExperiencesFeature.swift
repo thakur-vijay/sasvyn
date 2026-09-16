@@ -15,26 +15,48 @@ public struct iOSExperiencesFeature {
 
     @ObservableState
     public struct State: Equatable {
+        public let mode: ExperienceViewMode
         public var experiences: [Experience] = []
         public var experienceToDelete: Experience?
         @Presents public var destination: Destination.State?
         @Presents public var alert: AlertState<Action.Alert>?
 
-        public init() {}
+        public init(
+            mode: ExperienceViewMode = .screen,
+            selectedExperiencesIDs: Set<String> = .init()
+        ) {
+            self.mode = mode
+            self.selectedExperiencesIDs = selectedExperiencesIDs
+        }
+        
+        var selectedExperiencesIDs: Set<String>
+
+        var selectedExperiences: [Experience] {
+            experiences
+                .filter { selectedExperiencesIDs.contains($0.id) }
+        }
     }
 
     public enum Action: BindableAction {
         case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
         case alert(PresentationAction<Alert>)
+        case closeTapped
         case addTapped
+        case saveTapped
         case editTapped(Experience)
         case deleteTapped(Experience)
         case experienceDeleted(Experience)
         case onTask
         case experiencesLoaded([Experience])
+        case delegate(Delegate)
 
         public enum Alert { case deleteConfirmed }
+        
+        public enum Delegate {
+            case close
+            case update([Experience])
+        }
     }
 
     public init() {}
@@ -48,6 +70,8 @@ public struct iOSExperiencesFeature {
         BindingReducer()
         Reduce { state, action in
             switch action {
+            case .closeTapped:
+                return .none
             case .addTapped:
                 state.destination = .experienceForm(.init(experience: .init(id: UUID().uuidString), mode: .create))
                 return .none
@@ -104,6 +128,10 @@ public struct iOSExperiencesFeature {
                 state.experiences.removeAll { $0.id == experience.id }
                 return .none
             case .binding, .destination, .alert:
+                return .none
+            case .saveTapped:
+                return .send(.delegate(.update(state.selectedExperiences)))
+            case .delegate(_):
                 return .none
             }
         }

@@ -3,12 +3,12 @@ import SVDesignSystem
 import SVExperienceKit
 import SwiftUI
 
-internal struct ExperienceFormView: View {
+public struct ExperienceFormView: View {
     @Bindable var store: StoreOf<ExperienceFormFeature>
 
-    init(store: StoreOf<ExperienceFormFeature>) { self.store = store }
+    public init(store: StoreOf<ExperienceFormFeature>) { self.store = store }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             List {
                 Section {

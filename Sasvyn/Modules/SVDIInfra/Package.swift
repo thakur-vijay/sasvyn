@@ -25,10 +25,15 @@ let package = Package(
         .package(path: "../SVSocialLinkKit"),
         .package(path: "../SVSpotlightKit"),
         .package(path: "../SVAboutKit"),
+        .package(path: "../AuthKit"),
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.26.0"
         ),
+        .package(
+            url: "https://github.com/thakur-vijay/NetworkKit.git",
+            from: "1.0.0"
+        )
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -47,6 +52,8 @@ let package = Package(
                 .product(name: "SVSocialLinkKit", package: "SVSocialLinkKit"),
                 .product(name: "SVSpotlightKit", package: "SVSpotlightKit"),
                 .product(name: "SVAboutKit", package: "SVAboutKit"),
+                .product(name: "NetworkKit", package: "NetworkKit"),
+                .product(name: "AuthKit", package: "AuthKit"),
                 .product(
                     name: "ComposableArchitecture",
                     package: "swift-composable-architecture"

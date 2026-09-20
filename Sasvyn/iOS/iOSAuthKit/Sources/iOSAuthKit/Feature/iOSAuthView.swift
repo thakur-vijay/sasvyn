@@ -64,7 +64,7 @@ public struct iOSAuthView: View {
                     SignInWithAppleButton { request in
                         
                     } onCompletion: { result in
-                        store.send(.delegate(.loginSucceeded))
+                        store.send(.onSignInWithAppleTap)
                     }
                     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                     .frame(height: 55)

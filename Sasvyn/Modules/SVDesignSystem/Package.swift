@@ -14,7 +14,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../SVRemoteImage")
+        .package(path: "../SVRemoteImage"),
+        .package(url: "https://github.com/colinc86/LaTeXSwiftUI", from: "2.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -22,7 +23,8 @@ let package = Package(
         .target(
             name: "SVDesignSystem",
             dependencies: [
-                .product(name: "SVRemoteImage", package: "SVRemoteImage")
+                .product(name: "SVRemoteImage", package: "SVRemoteImage"),
+                .product(name: "LaTeXSwiftUI", package: "LaTeXSwiftUI"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

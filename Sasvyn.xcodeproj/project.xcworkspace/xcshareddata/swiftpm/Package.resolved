@@ -1,5 +1,5 @@
 {
-  "originHash" : "444bc52a0ec5a5ecaaa53aeb67b67ad783f0822ce4f6dc39b9ad1bb758cd4379",
+  "originHash" : "45434210191f1ae49e21fb3faa28f54305c603b8bcd2be060f5f1d91759be2a9",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -17,6 +17,33 @@
       "state" : {
         "revision" : "b83108d10f42680d78f23fe4d4d80fc88dab3212",
         "version" : "7.11.1"
+      }
+    },
+    {
+      "identity" : "latexswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/colinc86/LaTeXSwiftUI",
+      "state" : {
+        "revision" : "cc677f66b9cc1751e09207621d62d1cda0200675",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "mathjaxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/colinc86/MathJaxSwift",
+      "state" : {
+        "revision" : "00e9c3df6b1c82031c7fe3785028f3d21c0d73ba",
+        "version" : "3.5.0"
+      }
+    },
+    {
+      "identity" : "networkkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/thakur-vijay/NetworkKit.git",
+      "state" : {
+        "revision" : "fdc21e0597744a60223acdf0176407a554d9c86e",
+        "version" : "1.0.6"
       }
     },
     {
@@ -92,6 +119,15 @@
       }
     },
     {
+      "identity" : "swift-html-entities",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kitura/swift-html-entities",
+      "state" : {
+        "revision" : "d8ca73197f59ce260c71bd6d7f6eb8bbdccf508b",
+        "version" : "4.0.1"
+      }
+    },
+    {
       "identity" : "swift-identified-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
@@ -143,6 +179,15 @@
       "state" : {
         "revision" : "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
         "version" : "603.0.2"
+      }
+    },
+    {
+      "identity" : "swiftdraw",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swhitty/SwiftDraw",
+      "state" : {
+        "revision" : "82699f4bdf2f075793cfa0d392eb27c59b41a3fe",
+        "version" : "0.29.0"
       }
     },
     {

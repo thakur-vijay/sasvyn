@@ -17,14 +17,29 @@ import SVSocialLinkKit
 import SVSpotlightKit
 import SVAboutKit
 import ComposableArchitecture
+import NetworkKit
+import AuthKit
 
 public final class SVAppDIContainer {
     
     public init(){
         
     }
-    public lazy var databaseContainer: SVDatabaseContainer = {
+    
+    lazy var networkContainer: SVNetworkDIContainer = {
+        SVNetworkDIContainer()
+    }()
+    
+    lazy var databaseContainer: SVDatabaseContainer = {
         SVDatabaseContainer()
+    }()
+    
+    lazy var authDIContainer: AuthDIContainer = {
+        AuthDIContainer(
+            database: databaseContainer.appDatabase,
+            tokenStore: networkContainer.tokenStore,
+            networkClient: networkContainer.client
+        )
     }()
     
     lazy var skillsDIContainer: SkillsDIContainer = {
@@ -67,21 +82,6 @@ public final class SVAppDIContainer {
         AboutDIContainer(database: databaseContainer.appDatabase)
     }()
     
-//    public lazy var rootDIContainer: RootDIContainer = {
-//        RootDIContainer(
-//            skillsDIContainer: skillsDIContainer,
-//            documentsDIContainer: documentsDIContainer,
-//            projectsDIContainer: projectsDIContainer,
-//            mockupsDIContainer: mockupsDIContainer,
-//            educationsDIContainer: educationsDIContainer,
-//            experiencesDIContainer: experiencesDIContainer,
-//            languagesDIContainer: languagesDIContainer,
-//            socialLinksDIContainer: socialLinksDIContianer,
-//            spotlightDIContainer: spotlightDIContainer,
-//            aboutDIContainer: aboutDIContainer
-//        )
-//    }()
-    
     public func addDependencies(_ to: inout DependencyValues) {
         skillsDIContainer.register(&to)
         documentsDIContainer.register(&to)
@@ -93,5 +93,6 @@ public final class SVAppDIContainer {
         socialLinksDIContianer.register(&to)
         spotlightDIContainer.register(&to)
         aboutDIContainer.register(&to)
+        authDIContainer.register(&to)
     }
 }

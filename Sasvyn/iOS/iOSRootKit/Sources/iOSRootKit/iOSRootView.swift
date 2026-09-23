@@ -23,19 +23,24 @@ public struct iOSRootView: View {
     @AppStorage("appearanceMode") private var appearanceMode: AppearanceMode = .system
     
     public var body: some View {
-        switch store.state {
-        case .auth:
-            if let store = store.scope(\.auth, action: \.auth){
-                iOSAuthView(store: store)
-                    .tint(appTint.color)
-                    .preferredColorScheme(appearanceMode.colorScheme())
+        Group {
+            switch store.state {
+            case .auth:
+                if let store = store.scope(\.auth, action: \.auth){
+                    iOSAuthView(store: store)
+                        .tint(appTint.color)
+                        .preferredColorScheme(appearanceMode.colorScheme())
+                }
+            case .main:
+                if let store = store.scope(\.main, action: \.main){
+                    iOSMainView(store: store)
+                        .tint(appTint.color)
+                        .preferredColorScheme(appearanceMode.colorScheme())
+                }
             }
-        case .main:
-            if let store = store.scope(\.main, action: \.main){
-                iOSMainView(store: store)
-                    .tint(appTint.color)
-                    .preferredColorScheme(appearanceMode.colorScheme())
-            }
+        }
+        .task {
+            await store.send(.onAppear).finish()
         }
     }
 }

@@ -12,6 +12,7 @@ import Security
 public final class SVTokenStore: TokenStore{
 
     private enum Key {
+        static let userId = "com.vijaythakur.sasvyn.userId"
         static let accessToken = "com.vijaythakur.sasvyn.accessToken"
         static let refreshToken = "com.vijaythakur.sasvyn.refreshToken"
     }
@@ -25,6 +26,11 @@ public final class SVTokenStore: TokenStore{
     public var refreshToken: String? {
         read(key: Key.refreshToken)
     }
+    
+    public var userId: String? {
+        read(key: Key.userId)
+    }
+    
 
     public func store(
         accessToken: String,
@@ -32,6 +38,10 @@ public final class SVTokenStore: TokenStore{
     ) {
         save(accessToken, key: Key.accessToken)
         save(refreshToken, key: Key.refreshToken)
+    }
+    
+    public func save(userId: String) {
+        save(userId, key: Key.userId)
     }
 
     public func clearTokens() {

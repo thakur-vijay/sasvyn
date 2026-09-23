@@ -44,6 +44,7 @@ public struct iOSAuthFeature {
                 return .run { [client] send in
                     do {
                         try await client.signInWithApple(dto)
+                        await send(.delegate(.loginSucceeded))
                     }catch {
                         print(error.localizedDescription)
                     }

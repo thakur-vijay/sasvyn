@@ -8,12 +8,22 @@
 import ComposableArchitecture
 import iOSPersonalInformationKit
 import iOSAppearanceKit
+import SVPersonalInformationKit
+import AuthKit
 
 @Reducer
 public struct iOSSettingsFeature {
     
+    @Dependency(\.usersClient)
+    private var usersClient
+    
+    @Dependency(\.authClient)
+    private var authClient
+    
     @ObservableState
     public struct State: Equatable {
+        var isCurrentUserFetched: Bool = false
+        public var currentUser: User?
         public var path = StackState<Path.State>()
         public init(){
             
@@ -24,6 +34,8 @@ public struct iOSSettingsFeature {
     }
     
     public enum Action: BindableAction{
+        case onAppear
+        case onCurrentUserFetched(User)
         case binding(BindingAction<State>)
         case alert(PresentationAction<Action.Alert>)
         case path(StackActionOf<Path>)
@@ -59,6 +71,9 @@ public struct iOSSettingsFeature {
                 return .none
             case .binding(_):
                 return .none
+            case .path(.element(_, action: .personalInformation(.delegate(.update(let user))))):
+                state.currentUser = user
+                return .none
             case .path(_):
                 return .none
             case .destinationTapped(let destination):
@@ -83,7 +98,8 @@ public struct iOSSettingsFeature {
                         )
                     }
                 case .personalInformation:
-                    state.path.append(.personalInformation(.init()))
+                    guard let user = state.currentUser else { break }
+                    state.path.append(.personalInformation(.init(user)))
                 case .appearance:
                     state.path.append(.appearance(.init()))
                 case .privacy:
@@ -96,9 +112,32 @@ public struct iOSSettingsFeature {
                 return .none
             case .alert(.presented(.signout)):
                 state.alert = nil
-                return .send(.delegate(.logoutSucceeded))
+                return .run {[authClient] send in
+                    defer {
+                        await send(.delegate(.logoutSucceeded))
+                    }
+                    do {
+                        try await authClient.logout()
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
             case .alert(.dismiss):
                 state.alert = nil
+                return .none
+            case .onAppear:
+                guard !state.isCurrentUserFetched else { return .none }
+                return .run {[usersClient] send in
+                    do {
+                        let user = try await usersClient.fetchCurrentUser()
+                        await send(.onCurrentUserFetched(user), animation: .smooth)
+                    }catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .onCurrentUserFetched(let user):
+                state.currentUser = user
+                state.isCurrentUserFetched = true
                 return .none
             }
         }

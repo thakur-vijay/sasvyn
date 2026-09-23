@@ -33,9 +33,21 @@ public final class AuthDIContainer{
     private lazy var signInWithAppleUseCase: SignInWithAppleUseCase = {
         SignInWithAppleUseCase(repository: repository)
     }()
+    
+    private lazy var authSessionUseCase: AuthSessionUseCase = {
+        AuthSessionUseCase(tokenStore: tokenStore)
+    }()
+    
+    private lazy var logoutUseCase: LogoutUseCase = {
+        LogoutUseCase(repository: repository)
+    }()
 
     private lazy var client: AuthClient = {
-        AuthClient.live(signInWithAppleUseCase: signInWithAppleUseCase)
+        AuthClient.live(
+            signInWithAppleUseCase: signInWithAppleUseCase,
+            authSessionUseCase: authSessionUseCase,
+            logoutUseCase: logoutUseCase
+        )
     }()
     
     public func register(_ values: inout DependencyValues) {

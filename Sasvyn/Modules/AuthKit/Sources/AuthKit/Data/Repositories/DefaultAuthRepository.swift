@@ -18,11 +18,17 @@ internal final class DefaultAuthRepository: AuthRepository {
     }
     
     
-    func appleLogin(_ body: LoginRequestDTO) async throws-> User{
+    func appleLogin(_ body: LoginRequestDTO) async throws{
         let response = try await remoteDataSource.appleLogin(body)
         let accessToken = response.data.accessToken
         let refreshToken = response.data.refreshToken
+        let userId = response.data.user.id
         self.tokenStore.store(accessToken: accessToken, refreshToken: refreshToken)
-        return response.data.user.toDomain()
+        self.tokenStore.save(userId: userId)
+    }
+    
+    func logout() async throws {
+        try await remoteDataSource.logout()
+        self.tokenStore.clearTokens()
     }
 }

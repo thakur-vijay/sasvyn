@@ -9,5 +9,6 @@ import Foundation
 
 internal protocol AuthRepository: Sendable{
     
-    func appleLogin(_ body: LoginRequestDTO) async throws-> User
+    func appleLogin(_ body: LoginRequestDTO) async throws
+    func logout() async throws
 }

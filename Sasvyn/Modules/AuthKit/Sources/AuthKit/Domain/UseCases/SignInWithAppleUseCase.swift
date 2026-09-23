@@ -15,7 +15,6 @@ internal struct SignInWithAppleUseCase {
     }
     
     func execute(_ body: LoginRequestDTO) async throws {
-        let user = try await repository.appleLogin(body)
-        dump(user)
+       try await repository.appleLogin(body)
     }
 }

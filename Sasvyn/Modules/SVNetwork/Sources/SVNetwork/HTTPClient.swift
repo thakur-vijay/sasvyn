@@ -22,7 +22,7 @@ public final class HTTPClient: HTTPDataTask {
     public func data(
         for request: URLRequest
     ) async throws -> (Data, URLResponse) {
-        try await session.data(
+        return try await session.data(
             for: request
         )
     }

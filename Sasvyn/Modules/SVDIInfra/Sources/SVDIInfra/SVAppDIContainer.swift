@@ -19,6 +19,8 @@ import SVAboutKit
 import ComposableArchitecture
 import NetworkKit
 import AuthKit
+import SVPersonalInformationKit
+import SVNetwork
 
 public final class SVAppDIContainer {
     
@@ -82,6 +84,15 @@ public final class SVAppDIContainer {
         AboutDIContainer(database: databaseContainer.appDatabase)
     }()
     
+    lazy var personalInformationDIContainer: PersonalInformationDIContainer = {
+        PersonalInformationDIContainer(
+            database: databaseContainer.appDatabase,
+            networkClient: networkContainer.client,
+            tokenStore: networkContainer.tokenStore,
+            imageUploader: networkContainer.imageUploader
+        )
+    }()
+    
     public func addDependencies(_ to: inout DependencyValues) {
         skillsDIContainer.register(&to)
         documentsDIContainer.register(&to)
@@ -94,5 +105,6 @@ public final class SVAppDIContainer {
         spotlightDIContainer.register(&to)
         aboutDIContainer.register(&to)
         authDIContainer.register(&to)
+        personalInformationDIContainer.register(&to)
     }
 }

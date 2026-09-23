@@ -1,5 +1,5 @@
 {
-  "originHash" : "45434210191f1ae49e21fb3faa28f54305c603b8bcd2be060f5f1d91759be2a9",
+  "originHash" : "9b00ac0f2051c304b69de033fd949198c7d24c2c27cb1e71ca26854825f1d23b",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/thakur-vijay/NetworkKit.git",
       "state" : {
-        "revision" : "fdc21e0597744a60223acdf0176407a554d9c86e",
-        "version" : "1.0.6"
+        "revision" : "0a418308bf4b3ae8c0bff63e6957d0e4ff70e53b",
+        "version" : "1.1.3"
       }
     },
     {

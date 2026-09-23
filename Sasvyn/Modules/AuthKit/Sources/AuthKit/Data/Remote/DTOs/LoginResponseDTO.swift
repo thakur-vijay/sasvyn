@@ -13,6 +13,11 @@ internal struct LoginResponseDTO: Codable, Hashable, Sendable {
     let data: LoginDataDTO
 }
 
+internal struct LogoutResponseDTO: Codable, Hashable, Sendable {
+    let statusCode: Int
+    let message: String
+}
+
 internal struct LoginDataDTO: Codable, Hashable, Sendable {
     let user: UserDTO
     let accessToken: String
@@ -27,13 +32,4 @@ internal struct UserDTO: Codable, Hashable, Sendable {
     let dateOfBirth: String?
     let createdAt: String
     let updatedAt: String
-    
-    func toDomain()-> User {
-        .init(
-            id: id,
-            fullName: fullName,
-            email: email,
-            dateOfBirth: dateOfBirth
-        )
-    }
 }

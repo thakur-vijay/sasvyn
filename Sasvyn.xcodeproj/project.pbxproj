@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1858C8FE30571A3B006DFC41 /* macOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 1858C8FD30571A3B006DFC41 /* macOSRootKit */; };
-		1858C90030572536006DFC41 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 1858C8FF30572536006DFC41 /* iOSRootKit */; };
-		18A64C913052BF5A006EA12A /* SVShortcutsKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A64C903052BF5A006EA12A /* SVShortcutsKit */; };
-		18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 18A7808E3033006E007DA2CF /* SVDIInfra */; };
+		18A1BD673063ADFB002FFDD2 /* iOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A1BD663063ADFB002FFDD2 /* iOSRootKit */; };
+		18A1BD693063ADFB002FFDD2 /* macOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 18A1BD683063ADFB002FFDD2 /* macOSRootKit */; };
+		18A1BD6B3063AE00002FFDD2 /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 18A1BD6A3063AE00002FFDD2 /* SVDIInfra */; };
+		18A1BD6D3063AE09002FFDD2 /* SVShortcutsKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A1BD6C3063AE09002FFDD2 /* SVShortcutsKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +84,8 @@
 				Modules/SVHomeKit,
 				Modules/SVLanguageKit,
 				Modules/SVMockupKit,
+				Modules/SVNetwork,
+				Modules/SVPersonalInformationKit,
 				Modules/SVPortfolioKit,
 				Modules/SVProjectKit,
 				Modules/SVRemoteImage,
@@ -124,10 +126,10 @@
 		1854B94E301BE27000F2E614 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				18A7808F3033006E007DA2CF /* SVDIInfra in Frameworks */,
-				1858C90030572536006DFC41 /* iOSRootKit in Frameworks */,
-				1858C8FE30571A3B006DFC41 /* macOSRootKit in Frameworks */,
-				18A64C913052BF5A006EA12A /* SVShortcutsKit in Frameworks */,
+				18A1BD6B3063AE00002FFDD2 /* SVDIInfra in Frameworks */,
+				18A1BD673063ADFB002FFDD2 /* iOSRootKit in Frameworks */,
+				18A1BD6D3063AE09002FFDD2 /* SVShortcutsKit in Frameworks */,
+				18A1BD693063ADFB002FFDD2 /* macOSRootKit in Frameworks */,
 			);
 		};
 		1854B95B301BE27200F2E614 /* Frameworks */ = {
@@ -190,10 +192,10 @@
 			);
 			name = Sasvyn;
 			packageProductDependencies = (
-				18A7808E3033006E007DA2CF /* SVDIInfra */,
-				18A64C903052BF5A006EA12A /* SVShortcutsKit */,
-				1858C8FD30571A3B006DFC41 /* macOSRootKit */,
-				1858C8FF30572536006DFC41 /* iOSRootKit */,
+				18A1BD663063ADFB002FFDD2 /* iOSRootKit */,
+				18A1BD683063ADFB002FFDD2 /* macOSRootKit */,
+				18A1BD6A3063AE00002FFDD2 /* SVDIInfra */,
+				18A1BD6C3063AE09002FFDD2 /* SVShortcutsKit */,
 			);
 			productName = Sasvyn;
 			productReference = 1854B951301BE27000F2E614 /* Sasvyn.app */;
@@ -699,21 +701,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1858C8FD30571A3B006DFC41 /* macOSRootKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = macOSRootKit;
-		};
-		1858C8FF30572536006DFC41 /* iOSRootKit */ = {
+		18A1BD663063ADFB002FFDD2 /* iOSRootKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSRootKit;
 		};
-		18A64C903052BF5A006EA12A /* SVShortcutsKit */ = {
+		18A1BD683063ADFB002FFDD2 /* macOSRootKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SVShortcutsKit;
+			productName = macOSRootKit;
 		};
-		18A7808E3033006E007DA2CF /* SVDIInfra */ = {
+		18A1BD6A3063AE00002FFDD2 /* SVDIInfra */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SVDIInfra;
+		};
+		18A1BD6C3063AE09002FFDD2 /* SVShortcutsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SVShortcutsKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

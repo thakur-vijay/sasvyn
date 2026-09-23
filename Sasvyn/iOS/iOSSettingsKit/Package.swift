@@ -21,6 +21,8 @@ let package = Package(
         .package(path: "../iOSPersonalInformationKit"),
         .package(path: "../iOSAppearanceKit"),
         .package(path: "../../Modules/SVDesignSystem"),
+        .package(path: "../../Modules/SVPersonalInformationKit"),
+        .package(path: "../../Modules/AuthKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -35,6 +37,8 @@ let package = Package(
                 .product(name: "iOSPersonalInformationKit", package: "iOSPersonalInformationKit"),
                 .product(name: "iOSAppearanceKit", package: "iOSAppearanceKit"),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),
+                .product(name: "SVPersonalInformationKit", package: "SVPersonalInformationKit"),
+                .product(name: "AuthKit", package: "AuthKit"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

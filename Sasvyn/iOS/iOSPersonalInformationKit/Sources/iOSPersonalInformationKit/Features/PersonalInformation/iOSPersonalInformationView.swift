@@ -10,6 +10,7 @@ import ComposableArchitecture
 import SVDesignSystem
 import SVRemoteImage
 import Photos
+import SVFoundation
 
 public struct iOSPersonalInfomationView: View {
     @Bindable var store: StoreOf<iOSPersonalInfomationFeature>
@@ -23,7 +24,7 @@ public struct iOSPersonalInfomationView: View {
             Section {
                 VStack(spacing: 12){
                     SVRemoteImage(
-                        url: .init(string: ""),
+                        url: store.user.imageLocalUrl ?? URL(string: store.user.imageUrl ?? ""),
                         size: .init(width: 180, height: 180),
                         contentMode: .fill,
                         shape: .circle,
@@ -44,27 +45,27 @@ public struct iOSPersonalInfomationView: View {
             Section {
                 SVListRow(
                     PersonalInformationDestination.name.rawValue,
-                    value: "Vijay Thakur"
+                    value: store.user.fullName
                 ) {
                     store.send(.destinationTapped(.name))
                 }
                 
                 SVListRow(
                     PersonalInformationDestination.email.rawValue,
-                    value: "thakurvijay0006@gmail.com"
+                    value: store.user.email
                 ) {
                     store.send(.destinationTapped(.email))
                 }
                 SVListRow(
                     PersonalInformationDestination.dateOfBirth.rawValue,
-                    value: "21 September 2001"
+                    value: store.user.dateOfBirth?.formatted(.longDate) ?? "Select"
                 ){
                     store.send(.destinationTapped(.dateOfBirth))
                 }
                 
                 SVListRow(
                     PersonalInformationDestination.phoneNo.rawValue,
-                    value: "+91 8146408509"
+                    value: "Select"
                 ){
                     store.send(.destinationTapped(.phoneNo))
                 }
@@ -89,5 +90,8 @@ public struct iOSPersonalInfomationView: View {
             selection: $store.selectedItem,
             matching: .images,
         )
+        .onChange(of: store.selectedItem) { oldValue, newValue in
+            store.send(.onProfilePicChanged)
+        }
     }
 }

@@ -43,6 +43,13 @@ public final class SVTableBuilder {
             column: table.column(name, .datetime)
         )
     }
+    
+    @discardableResult
+    public func date(_ name: String) -> SVColumnBuilder {
+        SVColumnBuilder(
+            column: table.column(name, .date)
+        )
+    }
 
     @discardableResult
     public func blob(_ name: String) -> SVColumnBuilder {

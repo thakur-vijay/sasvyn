@@ -18,4 +18,8 @@ internal final class AuthRemoteDataSource: Sendable{
         let endpoint = AppleLoginEndpoint(body)
         return try await client.request(endpoint)
     }
+    
+    func logout() async throws {
+        try await client.request(LogoutEndpoint())
+    }
 }

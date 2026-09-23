@@ -25,15 +25,13 @@ public struct iOSSettingsView: View {
                 Section {
                     VStack {
                         SVRemoteImage(
-                            url: .init(
-                                string: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                            ),
+                            url: store.currentUser?.imageLocalUrl ?? URL(string: store.currentUser?.imageUrl ?? ""),
                             size: .init(width: 120, height: 120),
                             shape: .circle
                         )
-                        Text("Vijay Thakur")
+                        Text(store.currentUser?.fullName ?? "Fetching")
                             .font(.largeTitle.bold())
-                        Text("thakurvijay0006@gmail.com")
+                        Text(store.currentUser?.email ?? "Fetching")
                             .font(.headline)
                             .foregroundStyle(.gray)
                             .tint(.gray)
@@ -65,5 +63,8 @@ public struct iOSSettingsView: View {
             }
         }
         .alert($store.scope(\.alert, action: \.alert))
+        .task {
+            await store.send(.onAppear).finish()
+        }
     }
 }

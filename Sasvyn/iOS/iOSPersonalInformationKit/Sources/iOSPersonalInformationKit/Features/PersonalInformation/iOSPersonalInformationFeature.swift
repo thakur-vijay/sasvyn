@@ -141,16 +141,19 @@ public struct iOSPersonalInfomationFeature {
                 state.user.imageLocalUrl = localImageUrl
                 let user = state.user
 
-                return .run { [client] send in
-                    do {
-                        try await client.updateImage(user)
-                        await send(
-                            .delegate(.update(user))
-                        )
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
+                return .merge(
+                    .run { [client] send in
+                        do {
+                            try await client.updateImage(user)
+                            await send(
+                                .delegate(.update(user))
+                            )
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    },
+                    .send(.delegate(.update(user)))
+                )
             }
         }
         .ifLet(\.$destination, action: \.destination)

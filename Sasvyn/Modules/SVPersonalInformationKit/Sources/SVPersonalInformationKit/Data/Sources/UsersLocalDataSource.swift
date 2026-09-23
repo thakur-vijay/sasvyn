@@ -35,7 +35,8 @@ final class UsersLocalDataSource: @unchecked Sendable{
     func save(
         user: User,
         profileSyncStatus: SyncStatus? = nil,
-        imageSyncStatus: SyncStatus? = nil
+        imageSyncStatus: SyncStatus? = nil,
+        syncedAt: Date? = nil
     ) async throws {
         try await database.write { db in
             let record = try db.fetchOne(UserRecord.self, filters: [.equals(UserRecord.ColumnNames.id, .text(user.id))])
@@ -77,10 +78,24 @@ final class UsersLocalDataSource: @unchecked Sendable{
                         profileSyncStatus: profileSyncStatus ?? .synced,
                         imageSyncStatus: imageSyncStatus ?? .synced,
                         createdAt: .now,
-                        updatedAt: .now
+                        updatedAt: .now,
+                        syncedAt: syncedAt
                     )
                 )
             }
+        }
+    }
+    
+    func updateSyncedAt(id: String, syncedAt: Date) async throws {
+        try await database.write { db in
+            try db.update(
+                table: UserRecord.databaseTableName,
+                values: [
+                    UserRecord.ColumnNames.syncedAt: .date(syncedAt),
+                ],
+                whereColumn: UserRecord.ColumnNames.id,
+                equals: .text(id)
+            )
         }
     }
 

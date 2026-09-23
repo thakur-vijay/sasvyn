@@ -29,6 +29,7 @@ struct CreateUsersMigration: DatabaseMigration {
             table.text("image_sync_status").notNull().defaults(to: SyncStatus.synced.rawValue)
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
+            table.datetime("synced_at")
         }
     }
 }

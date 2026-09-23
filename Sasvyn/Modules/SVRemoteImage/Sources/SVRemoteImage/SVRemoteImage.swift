@@ -87,6 +87,9 @@ public struct SVRemoteImage<S: Shape, Placeholder: View & Sendable>: View {
         .frame(width: max(size?.width ?? 0, 0), height: max(size?.height ?? 0, 0))
         .aspectRatio(aspectRatio, contentMode: contentMode)
         .clipShape(shape)
+        .task {
+            print("SVRemoteImage url", url?.absoluteString)
+        }
     }
 }
 

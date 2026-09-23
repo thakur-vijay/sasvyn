@@ -12,9 +12,11 @@ enum UserRecordMapper {
     nonisolated static func map(
         _ record: UserRecord,
     ) -> User {
-        let directory = try? UserImageStorage.userImagesDirectory()
-        let localImageUrl = directory?.appending(path: record.imageLocalPath ?? "")
-        print(localImageUrl, record.imageLocalPath)
+        var localImageUrl: URL?
+        if let imageLocalPath = record.imageLocalPath, !imageLocalPath.isEmpty{
+            let directory = try? UserImageStorage.userImagesDirectory()
+            localImageUrl = directory?.appending(path: imageLocalPath)
+        }
         return .init(
             id: record.id,
             appleId: record.appleId,

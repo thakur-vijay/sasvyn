@@ -36,6 +36,8 @@ struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     
     let updatedAt: Date
     
+    let syncedAt: Date?
+    
     enum CodingKeys: String, CodingKey {
         
         case id, email
@@ -48,6 +50,7 @@ struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord{
         case imageSyncStatus = "image_sync_status"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case syncedAt = "synced_at"
         
     }
     
@@ -66,6 +69,7 @@ extension UserRecord {
         static let imageSyncStatus = SVColumnName("image_sync_status")
         static let createdAt = SVColumnName("created_at")
         static let updatedAt = SVColumnName("updated_at")
+        static let syncedAt = SVColumnName("synced_at")
     }
 }
 
@@ -84,7 +88,7 @@ extension UserRecord {
         static let imageSyncStatus = SVColumn("image_sync_status")
         static let createdAt = SVColumn("created_at")
         static let updatedAt = SVColumn("updated_at")
-        
+        static let syncedAt = SVColumnName("synced_at")
     }
     
 }

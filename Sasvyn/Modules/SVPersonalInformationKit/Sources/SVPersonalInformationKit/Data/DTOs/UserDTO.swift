@@ -14,8 +14,8 @@ internal struct UserDTO: Codable, Hashable, Sendable {
     let email: String
     let dateOfBirth: Date?
     let imgUrl: String?
-    let createdAt: String
-    let updatedAt: String
+    let createdAt: Date
+    let updatedAt: Date
     
     func toDomain()-> User {
         .init(

@@ -60,7 +60,37 @@ public final class DefaultUsersRepository: UsersRepository {
                     }
                 }
             }
+            
+            Task { [weak self] in
+                guard let self else { return }
 
+                if let syncedAt = record.syncedAt,
+                   Date().timeIntervalSince(syncedAt) <= 60 {
+                    return
+                }
+                
+                guard record.profileSyncStatus == .synced,
+                      record.imageSyncStatus == .synced else {
+                    return
+                }
+                do {
+                    let response = try await remoteDataSource.fetch(userId)
+                    let serverUser = response.data
+
+                    guard serverUser.updatedAt > record.updatedAt else {
+                        return
+                    }
+
+                    try await localDataSource.save(
+                        user: serverUser.toDomain(),
+                        profileSyncStatus: .synced,
+                        imageSyncStatus: .synced,
+                        syncedAt: .now
+                    )
+                } catch {
+                    print("Server sync failed:", error.localizedDescription)
+                }
+            }
             return user
         }
 
@@ -70,7 +100,8 @@ public final class DefaultUsersRepository: UsersRepository {
         try await localDataSource.save(
             user: user,
             profileSyncStatus: .synced,
-            imageSyncStatus: .synced
+            imageSyncStatus: .synced,
+            syncedAt: .now
         )
 
         return user
@@ -96,6 +127,11 @@ public final class DefaultUsersRepository: UsersRepository {
         try await localDataSource.save(
             user: response.data.toDomain(),
             profileSyncStatus: .synced
+        )
+        
+        try await localDataSource.updateSyncedAt(
+            id: user.id,
+            syncedAt: .now
         )
     }
 
@@ -136,6 +172,11 @@ public final class DefaultUsersRepository: UsersRepository {
         try await localDataSource.save(
             user: updatedUser,
             imageSyncStatus: .synced
+        )
+        
+        try await localDataSource.updateSyncedAt(
+            id: user.id,
+            syncedAt: .now
         )
     }
 }

@@ -22,7 +22,7 @@ public struct iOSSettingsFeature {
     
     @ObservableState
     public struct State: Equatable {
-        var isCurrentUserFetched: Bool = false
+//        var isCurrentUserFetched: Bool = false
         public var currentUser: User?
         public var path = StackState<Path.State>()
         public init(){
@@ -126,7 +126,7 @@ public struct iOSSettingsFeature {
                 state.alert = nil
                 return .none
             case .onAppear:
-                guard !state.isCurrentUserFetched else { return .none }
+//                guard !state.isCurrentUserFetched else { return .none }
                 return .run {[usersClient] send in
                     do {
                         let user = try await usersClient.fetchCurrentUser()
@@ -137,7 +137,7 @@ public struct iOSSettingsFeature {
                 }
             case .onCurrentUserFetched(let user):
                 state.currentUser = user
-                state.isCurrentUserFetched = true
+//                state.isCurrentUserFetched = true
                 return .none
             }
         }

@@ -16,6 +16,7 @@ internal struct UserDTO: Codable, Hashable, Sendable {
     let imgUrl: String?
     let createdAt: Date
     let updatedAt: Date
+    let syncVersion: Int64
     
     func toDomain()-> User {
         .init(
@@ -24,7 +25,9 @@ internal struct UserDTO: Codable, Hashable, Sendable {
             fullName: fullName,
             email: email,
             dateOfBirth: dateOfBirth,
-            imageUrl: imgUrl
+            imageUrl: imgUrl,
+            serverVersion: syncVersion,
+            updatedAt: updatedAt
         )
     }
 }

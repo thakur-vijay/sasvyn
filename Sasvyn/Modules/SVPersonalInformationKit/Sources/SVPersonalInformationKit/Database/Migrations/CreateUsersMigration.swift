@@ -24,12 +24,16 @@ struct CreateUsersMigration: DatabaseMigration {
             table.date("date_of_birth")
             table.text("image_local_path")
             table.text("image_url")
-            table.text("sync_status").notNull().defaults(to: SyncStatus.synced.rawValue)
             table.text("profile_sync_status").notNull().defaults(to: SyncStatus.synced.rawValue)
             table.text("image_sync_status").notNull().defaults(to: SyncStatus.synced.rawValue)
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
+            table.integer("server_version").notNull().defaults(to: 0)
             table.datetime("synced_at")
+            table.text("sync_operation_id")
+            table.text("sync_operation")
+            table.integer("sync_retry_count").notNull().defaults(to: 0)
+            table.text("sync_error")
         }
     }
 }

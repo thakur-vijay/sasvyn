@@ -93,6 +93,7 @@
 				Modules/SVSkillsKit,
 				Modules/SVSocialLinkKit,
 				Modules/SVSpotlightKit,
+				Modules/SVSyncKit,
 			);
 			platformFiltersByRelativePath = {
 				"Launch Screen.storyboard" = (ios, );

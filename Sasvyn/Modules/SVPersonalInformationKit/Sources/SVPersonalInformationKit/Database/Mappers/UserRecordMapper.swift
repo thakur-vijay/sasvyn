@@ -24,7 +24,9 @@ enum UserRecordMapper {
             email: record.email,
             dateOfBirth: record.dateOfBirth,
             imageLocalUrl: localImageUrl,
-            imageUrl: record.imageUrl
+            imageUrl: record.imageUrl,
+            serverVersion: record.serverVersion,
+            updatedAt: record.updatedAt
         )
     }
 }

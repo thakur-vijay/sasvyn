@@ -9,6 +9,7 @@ import Foundation
 import NetworkKit
 import SVFoundation
 import SVNetwork
+import SVSyncKit
 
 public final class DefaultUsersRepository: UsersRepository {
 
@@ -16,17 +17,20 @@ public final class DefaultUsersRepository: UsersRepository {
     private let remoteDataSource: UsersRemoteDataSource
     private let tokenStore: any TokenStore
     private let imageUploader: any ImageUploader
+    private let syncEngine: any SyncEngine<User>
 
     init(
         localDataSource: UsersLocalDataSource,
         remoteDataSource: UsersRemoteDataSource,
         tokenStore: any TokenStore,
-        imageUploader: any ImageUploader
+        imageUploader: any ImageUploader,
+        syncEngine: any SyncEngine<User>
     ) {
         self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
         self.tokenStore = tokenStore
         self.imageUploader = imageUploader
+        self.syncEngine = syncEngine
     }
 
     public func fetchCurrentUser() async throws -> User {
@@ -34,20 +38,8 @@ public final class DefaultUsersRepository: UsersRepository {
             throw URLError(.unknown)
         }
 
-        if let record = try await localDataSource.fetch(id: userId) {
+        if let record = try await localDataSource.fetchRecord(id: userId) {
             let user = UserRecordMapper.map(record)
-
-            if record.profileSyncStatus != .synced {
-                Task { [weak self] in
-                    guard let self else { return }
-
-                    do {
-                        try await update(user)
-                    } catch {
-                        print("Profile sync failed:", error.localizedDescription)
-                    }
-                }
-            }
 
             if record.imageSyncStatus != .synced {
                 Task { [weak self] in
@@ -61,36 +53,7 @@ public final class DefaultUsersRepository: UsersRepository {
                 }
             }
             
-            Task { [weak self] in
-                guard let self else { return }
-
-                if let syncedAt = record.syncedAt,
-                   Date().timeIntervalSince(syncedAt) <= 60 {
-                    return
-                }
-                
-                guard record.profileSyncStatus == .synced,
-                      record.imageSyncStatus == .synced else {
-                    return
-                }
-                do {
-                    let response = try await remoteDataSource.fetch(userId)
-                    let serverUser = response.data
-
-                    guard serverUser.updatedAt > record.updatedAt else {
-                        return
-                    }
-
-                    try await localDataSource.save(
-                        user: serverUser.toDomain(),
-                        profileSyncStatus: .synced,
-                        imageSyncStatus: .synced,
-                        syncedAt: .now
-                    )
-                } catch {
-                    print("Server sync failed:", error.localizedDescription)
-                }
-            }
+            Task { [syncEngine] in _ = try? await syncEngine.sync(id: userId) }
             return user
         }
 
@@ -108,31 +71,17 @@ public final class DefaultUsersRepository: UsersRepository {
     }
 
     public func update(_ user: User) async throws {
+        print(user.fullName)
+        var pendingUser = user
+        pendingUser.updatedAt = .now
         try await localDataSource.save(
-            user: user,
-            profileSyncStatus: .pending
+            user: pendingUser
         )
-
-        let body = UpdateUserDTO(
-            fullName: user.fullName,
-            dateOfBirth: user.dateOfBirth?.formatted(.isoDate),
-            imageKey: nil
+        try await syncEngine.enqueue(
+            id: pendingUser.id,
+            operation: .update
         )
-
-        let response = try await remoteDataSource.update(
-            user.id,
-            body: body
-        )
-
-        try await localDataSource.save(
-            user: response.data.toDomain(),
-            profileSyncStatus: .synced
-        )
-        
-        try await localDataSource.updateSyncedAt(
-            id: user.id,
-            syncedAt: .now
-        )
+        _ = try await syncEngine.sync(id: pendingUser.id)
     }
 
     public func updateImage(_ user: User) async throws {

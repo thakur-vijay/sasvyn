@@ -9,6 +9,7 @@ import SVDatabaseKit
 import ComposableArchitecture
 import NetworkKit
 import SVNetwork
+import SVSyncKit
 
 @available(iOS 26.0, macOS 15.0, *)
 public final class PersonalInformationDIContainer{
@@ -38,12 +39,21 @@ public final class PersonalInformationDIContainer{
         UsersRemoteDataSource(client: networkClient)
     }()
 
+    private lazy var syncEngine: any SyncEngine<User> = {
+        DefaultSyncEngine(
+            localStore: localDataSource,
+            remoteStore: remoteDataSource,
+            conflictResolver: DefaultSyncConflictResolver<User>()
+        )
+    }()
+
     private lazy var repository: UsersRepository = {
         DefaultUsersRepository(
             localDataSource: localDataSource,
             remoteDataSource: remoteDataSource,
             tokenStore: tokenStore,
-            imageUploader: imageUploader
+            imageUploader: imageUploader,
+            syncEngine: syncEngine
         )
     }()
     

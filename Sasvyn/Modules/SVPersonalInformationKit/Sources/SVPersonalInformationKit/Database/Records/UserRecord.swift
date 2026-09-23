@@ -8,6 +8,7 @@
 
 import Foundation
 import SVDatabaseKit
+import SVNetwork
 
 struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     
@@ -27,6 +28,10 @@ struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     
     let imageUrl: String?
     
+    let profileSyncStatus: SyncStatus
+    
+    let imageSyncStatus: SyncStatus
+    
     let createdAt: Date
     
     let updatedAt: Date
@@ -39,6 +44,8 @@ struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord{
         case dateOfBirth = "date_of_birth"
         case imageLocalPath = "image_local_path"
         case imageUrl = "image_url"
+        case profileSyncStatus = "profile_sync_status"
+        case imageSyncStatus = "image_sync_status"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         
@@ -55,6 +62,8 @@ extension UserRecord {
         static let dateOfBirth = SVColumnName("date_of_birth")
         static let imageLocalPath = SVColumnName("image_local_path")
         static let imageUrl = SVColumnName("image_url")
+        static let profileSyncStatus = SVColumnName("profile_sync_status")
+        static let imageSyncStatus = SVColumnName("image_sync_status")
         static let createdAt = SVColumnName("created_at")
         static let updatedAt = SVColumnName("updated_at")
     }
@@ -69,8 +78,10 @@ extension UserRecord {
         static let fullName = SVColumn("full_name")
         static let email = SVColumn("email")
         static let dateOfBirth = SVColumn("date_of_birth")
-        static let imageLocalPath = SVColumnName("image_local_path")
+        static let imageLocalPath = SVColumn("image_local_path")
         static let imageUrl = SVColumn("image_url")
+        static let profileSyncStatus = SVColumn("profile_sync_status")
+        static let imageSyncStatus = SVColumn("image_sync_status")
         static let createdAt = SVColumn("created_at")
         static let updatedAt = SVColumn("updated_at")
         

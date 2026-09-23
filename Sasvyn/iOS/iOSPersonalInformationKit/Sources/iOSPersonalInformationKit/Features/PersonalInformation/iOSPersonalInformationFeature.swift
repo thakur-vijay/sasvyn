@@ -178,6 +178,6 @@ enum UserImageCreator {
             options: .atomic
         )
         print("User image url", fileURL)
-        return fileURL
+        return fileURL.appending(queryItems: [.init(name: "v", value: UUID().uuidString)])
     }
 }

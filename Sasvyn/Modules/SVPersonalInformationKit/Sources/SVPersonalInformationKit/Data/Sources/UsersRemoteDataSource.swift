@@ -7,6 +7,7 @@
 
 import NetworkKit
 import SVNetwork
+import Foundation
 
 internal final class UsersRemoteDataSource: Sendable{
     private let client: NetworkClientProtocol
@@ -23,10 +24,8 @@ internal final class UsersRemoteDataSource: Sendable{
     func update(_ id: String, body: UpdateUserDTO) async throws-> DataResponseDTO<UserDTO> {
         let endpoint = UpdateUserEndpoint(id: id, body: body)
         return try await client.request(endpoint)
+//        throw URLError(.badURL)
+//        throw URLError(.notConnectedToInternet)
     }
-    
-    func upload(_ body: CreateUploadDTO) async throws -> DataResponseDTO<UploadDTO> {
-        let endpoint = UploadEndpoint(body)
-        return try await client.request(endpoint)
-    }
+
 }

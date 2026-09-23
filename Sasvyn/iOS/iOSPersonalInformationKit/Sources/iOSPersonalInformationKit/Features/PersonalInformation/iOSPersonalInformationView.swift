@@ -20,11 +20,12 @@ public struct iOSPersonalInfomationView: View {
     }
     
     public var body: some View {
+        let imageURL = store.user.imageLocalUrl ?? URL(string: store.user.imageUrl ?? "")
         List {
             Section {
                 VStack(spacing: 12){
                     SVRemoteImage(
-                        url: store.user.imageLocalUrl ?? URL(string: store.user.imageUrl ?? ""),
+                        url: imageURL,
                         size: .init(width: 180, height: 180),
                         contentMode: .fill,
                         shape: .circle,

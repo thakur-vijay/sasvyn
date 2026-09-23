@@ -8,6 +8,7 @@
 
 import Foundation
 import SVDatabaseKit
+import SVNetwork
 
 final class UsersLocalDataSource: @unchecked Sendable{
     
@@ -31,18 +32,38 @@ final class UsersLocalDataSource: @unchecked Sendable{
         }
     }
     
-    func save(user: User) async throws {
+    func save(
+        user: User,
+        profileSyncStatus: SyncStatus? = nil,
+        imageSyncStatus: SyncStatus? = nil
+    ) async throws {
         try await database.write { db in
             let record = try db.fetchOne(UserRecord.self, filters: [.equals(UserRecord.ColumnNames.id, .text(user.id))])
             var imageLocalPath: String?
             if let imageLocalUrl = user.imageLocalUrl{
                 imageLocalPath = try UserImageStorage.relativePath(for: imageLocalUrl)
-                print("imageLocalUrl", imageLocalUrl)
-                print("imageLocalPath", imageLocalPath)
-            }else {
-                print("no local url")
             }
-            if record == nil {
+            
+            if let record {
+                try db.update(
+                    table: UserRecord.databaseTableName,
+                    values: [
+                        UserRecord.ColumnNames.fullName: .text(user.fullName),
+                        UserRecord.ColumnNames.dateOfBirth: .date(user.dateOfBirth ?? .now),
+                        UserRecord.ColumnNames.imageLocalPath: .text(imageLocalPath ?? ""),
+                        UserRecord.ColumnNames.imageUrl: .text(user.imageUrl ?? ""),
+                        UserRecord.ColumnNames.profileSyncStatus: .text(
+                            profileSyncStatus?.rawValue ?? record.profileSyncStatus.rawValue
+                        ),
+                        UserRecord.ColumnNames.imageSyncStatus: .text(
+                            imageSyncStatus?.rawValue ?? record.imageSyncStatus.rawValue
+                        ),
+                        UserRecord.ColumnNames.updatedAt: .date(.now),
+                    ],
+                    whereColumn: UserRecord.ColumnNames.id,
+                    equals: .text(user.id)
+                )
+            }else {
                 //create
                 try db.insert(
                     UserRecord(
@@ -53,22 +74,11 @@ final class UsersLocalDataSource: @unchecked Sendable{
                         dateOfBirth: user.dateOfBirth,
                         imageLocalPath: imageLocalPath,
                         imageUrl: user.imageUrl,
+                        profileSyncStatus: profileSyncStatus ?? .synced,
+                        imageSyncStatus: imageSyncStatus ?? .synced,
                         createdAt: .now,
                         updatedAt: .now
                     )
-                )
-            }else {
-                try db.update(
-                    table: UserRecord.databaseTableName,
-                    values: [
-                        UserRecord.ColumnNames.fullName: .text(user.fullName),
-                        UserRecord.ColumnNames.dateOfBirth: .date(user.dateOfBirth ?? .now),
-                        UserRecord.ColumnNames.imageLocalPath: .text(imageLocalPath ?? ""),
-                        UserRecord.ColumnNames.imageUrl: .text(user.imageUrl ?? ""),
-                        UserRecord.ColumnNames.updatedAt: .date(.now),
-                    ],
-                    whereColumn: UserRecord.ColumnNames.id,
-                    equals: .text(user.id)
                 )
             }
         }

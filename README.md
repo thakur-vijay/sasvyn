@@ -5,19 +5,19 @@
 <p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>
 
 <p>
-  <img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" height="18">
+  <img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" height="18" style="vertical-align: middle;">
   <strong>Swift 6.4</strong>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/swift/007AFF" alt="SwiftUI" height="18">
+  <img src="https://cdn.simpleicons.org/swift/007AFF" alt="SwiftUI" height="18" style="vertical-align: middle;">
   <strong>SwiftUI</strong>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18">
+  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18" style="vertical-align: middle;">
   <strong>iOS 26</strong>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18">
+  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18" style="vertical-align: middle;">
   <strong>macOS 26</strong>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/swift/FFAC45" alt="Swift Package Manager" height="18">
+  <img src="https://cdn.simpleicons.org/swift/FFAC45" alt="Swift Package Manager" height="18" style="vertical-align: middle;">
   <strong>Swift Package Manager</strong>
 </p>
 

@@ -1,25 +1,32 @@
 <div align="center">
-	<h1>Sasvyn</h1>
 
-	<p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>
+<h1>Sasvyn</h1>
 
-	<p>
-		<img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" height="20" align="absmiddle"> <strong>Swift 6.4</strong>
-		&nbsp;&nbsp;·&nbsp;&nbsp;
-		<img src="https://cdn.simpleicons.org/swift/007AFF" alt="SwiftUI" height="20" align="absmiddle"> <strong>SwiftUI</strong>
-		&nbsp;&nbsp;·&nbsp;&nbsp;
-		<img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="20" align="absmiddle"> <strong>iOS 26</strong>
-		&nbsp;&nbsp;·&nbsp;&nbsp;
-		<img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="20" align="absmiddle"> <strong>macOS 26</strong>
-		&nbsp;&nbsp;·&nbsp;&nbsp;
-		<img src="https://cdn.simpleicons.org/swift/FFAC45" alt="Swift" height="20" align="absmiddle"> <strong>Swift Package Manager</strong>
-	</p>
+<p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>
 
-	<p>
-		<a href="#product-areas">Explore the product</a> ·
-		<a href="#architecture">Understand the architecture</a> ·
-		<a href="#getting-started">Run locally</a>
-	</p>
+<p>
+  <img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" height="18">
+  <strong>Swift 6.4</strong>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  <img src="https://cdn.simpleicons.org/swift/007AFF" alt="SwiftUI" height="18">
+  <strong>SwiftUI</strong>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18">
+  <strong>iOS 26</strong>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18">
+  <strong>macOS 26</strong>
+  &nbsp;&nbsp;·&nbsp;&nbsp;
+  <img src="https://cdn.simpleicons.org/swift/FFAC45" alt="Swift Package Manager" height="18">
+  <strong>Swift Package Manager</strong>
+</p>
+
+<p>
+  <a href="#product-areas">Explore the product</a> ·
+  <a href="#architecture">Understand the architecture</a> ·
+  <a href="#getting-started">Run locally</a>
+</p>
+
 </div>
 
 <br>

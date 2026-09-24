@@ -1,43 +1,40 @@
-<div align="center">
+# Sasvyn
 
-<h1>Sasvyn</h1>
+A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.
 
-<p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>
-
-<p>
-  <img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" height="18" style="vertical-align: middle;">
-  <strong>Swift 6.4</strong>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/swift/007AFF" alt="SwiftUI" height="18" style="vertical-align: middle;">
-  <strong>SwiftUI</strong>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18" style="vertical-align: middle;">
-  <strong>iOS 26</strong>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="18" style="vertical-align: middle;">
-  <strong>macOS 26</strong>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <img src="https://cdn.simpleicons.org/swift/FFAC45" alt="Swift Package Manager" height="18" style="vertical-align: middle;">
-  <strong>Swift Package Manager</strong>
+<p align="center">
+  <img alt="Swift" src="https://img.shields.io/badge/Swift-6.4-F05138?logo=swift&logoColor=white" />
+  <img alt="SwiftUI" src="https://img.shields.io/badge/SwiftUI-6.4-007AFF?logo=swift&logoColor=white" />
+  <img alt="iOS" src="https://img.shields.io/badge/iOS-26-111827?logo=apple&logoColor=white" />
+  <img alt="macOS" src="https://img.shields.io/badge/macOS-26-111827?logo=apple&logoColor=white" />
+  <img alt="Swift Package Manager" src="https://img.shields.io/badge/Swift%20Package%20Manager-6.4-FFAC45?logo=swift&logoColor=white" />
 </p>
 
-<p>
+<p align="center">
   <a href="#product-areas">Explore the product</a> ·
   <a href="#architecture">Understand the architecture</a> ·
   <a href="#getting-started">Run locally</a>
 </p>
 
-</div>
-
-<br>
-
 <table>
-	<tr>
-		<td align="center" width="25%"><strong>Portfolio-first</strong><br><sub>Projects, experience, education, skills, and more</sub></td>
-		<td align="center" width="25%"><strong>Native by design</strong><br><sub>SwiftUI experiences for iOS and macOS</sub></td>
-		<td align="center" width="25%"><strong>Modular core</strong><br><sub>Small packages with focused responsibilities</sub></td>
-		<td align="center" width="25%"><strong>Sync-ready</strong><br><sub>Local persistence and resilient synchronization</sub></td>
-	</tr>
+  <tr>
+    <td align="center" width="25%">
+      <strong>Portfolio-first</strong><br>
+      <sub>Projects, experience, education, skills, and more</sub>
+    </td>
+    <td align="center" width="25%">
+      <strong>Native by design</strong><br>
+      <sub>SwiftUI experiences for iOS and macOS</sub>
+    </td>
+    <td align="center" width="25%">
+      <strong>Modular core</strong><br>
+      <sub>Small packages with focused responsibilities</sub>
+    </td>
+    <td align="center" width="25%">
+      <strong>Sync-ready</strong><br>
+      <sub>Local persistence and resilient synchronization</sub>
+    </td>
+  </tr>
 </table>
 
 Sasvyn is an Apple-platform application for organizing the information that makes up a professional portfolio: projects, experience, education, skills, languages, documents, mockups, personal information, and social links. It is implemented as a Swift Package Manager-based modular monorepo and assembled into a SwiftUI application for iOS and macOS.

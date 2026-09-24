@@ -1,6 +1,4 @@
 <div align="center">
-	<img src="README-assets/sasvyn-banner.gif" alt="SASVYN animated wordmark" width="100%">
-
 	<h1>Sasvyn</h1>
 
 	<p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>

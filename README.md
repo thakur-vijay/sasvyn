@@ -4,11 +4,15 @@
 	<p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>
 
 	<p>
-		<img src="https://img.shields.io/badge/Swift-6.4-F05138?logo=swift&logoColor=white" alt="Swift 6.4">
-		<img src="https://img.shields.io/badge/SwiftUI-Apple%20platforms-007AFF?logo=apple&logoColor=white" alt="SwiftUI for Apple platforms">
-		<img src="https://img.shields.io/badge/iOS-26-111827?logo=apple&logoColor=white" alt="iOS 26">
-		<img src="https://img.shields.io/badge/macOS-26-111827?logo=apple&logoColor=white" alt="macOS 26">
-		<img src="https://img.shields.io/badge/Swift%20Package%20Manager-modular-FFAC45?logo=swift&logoColor=white" alt="Swift Package Manager">
+		<img src="https://cdn.simpleicons.org/swift/F05138" alt="Swift" height="20" align="absmiddle"> <strong>Swift 6.4</strong>
+		&nbsp;&nbsp;·&nbsp;&nbsp;
+		<img src="https://cdn.simpleicons.org/swift/007AFF" alt="SwiftUI" height="20" align="absmiddle"> <strong>SwiftUI</strong>
+		&nbsp;&nbsp;·&nbsp;&nbsp;
+		<img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="20" align="absmiddle"> <strong>iOS 26</strong>
+		&nbsp;&nbsp;·&nbsp;&nbsp;
+		<img src="https://cdn.simpleicons.org/apple/111827" alt="Apple" height="20" align="absmiddle"> <strong>macOS 26</strong>
+		&nbsp;&nbsp;·&nbsp;&nbsp;
+		<img src="https://cdn.simpleicons.org/swift/FFAC45" alt="Swift" height="20" align="absmiddle"> <strong>Swift Package Manager</strong>
 	</p>
 
 	<p>

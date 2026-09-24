@@ -1,6 +1,35 @@
-# Sasvyn
+<div align="center">
+	<img src="README-assets/sasvyn-banner.gif" alt="SASVYN animated wordmark" width="100%">
 
-> A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.
+	<h1>Sasvyn</h1>
+
+	<p>A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.</p>
+
+	<p>
+		<img src="https://img.shields.io/badge/Swift-6.4-F05138?logo=swift&logoColor=white" alt="Swift 6.4">
+		<img src="https://img.shields.io/badge/SwiftUI-Apple%20platforms-007AFF?logo=apple&logoColor=white" alt="SwiftUI for Apple platforms">
+		<img src="https://img.shields.io/badge/iOS-26-111827?logo=apple&logoColor=white" alt="iOS 26">
+		<img src="https://img.shields.io/badge/macOS-26-111827?logo=apple&logoColor=white" alt="macOS 26">
+		<img src="https://img.shields.io/badge/Swift%20Package%20Manager-modular-FFAC45?logo=swift&logoColor=white" alt="Swift Package Manager">
+	</p>
+
+	<p>
+		<a href="#product-areas">Explore the product</a> ·
+		<a href="#architecture">Understand the architecture</a> ·
+		<a href="#getting-started">Run locally</a>
+	</p>
+</div>
+
+<br>
+
+<table>
+	<tr>
+		<td align="center" width="25%"><strong>Portfolio-first</strong><br><sub>Projects, experience, education, skills, and more</sub></td>
+		<td align="center" width="25%"><strong>Native by design</strong><br><sub>SwiftUI experiences for iOS and macOS</sub></td>
+		<td align="center" width="25%"><strong>Modular core</strong><br><sub>Small packages with focused responsibilities</sub></td>
+		<td align="center" width="25%"><strong>Sync-ready</strong><br><sub>Local persistence and resilient synchronization</sub></td>
+	</tr>
+</table>
 
 Sasvyn is an Apple-platform application for organizing the information that makes up a professional portfolio: projects, experience, education, skills, languages, documents, mockups, personal information, and social links. It is implemented as a Swift Package Manager-based modular monorepo and assembled into a SwiftUI application for iOS and macOS.
 
@@ -364,16 +393,3 @@ Sasvyn is an actively modularized application. The repository already contains t
 - Build and deployment settings currently target the project’s Swift tools and Apple SDK versions; update them together when changing platform support.
 
 When adding a new domain, prefer the existing package pattern: define domain entities and repository contracts, implement local and remote data sources, add database records and migrations, expose dependencies through a client/container, then add platform-specific TCA features and views. Keep shared business behavior in `Sasvyn/Modules` and platform presentation in `Sasvyn/iOS` or `Sasvyn/macOS`.
-
-## Contributing
-
-Before opening a change:
-
-1. Keep the change inside the owning package whenever possible.
-2. Preserve Swift 6 concurrency and package dependency conventions.
-3. Add or update migrations when persisted schemas change.
-4. Add focused tests for new domain behavior, synchronization rules, and reducers.
-5. Update package resolution only when dependency versions intentionally change.
-6. Verify the affected package or Xcode target locally.
-
-Small, focused packages make the project easier to evolve: domain logic can be tested independently, presentation features remain composable, and application-level wiring stays concentrated in the root containers.

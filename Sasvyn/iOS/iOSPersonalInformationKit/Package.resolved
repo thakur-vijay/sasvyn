@@ -1,5 +1,5 @@
 {
-  "originHash" : "605bbd3ba73bf15dbbcb0c686296fcfe6980c2bf416068c072834dbd046783d5",
+  "originHash" : "0d516bc8f0edc32e010c3af56789f7244ed096056e610d2bf8bd2d013af9ca82",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -8,6 +8,42 @@
       "state" : {
         "revision" : "114354e8c1667a2edc4993700fb9fa4f90157b56",
         "version" : "1.2.2"
+      }
+    },
+    {
+      "identity" : "grdb.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/GRDB.swift.git",
+      "state" : {
+        "revision" : "b83108d10f42680d78f23fe4d4d80fc88dab3212",
+        "version" : "7.11.1"
+      }
+    },
+    {
+      "identity" : "latexswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/colinc86/LaTeXSwiftUI",
+      "state" : {
+        "revision" : "cc677f66b9cc1751e09207621d62d1cda0200675",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "mathjaxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/colinc86/MathJaxSwift",
+      "state" : {
+        "revision" : "00e9c3df6b1c82031c7fe3785028f3d21c0d73ba",
+        "version" : "3.5.0"
+      }
+    },
+    {
+      "identity" : "networkkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/thakur-vijay/NetworkKit.git",
+      "state" : {
+        "revision" : "ab9f21826ebadcd52dfbfb3a380443ad79ff1bc7",
+        "version" : "1.1.5"
       }
     },
     {
@@ -83,6 +119,15 @@
       }
     },
     {
+      "identity" : "swift-html-entities",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kitura/swift-html-entities",
+      "state" : {
+        "revision" : "d8ca73197f59ce260c71bd6d7f6eb8bbdccf508b",
+        "version" : "4.0.1"
+      }
+    },
+    {
       "identity" : "swift-identified-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
@@ -134,6 +179,15 @@
       "state" : {
         "revision" : "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
         "version" : "603.0.2"
+      }
+    },
+    {
+      "identity" : "swiftdraw",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swhitty/SwiftDraw",
+      "state" : {
+        "revision" : "82699f4bdf2f075793cfa0d392eb27c59b41a3fe",
+        "version" : "0.29.0"
       }
     }
   ],

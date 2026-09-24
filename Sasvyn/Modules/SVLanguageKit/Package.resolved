@@ -1,5 +1,5 @@
 {
-  "originHash" : "7c7056ff382b3ba8a8b186666fb30e2927fddcb9e5dcb57bf6334d9ce7624dd7",
+  "originHash" : "b0707e89044f44ac69193b7764b07af66a2d2487fc744cbf226de9b3a651cf64",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -11,30 +11,12 @@
       }
     },
     {
-      "identity" : "latexswiftui",
+      "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/colinc86/LaTeXSwiftUI",
+      "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "cc677f66b9cc1751e09207621d62d1cda0200675",
-        "version" : "2.0.0"
-      }
-    },
-    {
-      "identity" : "mathjaxswift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/colinc86/MathJaxSwift",
-      "state" : {
-        "revision" : "00e9c3df6b1c82031c7fe3785028f3d21c0d73ba",
-        "version" : "3.5.0"
-      }
-    },
-    {
-      "identity" : "nuke",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke.git",
-      "state" : {
-        "revision" : "30f7a7e72e0607d304fbf69c799474bd5fb6d1ce",
-        "version" : "13.2.0"
+        "revision" : "b83108d10f42680d78f23fe4d4d80fc88dab3212",
+        "version" : "7.11.1"
       }
     },
     {
@@ -60,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "a0cb0954ecb21e4e31b0070e6ed5674e8556685a",
-        "version" : "1.6.0"
+        "revision" : "a66de878e87ef5a3d5d390e0f6d9002aa5541a43",
+        "version" : "1.7.0"
       }
     },
     {
@@ -101,15 +83,6 @@
       }
     },
     {
-      "identity" : "swift-html-entities",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Kitura/swift-html-entities",
-      "state" : {
-        "revision" : "d8ca73197f59ce260c71bd6d7f6eb8bbdccf508b",
-        "version" : "4.0.1"
-      }
-    },
-    {
       "identity" : "swift-identified-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
@@ -123,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-issue-reporting",
       "state" : {
-        "revision" : "71c7c9a761d1ca6ed4ccb6ced040fe1c1a39e8e7",
-        "version" : "2.1.0"
+        "revision" : "75b000cea2ca6d7527a57e1b9cc0bdf21a9abe9f",
+        "version" : "2.1.1"
       }
     },
     {
@@ -159,17 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
-        "revision" : "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
-        "version" : "603.0.2"
-      }
-    },
-    {
-      "identity" : "swiftdraw",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swhitty/SwiftDraw",
-      "state" : {
-        "revision" : "82699f4bdf2f075793cfa0d392eb27c59b41a3fe",
-        "version" : "0.29.0"
+        "revision" : "050f1a346fbbac0ca2cfb15a95274f7bd1cf0ccf",
+        "version" : "604.0.0"
       }
     }
   ],

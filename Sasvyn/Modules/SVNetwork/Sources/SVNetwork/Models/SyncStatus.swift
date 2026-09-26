@@ -8,7 +8,8 @@
 import Foundation
 
 public enum SyncStatus: String, Codable, Hashable, Sendable {
-    case synced
     case pending
+    case syncing
+    case synced
     case failed
 }

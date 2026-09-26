@@ -10,7 +10,7 @@ import Foundation
 public protocol SyncStateStore<ID>: Sendable {
     associatedtype ID: Hashable & Sendable & Codable
 
-    func markPendingUpload(id: ID) async throws
+    func markPending(id: ID) async throws
 
     func markSyncing(id: ID) async throws
 

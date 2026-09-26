@@ -7,10 +7,10 @@
 
 
 import SwiftUI
-import SafariServices
 import ComposableArchitecture
 import AuthenticationServices
 import SVDesignSystem
+import AuthKit
 
 public struct iOSAuthView: View {
     let store: StoreOf<iOSAuthFeature>
@@ -62,9 +62,49 @@ public struct iOSAuthView: View {
                 
                 Section {
                     SignInWithAppleButton { request in
-                        
+                        request.requestedScopes = [
+                            .fullName,
+                            .email
+                        ]
                     } onCompletion: { result in
-                        store.send(.onSignInWithAppleTap)
+                        switch result {
+                        case .success(let authorization):
+                            guard let credential = authorization.credential
+                                    as? ASAuthorizationAppleIDCredential
+                            else {
+                                return
+                            }
+
+                            let appleId = credential.user
+
+                            let email = credential.email
+
+                            let fullName = credential.fullName?.formatted()
+
+                            let identityToken = credential.identityToken
+                                .flatMap {
+                                    String(data: $0, encoding: .utf8)
+                                }
+
+                            let authorizationCode = credential.authorizationCode
+                                .flatMap {
+                                    String(data: $0, encoding: .utf8)
+                                }
+
+                            let body = SocialLoginRequest(
+                                provider: .apple,
+                                identityToken: identityToken,
+                                authorizationCode: authorizationCode,
+                                appleId: appleId,
+                                email: email,
+                                fullName: fullName
+                            )
+
+                            store.send(.appleLogin(body))
+
+                        case .failure(let error):
+                            dump(error)
+                        }
                     }
                     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                     .frame(height: 55)

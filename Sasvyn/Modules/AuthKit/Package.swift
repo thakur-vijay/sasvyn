@@ -22,7 +22,8 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.26.0"
         ),
-        .package(path: "../SVDatabaseKit")
+        .package(path: "../SVDatabaseKit"),
+        .package(path: "../SVNetwork")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -38,6 +39,10 @@ let package = Package(
                 .product(
                     name: "SVDatabaseKit",
                     package: "SVDatabaseKit"
+                ),
+                .product(
+                    name: "SVNetwork",
+                    package: "SVNetwork"
                 ),
             ],
             swiftSettings: [

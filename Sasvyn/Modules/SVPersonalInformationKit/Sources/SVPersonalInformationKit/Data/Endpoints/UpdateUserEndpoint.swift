@@ -18,8 +18,12 @@ internal struct UpdateUserEndpoint: Endpoint {
     
     var body: RequestBody?
     
-    init(id: String, body: UpdateUserDTO) {
+    var headers: [HTTPHeader]
+    
+    init(id: String, body: UpdateUserDTO, idempotencyKey: String) {
         self.path = "/users/\(id)"
         self.body = .json(body)
+        self.headers = [.init(name: "Idempotency-Key", value: idempotencyKey)]
     }
+    
 }

@@ -95,7 +95,7 @@ where
         operation: SyncOperation = .update
     ) async throws {
         if let pending = try await localStore.pendingChange(id: id) {
-            try await localStore.markPendingUpload(id: id)
+            try await localStore.markPending(id: id)
             try await localStore.enqueue(pending)
             return
         }
@@ -109,60 +109,44 @@ where
                 )
             )
         )
-        try await localStore.markPendingUpload(id: id)
+        try await localStore.markPending(id: id)
     }
 
     private func performSync(id: Entity.ID) async throws -> SyncResult<Entity> {
         try Task.checkCancellation()
-        try await localStore.markSyncing(id: id)
         let local = try await localStore.fetch(id: id)
-        let pendingChange = try await localStore.pendingChange(id: id)
-
         let remote = try await executeWithRetry {
             try await remoteStore.fetch(id: id)
         }
-
+        let metadata = try await localStore.metadata(id: id)
         switch (local, remote) {
 
         case (nil, nil):
             throw SyncError.entityNotFound
 
         case (nil, let remote?):
-            try await localStore.save(remote)
-            try await localStore.markSynced(
-                id: remote.id,
-                version: remote.syncVersion
-            )
-
+            try await localStore.create(remote)
+            try await localStore.markSynced(id: remote.id, version: remote.syncVersion)
             return .downloaded(remote)
-
         case (let local?, nil):
             switch missingRemoteStrategy {
             case .uploadLocal:
-                let uploaded = try await upload(local)
+                let uploaded = try await synchronize(local, nil, metadata: metadata)
                 return .uploaded(uploaded)
             case .deleteLocal:
                 try await localStore.delete(id: id)
-                try await localStore.removePendingChange(id: id)
                 return .noChange
             case .fail:
                 throw SyncError.remoteEntityMissing
             }
 
         case (let local?, let remote?):
-            if let pendingChange,
-               pendingChange.context.operation != .delete {
-                let uploaded = try await upload(
-                    local,
-                    prioritizeLocalChange: true
-                )
-                return .uploaded(uploaded)
-            }
-
-            return try await reconcile(
-                local: local,
-                remote: remote
+            let uploaded = try await synchronize(
+                local,
+                remote,
+                metadata: metadata
             )
+            return .uploaded(uploaded)
         }
     }
 
@@ -170,21 +154,10 @@ where
         id: Entity.ID
     ) async throws -> Entity? {
 
-        let remote = try await executeWithRetry {
+        guard let remote = (try await executeWithRetry {
             try await remoteStore.fetch(id: id)
-        }
-
-        guard let remote else {
-            return nil
-        }
-
-        try await localStore.save(remote)
-
-        try await localStore.markSynced(
-            id: remote.id,
-            version: remote.syncVersion
-        )
-
+        }) else { return nil}
+        try await localStore.create(remote)
         return remote
     }
 
@@ -210,140 +183,86 @@ where
         }
     }
 
-    private func upload(
+    private func synchronize(
         _ local: Entity,
-        prioritizeLocalChange: Bool = false
+        _ remote: Entity?,
+        metadata: SyncMetadata<Entity.ID>?
     ) async throws -> Entity {
 
         try Task.checkCancellation()
 
-        let remote = try await executeWithRetry {
-            try await remoteStore.fetch(id: local.id)
-        }
-
-          if !prioritizeLocalChange,
-              let remote,
-           remote.syncVersion > local.syncVersion {
-
-            let resolved = try await conflictResolver.resolve(
-                local: local,
-                remote: remote
-            )
-
-            if resolved.id == remote.id,
-               resolved.syncVersion == remote.syncVersion {
-                try await localStore.save(resolved)
-
-                try await localStore.markSynced(
-                    id: resolved.id,
-                    version: resolved.syncVersion
-                )
-
-                return resolved
-            }
-
-            return try await uploadResolved(
-                resolved,
-                remote: remote
-            )
-        }
-
-        let uploaded: Entity
-
-        if remote == nil {
-            uploaded = try await executeWithRetry {
-                try await remoteStore.create(
-                    local,
-                    idempotencyKey: try await operationKey(for: local.id)
-                )
-            }
-        } else {
-            uploaded = try await executeWithRetry {
+        guard let remote else {
+            let uploaded = try await executeWithRetry {
                 try await remoteStore.update(
                     local,
                     idempotencyKey: try await operationKey(for: local.id)
                 )
             }
-        }
 
-        try await localStore.save(uploaded)
-
-        try await localStore.markSynced(
-            id: uploaded.id,
-            version: uploaded.syncVersion
-        )
-
-        return uploaded
-    }
-
-    private func uploadResolved(
-        _ entity: Entity,
-        remote: Entity
-    ) async throws -> Entity {
-
-        guard entity.syncVersion >= remote.syncVersion else {
-            throw SyncError.conflict
-        }
-
-        let uploaded = try await executeWithRetry {
-            try await remoteStore.update(
-                entity,
-                idempotencyKey: try await operationKey(for: entity.id)
+            try await localStore.update(uploaded)
+            try await localStore.markSynced(
+                id: uploaded.id,
+                version: uploaded.syncVersion
             )
+
+            return uploaded
         }
 
-        try await localStore.save(uploaded)
+        // Local has an explicit pending change.
+        if metadata?.state == .pending {
 
-        try await localStore.markSynced(
-            id: uploaded.id,
-            version: uploaded.syncVersion
-        )
+            let uploaded = try await executeWithRetry {
+                try await remoteStore.update(
+                    local,
+                    idempotencyKey: try await operationKey(for: local.id)
+                )
+            }
 
-        return uploaded
-    }
+            try await localStore.update(uploaded)
+            try await localStore.markSynced(
+                id: uploaded.id,
+                version: uploaded.syncVersion
+            )
 
-    private func reconcile(
-        local: Entity,
-        remote: Entity
-    ) async throws -> SyncResult<Entity> {
+            return uploaded
+        }
 
+        // No pending local change:
+        // remote is newer → download.
         if remote.syncVersion > local.syncVersion {
-
-            try await localStore.save(remote)
-
+            try await localStore.update(remote)
             try await localStore.markSynced(
                 id: remote.id,
                 version: remote.syncVersion
             )
 
-            return .downloaded(remote)
+            return remote
         }
 
+        // Local is newer without a pending operation.
+        // Do not silently overwrite remote.
         if local.syncVersion > remote.syncVersion {
-
-            let uploaded = try await upload(local)
-
-            return .uploaded(uploaded)
+            throw SyncError.conflict
         }
 
-        if local.updatedAt == remote.updatedAt {
-            return .noChange
-        }
-
+        // Same version → resolve only if data actually differs.
         let resolved = try await conflictResolver.resolve(
             local: local,
             remote: remote
         )
 
-        if resolved.updatedAt == remote.updatedAt {
-            try await localStore.save(resolved)
-
+        if resolved == remote {
+            try await localStore.update(remote)
             try await localStore.markSynced(
-                id: resolved.id,
-                version: resolved.syncVersion
+                id: remote.id,
+                version: remote.syncVersion
             )
 
-            return .conflictResolved(resolved)
+            return remote
+        }
+
+        if resolved.syncVersion < remote.syncVersion {
+            throw SyncError.conflict
         }
 
         let uploaded = try await executeWithRetry {
@@ -353,23 +272,20 @@ where
             )
         }
 
-        try await localStore.save(uploaded)
-
+        try await localStore.update(uploaded)
         try await localStore.markSynced(
             id: uploaded.id,
             version: uploaded.syncVersion
         )
 
-        return .conflictResolved(uploaded)
+        return uploaded
     }
 
     private func operationKey(for id: Entity.ID) async throws -> String {
-        if let pending = try await localStore.pendingChange(id: id) {
-            return pending.context.operationID.value
+        guard let pending = try await localStore.pendingChange(id: id) else {
+            throw SyncError.pendingChangeNotFound
         }
 
-        let pending = SyncPendingChange(id: id)
-        try await localStore.enqueue(pending)
         return pending.context.operationID.value
     }
     

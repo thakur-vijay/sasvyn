@@ -14,8 +14,10 @@ where
     associatedtype Entity: SyncableEntity
 
     func fetch(id: Entity.ID) async throws -> Entity?
-
-    func save(_ entity: Entity) async throws
+    
+    func create(_ entity: Entity) async throws
+    
+    func update(_ entity: Entity) async throws
 
     func delete(id: Entity.ID) async throws
 

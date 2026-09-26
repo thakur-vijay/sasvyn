@@ -8,6 +8,7 @@
 import SVDatabaseKit
 import ComposableArchitecture
 import NetworkKit
+import SVNetwork
 
 @available(iOS 26.0, macOS 15.0, *)
 public final class AuthDIContainer{
@@ -15,11 +16,18 @@ public final class AuthDIContainer{
     private let database: AppDatabase
     private let networkClient: any NetworkClientProtocol
     private let tokenStore: any TokenStore
+    private let appleLoginSaver: any AppleLoginStoring
 
-    public init(database: AppDatabase, tokenStore: any TokenStore, networkClient: any NetworkClientProtocol) {
+    public init(
+        database: AppDatabase,
+        tokenStore: any TokenStore,
+        networkClient: any NetworkClientProtocol,
+        appleLoginSaver: any AppleLoginStoring
+    ) {
         self.database = database
         self.tokenStore = tokenStore
         self.networkClient = networkClient
+        self.appleLoginSaver = appleLoginSaver
     }
 
     private lazy var authRemoteDataSource: AuthRemoteDataSource = {
@@ -27,7 +35,11 @@ public final class AuthDIContainer{
     }()
 
     private lazy var repository: AuthRepository = {
-        DefaultAuthRepository(remoteDataSource: authRemoteDataSource, tokenStore: tokenStore)
+        DefaultAuthRepository(
+            remoteDataSource: authRemoteDataSource,
+            tokenStore: tokenStore,
+            appleLoginSaver: appleLoginSaver
+        )
     }()
     
     private lazy var signInWithAppleUseCase: SignInWithAppleUseCase = {

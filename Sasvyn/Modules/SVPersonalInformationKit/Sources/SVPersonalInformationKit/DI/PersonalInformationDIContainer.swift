@@ -43,7 +43,7 @@ public final class PersonalInformationDIContainer{
         DefaultSyncEngine(
             localStore: localDataSource,
             remoteStore: remoteDataSource,
-            conflictResolver: DefaultSyncConflictResolver<User>()
+            conflictResolver: DefaultSyncConflictResolver<User>(strategy: .remoteWins)
         )
     }()
 

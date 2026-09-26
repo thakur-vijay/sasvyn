@@ -18,122 +18,19 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
     init(database: AppDatabase) {
         self.database = database
     }
-    
-    func fetchRecord(id: String) async throws -> UserRecord? {
-        return try await database.read { database in
-            try database.fetchOne(
-                UserRecord.self,
-                filters: [.equals(
-                    UserRecord.ColumnNames.id,
-                    .text(
-                        id
-                    )
-                )]
-            )
-        }
-    }
-
-    func fetch(id: String) async throws -> User? {
-        guard let record = try await fetchRecord(id: id) else { return nil }
-        return UserRecordMapper.map(record)
-    }
-
-    func save(_ entity: User) async throws {
-        try await save(user: entity)
-    }
-    
-    func save(
-        user: User,
-        profileSyncStatus: SyncStatus? = nil,
-        imageSyncStatus: SyncStatus? = nil,
-        syncedAt: Date? = nil
-    ) async throws {
-        try await database.write { db in
-            let record = try db.fetchOne(UserRecord.self, filters: [.equals(UserRecord.ColumnNames.id, .text(user.id))])
-            var imageLocalPath: String?
-            if let imageLocalUrl = user.imageLocalUrl{
-                imageLocalPath = try UserImageStorage.relativePath(for: imageLocalUrl)
-            }
-            
-            if let record {
-                try db.update(
-                    table: UserRecord.databaseTableName,
-                    values: [
-                        UserRecord.ColumnNames.fullName: .text(user.fullName),
-                        UserRecord.ColumnNames.dateOfBirth: .date(user.dateOfBirth ?? .now),
-                        UserRecord.ColumnNames.imageLocalPath: .text(imageLocalPath ?? ""),
-                        UserRecord.ColumnNames.imageUrl: .text(user.imageUrl ?? ""),
-                        UserRecord.ColumnNames.profileSyncStatus: .text(
-                            profileSyncStatus?.rawValue ?? record.profileSyncStatus.rawValue
-                        ),
-                        UserRecord.ColumnNames.imageSyncStatus: .text(
-                            imageSyncStatus?.rawValue ?? record.imageSyncStatus.rawValue
-                        ),
-                        UserRecord.ColumnNames.serverVersion: .integer(Int(user.serverVersion)),
-                        UserRecord.ColumnNames.updatedAt: .date(user.updatedAt),
-                    ],
-                    whereColumn: UserRecord.ColumnNames.id,
-                    equals: .text(user.id)
-                )
-            }else {
-                //create
-                try db.insert(
-                    UserRecord(
-                        id: user.id,
-                        appleId: user.appleId,
-                        fullName: user.fullName,
-                        email: user.email,
-                        dateOfBirth: user.dateOfBirth,
-                        imageLocalPath: imageLocalPath,
-                        imageUrl: user.imageUrl,
-                        profileSyncStatus: profileSyncStatus ?? .synced,
-                        imageSyncStatus: imageSyncStatus ?? .synced,
-                        createdAt: .now,
-                        updatedAt: .now,
-                        serverVersion: user.serverVersion,
-                        syncedAt: syncedAt,
-                        syncOperationID: nil,
-                        syncOperation: nil,
-                        syncRetryCount: 0,
-                        syncError: nil
-                    )
-                )
-            }
-        }
-    }
-    
-    func updateSyncedAt(id: String, syncedAt: Date) async throws {
-        try await database.write { db in
-            try db.update(
-                table: UserRecord.databaseTableName,
-                values: [
-                    UserRecord.ColumnNames.syncedAt: .date(syncedAt),
-                ],
-                whereColumn: UserRecord.ColumnNames.id,
-                equals: .text(id)
-            )
-        }
-    }
-
-    func delete(id: String) async throws {
-        try await database.write { db in
-            try db.delete(
-                UserRecord.self,
-                key: id
-            )
-        }
-    }
 
     func metadata(id: String) async throws -> SyncMetadata<String>? {
         guard let record = try await fetchRecord(id: id) else { return nil }
         let state: SyncState
-        switch record.profileSyncStatus {
+        switch record.syncStatus {
         case .synced:
             state = .synced(version: UserRecordMapper.map(record).syncVersion)
         case .pending:
             state = .pending
         case .failed:
             state = .failed(message: "profile synchronization failed")
+        case .syncing:
+            state = .syncing
         }
         return SyncMetadata(id: id, state: state, lastSyncedAt: record.syncedAt)
     }
@@ -153,7 +50,7 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
             try db.update(
                 table: UserRecord.databaseTableName,
                 values: [
-                    UserRecord.ColumnNames.profileSyncStatus: .text(status.rawValue),
+                    UserRecord.ColumnNames.syncStatus: .text(status.rawValue),
                     UserRecord.ColumnNames.syncedAt: metadata.lastSyncedAt.map { .date($0) } ?? .null,
                 ],
                 whereColumn: UserRecord.ColumnNames.id,
@@ -181,7 +78,7 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
             try db.fetchAll(
                 UserRecord.self,
                 filters: [.equals(
-                    UserRecord.ColumnNames.profileSyncStatus,
+                    UserRecord.ColumnNames.syncStatus,
                     .text(SyncStatus.pending.rawValue)
                 )]
             )
@@ -205,7 +102,7 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
             try db.update(
                 table: UserRecord.databaseTableName,
                 values: [
-                    UserRecord.ColumnNames.profileSyncStatus: .text(SyncStatus.pending.rawValue),
+                    UserRecord.ColumnNames.syncStatus: .text(SyncStatus.pending.rawValue),
                     UserRecord.ColumnNames.syncOperationID: .text(change.context.operationID.value),
                     UserRecord.ColumnNames.syncOperation: .text(change.context.operation.rawValue),
                     UserRecord.ColumnNames.syncRetryCount: .integer(change.retryCount),
@@ -219,7 +116,7 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
 
     func pendingChange(id: String) async throws -> SyncPendingChange<String>? {
         guard let record = try await fetchRecord(id: id),
-              record.profileSyncStatus == .pending else {
+              record.syncStatus == .pending else {
             return nil
         }
 
@@ -244,6 +141,7 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
             try db.update(
                 table: UserRecord.databaseTableName,
                 values: [
+                    UserRecord.ColumnNames.syncStatus: .text(SyncStatus.synced.rawValue),
                     UserRecord.ColumnNames.syncOperationID: .null,
                     UserRecord.ColumnNames.syncOperation: .null,
                     UserRecord.ColumnNames.syncRetryCount: .integer(0),
@@ -266,43 +164,168 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
             )
         }
     }
-
-    func markPendingUpload(id: String) async throws {
-        try await setProfileStatus(id: id, status: .pending)
+    
+    func fetchRecord(id: String) async throws -> UserRecord? {
+        return try await database.read { database in
+            try database.fetchOne(
+                UserRecord.self,
+                filters: [.equals(
+                    UserRecord.ColumnNames.id,
+                    .text(
+                        id
+                    )
+                )]
+            )
+        }
     }
-
-    func markSyncing(id: String) async throws {
-        try await setProfileStatus(id: id, status: .pending)
+    
+    func fetch(id: String) async throws -> User? {
+        guard let record = try await fetchRecord(id: id) else { return nil }
+        return UserRecordMapper.map(record)
     }
-
-    func markSynced(id: String, version: Int64) async throws {
-        try await setProfileStatus(id: id, status: .synced)
-        try await updateSyncedAt(id: id, syncedAt: .now)
-    }
-
-    func markFailed(id: String, error: Error) async throws {
+    
+    func create(_ entity: User) async throws {
         try await database.write { db in
+            try db.insert(
+                UserRecord(
+                    id: entity.id,
+                    appleId: entity.appleId,
+                    fullName: entity.fullName,
+                    email: entity.email,
+                    dateOfBirth: entity.dateOfBirth,
+                    imageLocalPath: nil,
+                    imageUrl: entity.imageUrl,
+                    syncStatus: .synced,
+                    createdAt: .now,
+                    updatedAt: entity.updatedAt,
+                    serverVersion: entity.serverVersion,
+                    syncedAt: .now,
+                    syncOperationID: nil,
+                    syncOperation: nil,
+                    syncRetryCount: 0,
+                    syncError: nil
+                )
+            )
+        }
+    }
+    
+    func update(_ entity: User) async throws {
+        try await database.write { db in
+            let imageLocalPath: String?
+            if let imageLocalUrl = entity.imageLocalUrl {
+                imageLocalPath = try UserImageStorage.relativePath(
+                    for: imageLocalUrl
+                )
+            } else {
+                imageLocalPath = nil
+            }
             try db.update(
                 table: UserRecord.databaseTableName,
                 values: [
-                    UserRecord.ColumnNames.profileSyncStatus: .text(SyncStatus.failed.rawValue),
-                    UserRecord.ColumnNames.syncError: .text(String(describing: error)),
+                    UserRecord.ColumnNames.fullName: .text(entity.fullName),
+                    UserRecord.ColumnNames.dateOfBirth: .date(entity.dateOfBirth ?? .now),
+                    UserRecord.ColumnNames.imageLocalPath: .text(imageLocalPath ?? ""),
+                    UserRecord.ColumnNames.imageUrl: .text(entity.imageUrl ?? ""),
+                    UserRecord.ColumnNames.serverVersion: .integer(Int(entity.serverVersion)),
+                    UserRecord.ColumnNames.updatedAt: .date(entity.updatedAt),
+                    UserRecord.ColumnNames.syncedAt: .date(.now),
+                    UserRecord.ColumnNames.syncError: .null
                 ],
                 whereColumn: UserRecord.ColumnNames.id,
-                equals: .text(id)
+                equals: .text(entity.id)
+            )
+        }
+    }
+    
+    func delete(id: String) async throws {
+        try await database.write { db in
+            try db.delete(
+                UserRecord.self,
+                key: id
             )
         }
     }
 
-    private func setProfileStatus(id: String, status: SyncStatus) async throws {
+//    func updateAndSync(_ entity: User) async throws {
+//        try await database.write { db in
+//            let record = try db.fetchOne(
+//                UserRecord.self,
+//                filters: [
+//                    .equals(
+//                        UserRecord.ColumnNames.id,
+//                        .text(entity.id)
+//                    )
+//                ]
+//            )
+//
+//            let imageLocalPath: String?
+//            if let imageLocalUrl = entity.imageLocalUrl {
+//                imageLocalPath = try UserImageStorage.relativePath(
+//                    for: imageLocalUrl
+//                )
+//            } else {
+//                imageLocalPath = nil
+//            }
+//            try db.update(
+//                table: UserRecord.databaseTableName,
+//                values: [
+//                    UserRecord.ColumnNames.fullName: .text(entity.fullName),
+//                    UserRecord.ColumnNames.dateOfBirth: .date(entity.dateOfBirth ?? .now),
+//                    UserRecord.ColumnNames.imageLocalPath: .text(imageLocalPath ?? ""),
+//                    UserRecord.ColumnNames.imageUrl: .text(entity.imageUrl ?? ""),
+//                    UserRecord.ColumnNames.syncStatus: .text(SyncStatus.synced.rawValue),
+//                    UserRecord.ColumnNames.serverVersion: .integer(Int(entity.serverVersion)),
+//                    UserRecord.ColumnNames.updatedAt: .date(entity.updatedAt),
+//                    UserRecord.ColumnNames.syncedAt: .date(.now),
+//                    UserRecord.ColumnNames.syncError: .null
+//                ],
+//                whereColumn: UserRecord.ColumnNames.id,
+//                equals: .text(entity.id)
+//            )
+//        }
+//    }
+    
+    func markPending(id: String) async throws {
         try await database.write { db in
             try db.update(
                 table: UserRecord.databaseTableName,
-                values: [UserRecord.ColumnNames.profileSyncStatus: .text(status.rawValue)],
+                values: [UserRecord.ColumnNames.syncStatus: .text(SyncStatus.pending.rawValue)],
                 whereColumn: UserRecord.ColumnNames.id,
                 equals: .text(id)
             )
         }
     }
     
+    func markSyncing(id: String) async throws {
+        try await database.write { db in
+            try db.update(
+                table: UserRecord.databaseTableName,
+                values: [UserRecord.ColumnNames.syncStatus: .text(SyncStatus.syncing.rawValue)],
+                whereColumn: UserRecord.ColumnNames.id,
+                equals: .text(id)
+            )
+        }
+    }
+    
+    func markSynced(id: String, version: Int64) async throws {
+        try await database.write { db in
+            try db.update(
+                table: UserRecord.databaseTableName,
+                values: [UserRecord.ColumnNames.syncStatus: .text(SyncStatus.synced.rawValue)],
+                whereColumn: UserRecord.ColumnNames.id,
+                equals: .text(id)
+            )
+        }
+    }
+    
+    func markFailed(id: String, error: any Error) async throws {
+        try await database.write { db in
+            try db.update(
+                table: UserRecord.databaseTableName,
+                values: [UserRecord.ColumnNames.syncStatus: .text(SyncStatus.failed.rawValue)],
+                whereColumn: UserRecord.ColumnNames.id,
+                equals: .text(id)
+            )
+        }
+    }
 }

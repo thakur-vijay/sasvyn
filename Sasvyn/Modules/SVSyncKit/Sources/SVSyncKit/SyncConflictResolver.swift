@@ -26,7 +26,7 @@ public struct DefaultSyncConflictResolver<Entity: SyncableEntity>: SyncConflictR
 
     private let strategy: Strategy
 
-    public init(strategy: Strategy = .latestUpdatedAt) {
+    public init(strategy: Strategy) {
         self.strategy = strategy
     }
 

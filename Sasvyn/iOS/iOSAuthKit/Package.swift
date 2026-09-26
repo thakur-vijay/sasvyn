@@ -20,6 +20,7 @@ let package = Package(
         ),
         .package(path: "../../Modules/SVDesignSystem"),
         .package(path: "../../Modules/AuthKit"),
+        .package(path: "../../Modules/SVNetwork"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,6 +34,7 @@ let package = Package(
                 ),
                 .product(name: "SVDesignSystem", package: "SVDesignSystem"),
                 .product(name: "AuthKit", package: "AuthKit"),
+                .product(name: "SVNetwork", package: "SVNetwork"),
             ],
             resources: [
                 .process("Assets")

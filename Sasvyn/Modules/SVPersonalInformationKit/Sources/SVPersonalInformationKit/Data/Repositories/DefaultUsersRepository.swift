@@ -41,47 +41,40 @@ public final class DefaultUsersRepository: UsersRepository {
         if let record = try await localDataSource.fetchRecord(id: userId) {
             let user = UserRecordMapper.map(record)
 
-            if record.imageSyncStatus != .synced {
-                Task { [weak self] in
-                    guard let self else { return }
+//            if record.syncStatus != .synced {
+//                Task { [weak self] in
+//                    guard let self else { return }
+//
+//                    do {
+//                        try await updateImage(user)
+//                    } catch {
+//                        print("Image sync failed:", error.localizedDescription)
+//                    }
+//                }
+//            }
 
-                    do {
-                        try await updateImage(user)
-                    } catch {
-                        print("Image sync failed:", error.localizedDescription)
-                    }
-                }
+            Task { [syncEngine] in
+                _ = try? await syncEngine.sync(id: userId)
             }
-            
-            Task { [syncEngine] in _ = try? await syncEngine.sync(id: userId) }
+
             return user
         }
 
         let response = try await remoteDataSource.fetch(userId)
         let user = response.data.toDomain()
 
-        try await localDataSource.save(
-            user: user,
-            profileSyncStatus: .synced,
-            imageSyncStatus: .synced,
-            syncedAt: .now
-        )
+        try await localDataSource.create(user)
 
         return user
     }
 
     public func update(_ user: User) async throws {
-        print(user.fullName)
-        var pendingUser = user
-        pendingUser.updatedAt = .now
-        try await localDataSource.save(
-            user: pendingUser
-        )
+        try await localDataSource.update(user)
         try await syncEngine.enqueue(
-            id: pendingUser.id,
+            id: user.id,
             operation: .update
         )
-        _ = try await syncEngine.sync(id: pendingUser.id)
+        _ = try await syncEngine.sync(id: user.id)
     }
 
     public func updateImage(_ user: User) async throws {
@@ -89,10 +82,7 @@ public final class DefaultUsersRepository: UsersRepository {
             throw URLError(.badURL)
         }
 
-        try await localDataSource.save(
-            user: user,
-            imageSyncStatus: .pending
-        )
+        try await localDataSource.update(user)
 
         let uploadBody = CreateUploadDTO(
             type: "profile_image",
@@ -112,20 +102,13 @@ public final class DefaultUsersRepository: UsersRepository {
 
         let response = try await remoteDataSource.update(
             user.id,
-            body: updateBody
+            body: updateBody,
+            idempotencyKey: UUID().uuidString
         )
 
         var updatedUser = user
         updatedUser.imageUrl = response.data.imgUrl
 
-        try await localDataSource.save(
-            user: updatedUser,
-            imageSyncStatus: .synced
-        )
-        
-        try await localDataSource.updateSyncedAt(
-            id: user.id,
-            syncedAt: .now
-        )
+        try await localDataSource.update(updatedUser)
     }
 }

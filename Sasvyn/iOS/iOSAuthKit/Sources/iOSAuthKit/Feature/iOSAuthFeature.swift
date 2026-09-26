@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import AuthKit
+import SVNetwork
 
 @Reducer
 public struct iOSAuthFeature {
@@ -24,7 +25,8 @@ public struct iOSAuthFeature {
     
     public enum Action {
         case delegate(Delegate)
-        case onSignInWithAppleTap
+        case appleLogin(SocialLoginRequest)
+        case saveAppleLoginResult(AppleLoginResult)
         
         public enum Delegate {
             case loginSucceeded
@@ -38,18 +40,18 @@ public struct iOSAuthFeature {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .onSignInWithAppleTap:
-//                return .send(.delegate(.loginSucceeded))
-                let dto = LoginRequestDTO(appleId: "testing_apple_id_1", fullName: "Vijay Thakur", email: "thakurvijay0006@icloud.com")
-                return .run { [client] send in
+            case .appleLogin(let body):
+                return .run { [client, body] send in
                     do {
-                        try await client.signInWithApple(dto)
+                        try await client.signInWithApple(body)
                         await send(.delegate(.loginSucceeded))
                     }catch {
                         print(error.localizedDescription)
                     }
                 }
             case .delegate(_):
+                return .none
+            case .saveAppleLoginResult(_):
                 return .none
             }
         }

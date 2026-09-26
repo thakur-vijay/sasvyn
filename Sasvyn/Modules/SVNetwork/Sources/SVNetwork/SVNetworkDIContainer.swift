@@ -14,13 +14,14 @@ public final class SVNetworkDIContainer {
         
     }
 
+    private let defaultTokenStore = SVTokenStore()
     public lazy var client: NetworkClientProtocol = {
         NetworkClient(configuration: configuration)
     }()
     
-    public lazy var tokenStore: TokenStore = {
-        SVTokenStore()
-    }()
+    public lazy var tokenStore: TokenStore = defaultTokenStore
+    
+    public lazy var appleLoginSaver: AppleLoginStoring = defaultTokenStore
     
     private let environment: AppEnvironment = .development
     private let environmentResolver = EnvironmentResolver()

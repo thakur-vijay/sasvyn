@@ -40,7 +40,8 @@ public final class SVAppDIContainer {
         AuthDIContainer(
             database: databaseContainer.appDatabase,
             tokenStore: networkContainer.tokenStore,
-            networkClient: networkContainer.client
+            networkClient: networkContainer.client,
+            appleLoginSaver: networkContainer.appleLoginSaver,
         )
     }()
     

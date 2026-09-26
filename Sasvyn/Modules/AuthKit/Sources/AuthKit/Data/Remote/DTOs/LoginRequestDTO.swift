@@ -7,14 +7,31 @@
 
 import Foundation
 
-public struct LoginRequestDTO: Codable, Hashable, Sendable{
-    public let appleId: String
-    public let fullName: String
-    public let email: String
+public enum Provider: String, Encodable, Sendable{
+    case apple
+}
 
-    public init(appleId: String, fullName: String, email: String) {
+public struct SocialLoginRequest: Encodable, Sendable{
+    public let provider: Provider
+    public let identityToken: String?
+    public let authorizationCode: String?
+    public var appleId: String
+    public var email: String?
+    public var fullName: String?
+
+    public init(
+        provider: Provider,
+        identityToken: String?,
+        authorizationCode: String?,
+        appleId: String,
+        email: String?,
+        fullName: String?
+    ) {
+        self.provider = provider
+        self.identityToken = identityToken
+        self.authorizationCode = authorizationCode
         self.appleId = appleId
-        self.fullName = fullName
         self.email = email
+        self.fullName = fullName
     }
 }

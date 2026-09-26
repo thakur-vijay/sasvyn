@@ -6,12 +6,13 @@
 //
 
 import ComposableArchitecture
+import SVNetwork
 
 public struct AuthClient: Sendable {
     
     public var signInWithApple:
-        @Sendable (_ body: LoginRequestDTO) async throws -> Void
-    
+        @Sendable (_ body: SocialLoginRequest) async throws -> Void
+        
     public var currentUser:
         @Sendable () async -> AuthSession?
     

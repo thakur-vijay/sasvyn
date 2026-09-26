@@ -14,7 +14,7 @@ internal final class AuthRemoteDataSource: Sendable{
         self.client = client
     }
     
-    func appleLogin(_ body: LoginRequestDTO) async throws-> LoginResponseDTO{
+    func appleLogin(_ body: SocialLoginRequest) async throws-> LoginResponseDTO{
         let endpoint = AppleLoginEndpoint(body)
         return try await client.request(endpoint)
     }

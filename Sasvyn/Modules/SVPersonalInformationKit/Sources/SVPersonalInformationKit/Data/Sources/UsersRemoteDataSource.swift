@@ -22,8 +22,8 @@ internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
         return try await request { try await client.request(endpoint) }
     }
     
-    func update(_ id: String, body: UpdateUserDTO) async throws-> DataResponseDTO<UserDTO> {
-        let endpoint = UpdateUserEndpoint(id: id, body: body)
+    func update(_ id: String, body: UpdateUserDTO, idempotencyKey: String) async throws-> DataResponseDTO<UserDTO> {
+        let endpoint = UpdateUserEndpoint(id: id, body: body, idempotencyKey: idempotencyKey)
         return try await request { try await client.request(endpoint) }
     }
 
@@ -35,13 +35,22 @@ internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
         try await update(entity, idempotencyKey: idempotencyKey)
     }
 
-    func update(_ entity: User, idempotencyKey: String) async throws -> User {
+    func update(
+        _ entity: User,
+        idempotencyKey: String
+    ) async throws -> User {
+
         let body = UpdateUserDTO(
             fullName: entity.fullName,
             dateOfBirth: entity.dateOfBirth?.formatted(.isoDate),
             imageKey: nil
         )
-        return try await update(entity.id, body: body).data.toDomain()
+
+        return try await update(
+            entity.id,
+            body: body,
+            idempotencyKey: idempotencyKey
+        ).data.toDomain()
     }
 
     func delete(id: String, idempotencyKey: String) async throws {

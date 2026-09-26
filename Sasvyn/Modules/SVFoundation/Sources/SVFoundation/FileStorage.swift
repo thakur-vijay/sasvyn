@@ -9,19 +9,15 @@ import Foundation
 
 public enum FileStorage {
 
-    private static let appGroupIdentifier = "group.com.sasvyn.shared"
-
     // MARK: - Application Support
 
     public static func applicationSupportDirectory() throws -> URL {
-        guard let containerURL = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: appGroupIdentifier
-        ) else {
-            throw FileStorageError.appGroupContainerNotFound
-        }
-
-        let directory = containerURL
-            .appendingPathComponent("Application Support", isDirectory: true)
+        let directory = try FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
 
         try FileManager.default.createDirectory(
             at: directory,
@@ -103,5 +99,4 @@ public enum FileStorage {
 
 public enum FileStorageError: Error {
     case fileOutsideDirectory
-    case appGroupContainerNotFound
 }

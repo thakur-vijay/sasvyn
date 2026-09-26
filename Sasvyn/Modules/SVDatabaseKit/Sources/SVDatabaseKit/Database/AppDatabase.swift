@@ -9,7 +9,7 @@ import Foundation
 @_exported import GRDB
 
 public final class AppDatabase: @unchecked Sendable {
-    private static let appGroupIdentifier = "group.com.sasvyn.shared"
+
     public let dbQueue: DatabaseQueue
 
     public init(
@@ -38,25 +38,23 @@ public final class AppDatabase: @unchecked Sendable {
     }
 
     private static func databaseURL(
+        filename: String
+    ) throws -> URL {
+        let directory = try FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
 
-            filename: String
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
 
-        ) throws -> URL {
+        return directory.appendingPathComponent(filename)
+    }
 
-            guard let containerURL = FileManager.default.containerURL(
-
-                forSecurityApplicationGroupIdentifier: appGroupIdentifier
-
-            ) else {
-
-                throw DatabaseError.documentsDirectoryNotFound
-
-            }
-
-            return containerURL.appendingPathComponent(filename)
-
-        }
-    
     public func read<T: Sendable>(
         _ block: @Sendable @escaping (SVDatabase) throws -> T
     ) async throws -> T {
@@ -64,7 +62,7 @@ public final class AppDatabase: @unchecked Sendable {
             try block(SVDatabase(db: db))
         }
     }
-    
+
     @discardableResult
     public func write<T: Sendable>(
         _ block: @Sendable @escaping (SVDatabase) throws -> T
@@ -73,7 +71,7 @@ public final class AppDatabase: @unchecked Sendable {
             try block(SVDatabase(db: db))
         }
     }
-    
+
     public func observeAll<Record: SVFetchableRecord & SVTableRecord & Sendable>(
         _ record: Record.Type,
         where predicate: SVSQLExpression? = nil,
@@ -81,6 +79,7 @@ public final class AppDatabase: @unchecked Sendable {
     ) -> AsyncThrowingStream<[Record], Error> {
         AsyncThrowingStream { continuation in
             let dbQueue = dbQueue
+
             Task { @MainActor in
                 let observation = ValueObservation.tracking { db in
                     var request = record.all()

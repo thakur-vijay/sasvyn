@@ -18,7 +18,7 @@ internal struct AppleLoginEndpoint: Endpoint {
     
     var requiresAuth: Bool = false
     
-    init(_ body: LoginRequestDTO){
+    init(_ body: SocialLoginRequest){
         self.body = .json(body)
     }
 }

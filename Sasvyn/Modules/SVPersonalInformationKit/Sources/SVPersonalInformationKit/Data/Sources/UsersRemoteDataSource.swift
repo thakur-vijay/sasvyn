@@ -12,9 +12,11 @@ import Foundation
 
 internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
     private let client: NetworkClientProtocol
+    private let imageUploader: any ImageUploader
     
-    init(client: NetworkClientProtocol) {
+    init(client: NetworkClientProtocol, imageUploader: any ImageUploader) {
         self.client = client
+        self.imageUploader = imageUploader
     }
     
     func fetch(_ id: String) async throws-> DataResponseDTO<UserDTO>{
@@ -40,17 +42,38 @@ internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
         idempotencyKey: String
     ) async throws -> User {
 
+        var imageKey: String?
+
+        if let imageLocalUrl = entity.imageLocalUrl {
+            let uploadBody = CreateUploadDTO(
+                type: "profile_image",
+                contentType: "image/jpeg"
+            )
+
+            imageKey = try await imageUploader.upload(
+                uploadBody,
+                fileURL: imageLocalUrl
+            )
+        }
+
         let body = UpdateUserDTO(
             fullName: entity.fullName,
             dateOfBirth: entity.dateOfBirth?.formatted(.isoDate),
-            imageKey: nil
+            imageKey: imageKey
         )
 
-        return try await update(
+        let response = try await update(
             entity.id,
             body: body,
             idempotencyKey: idempotencyKey
-        ).data.toDomain()
+        )
+
+        var updatedUser = response.data.toDomain()
+
+        // Local-only URL is cleared only after successful server upload.
+        updatedUser.imageLocalUrl = nil
+
+        return updatedUser
     }
 
     func delete(id: String, idempotencyKey: String) async throws {

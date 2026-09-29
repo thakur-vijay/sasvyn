@@ -213,7 +213,10 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
         try await database.write { db in
             try db.update(
                 table: SyncMetadataRecord.databaseTableName,
-                values: [SyncMetadataRecord.ColumnNames.syncStatus: .text(SyncStatus.synced.rawValue)],
+                values: [
+                    SyncMetadataRecord.ColumnNames.syncStatus: .text(SyncStatus.synced.rawValue),
+                    SyncMetadataRecord.ColumnNames.serverVersion: .integer(Int(version))
+                ],
                 whereColumn: SyncMetadataRecord.ColumnNames.entityID,
                 equals: .text(id)
             )

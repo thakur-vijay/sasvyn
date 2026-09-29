@@ -36,7 +36,10 @@ public final class PersonalInformationDIContainer{
     }()
 
     private lazy var remoteDataSource: UsersRemoteDataSource = {
-        UsersRemoteDataSource(client: networkClient)
+        UsersRemoteDataSource(
+            client: networkClient,
+            imageUploader: imageUploader
+        )
     }()
 
     private lazy var syncEngine: any SyncEngine<User> = {
@@ -52,7 +55,6 @@ public final class PersonalInformationDIContainer{
             localDataSource: localDataSource,
             remoteDataSource: remoteDataSource,
             tokenStore: tokenStore,
-            imageUploader: imageUploader,
             syncEngine: syncEngine
         )
     }()

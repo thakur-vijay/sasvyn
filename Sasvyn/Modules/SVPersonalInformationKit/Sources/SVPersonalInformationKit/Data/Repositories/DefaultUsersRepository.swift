@@ -16,20 +16,17 @@ public final class DefaultUsersRepository: UsersRepository {
     private let localDataSource: UsersLocalDataSource
     private let remoteDataSource: UsersRemoteDataSource
     private let tokenStore: any TokenStore
-    private let imageUploader: any ImageUploader
     private let syncEngine: any SyncEngine<User>
 
     init(
         localDataSource: UsersLocalDataSource,
         remoteDataSource: UsersRemoteDataSource,
         tokenStore: any TokenStore,
-        imageUploader: any ImageUploader,
         syncEngine: any SyncEngine<User>
     ) {
         self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
         self.tokenStore = tokenStore
-        self.imageUploader = imageUploader
         self.syncEngine = syncEngine
     }
     
@@ -96,39 +93,19 @@ public final class DefaultUsersRepository: UsersRepository {
         )
         _ = try await syncEngine.sync(id: user.id)
     }
-
+    
     public func updateImage(_ user: User) async throws {
-        guard let imageLocalUrl = user.imageLocalUrl else {
+        guard user.imageLocalUrl != nil else {
             throw URLError(.badURL)
         }
 
         try await localDataSource.update(user)
 
-        let uploadBody = CreateUploadDTO(
-            type: "profile_image",
-            contentType: "image/jpeg"
+        try await syncEngine.enqueue(
+            id: user.id,
+            operation: .update
         )
 
-        let imageKey = try await imageUploader.upload(
-            uploadBody,
-            fileURL: imageLocalUrl
-        )
-
-        let updateBody = UpdateUserDTO(
-            fullName: nil,
-            dateOfBirth: nil,
-            imageKey: imageKey
-        )
-
-        let response = try await remoteDataSource.update(
-            user.id,
-            body: updateBody,
-            idempotencyKey: UUID().uuidString
-        )
-
-        var updatedUser = user
-        updatedUser.imageUrl = response.data.imgUrl
-
-        try await localDataSource.update(updatedUser)
+        _ = try await syncEngine.sync(id: user.id)
     }
 }

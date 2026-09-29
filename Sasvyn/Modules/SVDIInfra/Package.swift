@@ -27,6 +27,7 @@ let package = Package(
         .package(path: "../SVAboutKit"),
         .package(path: "../SVPersonalInformationKit"),
         .package(path: "../SVNetwork"),
+        .package(path: "../SVSyncKit"),
         .package(path: "../AuthKit"),
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
@@ -53,6 +54,7 @@ let package = Package(
                 .product(name: "SVPersonalInformationKit", package: "SVPersonalInformationKit"),
                 .product(name: "AuthKit", package: "AuthKit"),
                 .product(name: "SVNetwork", package: "SVNetwork"),
+                .product(name: "SVSyncKit", package: "SVSyncKit"),
                 .product(
                     name: "ComposableArchitecture",
                     package: "swift-composable-architecture"

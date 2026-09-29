@@ -16,6 +16,7 @@ import SVLanguageKit
 import SVSocialLinkKit
 import SVAboutKit
 import SVPersonalInformationKit
+import SVSyncKit
 
 public final class SVDatabaseContainer {
     
@@ -36,6 +37,7 @@ public final class SVDatabaseContainer {
             migrator.register(SocialLinksDatabaseModule.self)
             migrator.register(AboutDatabaseModule.self)
             migrator.register(UsersDatabaseModule.self)
+            migrator.register(SyncMetadataDatabaseModule.self)
 
             let database = try AppDatabase(
                 migrator: migrator

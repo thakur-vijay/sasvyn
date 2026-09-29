@@ -32,42 +32,62 @@ public final class DefaultUsersRepository: UsersRepository {
         self.imageUploader = imageUploader
         self.syncEngine = syncEngine
     }
+    
+    public func fetchCurrentUser() -> AsyncStream<User> {
+        AsyncStream { continuation in
+            Task {
+                guard let userId = tokenStore.userId else {
+                    continuation.finish()
+                    return
+                }
 
-    public func fetchCurrentUser() async throws -> User {
-        guard let userId = tokenStore.userId else {
-            throw URLError(.unknown)
-        }
+                if let user = try? await localDataSource.fetch(id: userId) {
+                    continuation.yield(user)
 
-        if let record = try await localDataSource.fetchRecord(id: userId) {
-            let user = UserRecordMapper.map(record)
+                    do {
+                        let result = try await syncEngine.sync(id: userId)
 
-//            if record.syncStatus != .synced {
-//                Task { [weak self] in
-//                    guard let self else { return }
-//
-//                    do {
-//                        try await updateImage(user)
-//                    } catch {
-//                        print("Image sync failed:", error.localizedDescription)
-//                    }
-//                }
-//            }
+                        switch result {
+                        case .noChange:
+                            print("There is no change")
+                            break
 
-            Task { [syncEngine] in
-                _ = try? await syncEngine.sync(id: userId)
+                        case .downloaded(let user),
+                             .uploaded(let user),
+                             .conflictResolved(let user):
+                            continuation.yield(user)
+                        }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+
+                    continuation.finish()
+                    return
+                }
+
+                do {
+                    let response = try await remoteDataSource.fetch(userId)
+                    let user = response.data.toDomain()
+
+                    try await localDataSource.create(user)
+                    try await localDataSource.saveMetadata(
+                        .init(
+                            id: user.id,
+                            entityType: "user",
+                            state: .synced(version: user.syncVersion),
+                            serverVersion: user.serverVersion,
+                            lastSyncedAt: .now
+                        )
+                    )
+
+                    continuation.yield(user)
+                } catch {
+                    continuation.finish()
+                }
             }
-
-            return user
         }
-
-        let response = try await remoteDataSource.fetch(userId)
-        let user = response.data.toDomain()
-
-        try await localDataSource.create(user)
-
-        return user
     }
-
+    
     public func update(_ user: User) async throws {
         try await localDataSource.update(user)
         try await syncEngine.enqueue(

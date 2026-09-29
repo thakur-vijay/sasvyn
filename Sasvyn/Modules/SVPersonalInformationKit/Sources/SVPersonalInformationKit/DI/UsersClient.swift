@@ -10,7 +10,7 @@ import Foundation
 
 public struct UsersClient: Sendable{
     public var fetchCurrentUser:
-    @Sendable () async throws -> User
+    @Sendable () -> AsyncStream<User>
     
     public var update:
     @Sendable (_ user: User) async throws -> Void
@@ -27,7 +27,7 @@ extension UsersClient {
         updateUserImageUseCase: UpdateUserImageUseCase,
     ) -> Self {
         Self {
-            try await fetchCurrentUserUseCase.execute()
+            fetchCurrentUserUseCase.execute()
         } update: { user in
             try await updateUserUseCase.execute(user)
         } updateImage: { user in
@@ -50,12 +50,15 @@ extension UsersClient: DependencyKey {
 extension UsersClient: TestDependencyKey {
 
     public static let testValue = Self {
-        return .init(
-            id: "testing_id",
-            appleId: "testing_apple_id",
-            fullName: "testing_name",
-            email: "testing_email"
-        )
+        return .init { continuation in
+            continuation.yield(.init(
+                id: "testing_id",
+                appleId: "testing_apple_id",
+                fullName: "testing_name",
+                email: "testing_email"
+            ))
+            continuation.finish()
+        }
     } update: { user in
         
     } updateImage: { user in

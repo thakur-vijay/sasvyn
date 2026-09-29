@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol UsersRepository: Sendable {
-    func fetchCurrentUser()async throws -> User
+    func fetchCurrentUser() -> AsyncStream<User>
     func update(_ user: User) async throws
     func updateImage(_ user: User) async throws
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SyncState: Sendable, Equatable {
+public enum SyncState: Sendable, Hashable {
     case idle
     case pending
     case synced(version: Int64)

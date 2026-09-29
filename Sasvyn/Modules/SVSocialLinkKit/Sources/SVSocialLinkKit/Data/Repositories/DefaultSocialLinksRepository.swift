@@ -7,29 +7,50 @@
 
 import Foundation
 
-final class DefaultSocialLinksRepository: SocialLinksRepository {
+internal final class DefaultSocialLinksRepository: SocialLinksRepository {
    
-    private let dataSource: SocialLinksLocalDataSource
+    private let localDataSource: SocialLinksLocalDataSource
+    private let remoteDataSource: SocialLinksRemoteDataSource
     
-    init(dataSource: SocialLinksLocalDataSource) {
-        self.dataSource = dataSource
+    init(localDataSource: SocialLinksLocalDataSource, remoteDataSource: SocialLinksRemoteDataSource) {
+        self.localDataSource = localDataSource
+        self.remoteDataSource = remoteDataSource
     }
     
     func fetch() async throws -> [SocialLink] {
-       let records = try await dataSource.fetch()
+        let records = try await localDataSource.fetch()
         return records.compactMap { SocialLinkRecordMapper.map($0) }
     }
     
     func add(_ link: SocialLink) async throws {
-        try await dataSource.create(link)
+        guard let type = link.type?.rawValue, let urlString = link.url?.absoluteString else {
+            throw URLError(
+                .cannotParseResponse
+            )
+        }
+        try await localDataSource.create(link)
+        try await remoteDataSource.add(.init(type: type, url: urlString))
     }
     
     func update(_ link: SocialLink) async throws {
-        try await dataSource.update(link)
+        guard let type = link.type?.rawValue, let urlString = link.url?.absoluteString else {
+            throw URLError(
+                .cannotParseResponse
+            )
+        }
+        try await localDataSource.update(link)
+        try await remoteDataSource.update(
+            link.id,
+            body: .init(
+                type: type,
+                url: urlString
+            )
+        )
     }
     
     func delete(_ id: String) async throws {
-        try await dataSource.delete(id: id)
+        try await localDataSource.delete(id: id)
+        try await remoteDataSource.delete(id)
     }
     
 }

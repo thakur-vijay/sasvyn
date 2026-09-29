@@ -7,36 +7,17 @@
 
 import Foundation
 
-public protocol SyncLocalStore<Entity>: SyncMetadataStore, SyncStateStore, Sendable
+public protocol SyncLocalStore<Entity>: SyncMetadataStore, Sendable
 where
-    ID == Entity.ID
+    Entity.ID == String
 {
     associatedtype Entity: SyncableEntity
 
     func fetch(id: Entity.ID) async throws -> Entity?
-    
+
     func create(_ entity: Entity) async throws
-    
+
     func update(_ entity: Entity) async throws
 
     func delete(id: Entity.ID) async throws
-
-    func fetchPendingChanges()
-        async throws -> [SyncPendingChange<Entity.ID>]
-
-    func pendingChange(
-        id: Entity.ID
-    ) async throws -> SyncPendingChange<Entity.ID>?
-
-    func enqueue(
-        _ change: SyncPendingChange<Entity.ID>
-    ) async throws
-
-    func removePendingChange(
-        id: Entity.ID
-    ) async throws
-
-    func incrementRetryCount(
-        id: Entity.ID
-    ) async throws
 }

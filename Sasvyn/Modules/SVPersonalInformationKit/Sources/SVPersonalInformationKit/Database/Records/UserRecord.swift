@@ -8,7 +8,7 @@
 
 import Foundation
 import SVDatabaseKit
-import SVNetwork
+import SVSyncKit
 
 struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord {
 
@@ -21,20 +21,10 @@ struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord {
     let dateOfBirth: Date?
     let imageLocalPath: String?
     let imageUrl: String?
-
-    let syncStatus: SyncStatus
     
     let createdAt: Date
     let updatedAt: Date
-
-    let serverVersion: Int64
-    let syncedAt: Date?
-
-    let syncOperationID: String?
-    let syncOperation: String?
-    let syncRetryCount: Int
-    let syncError: String?
-
+    
     enum CodingKeys: String, CodingKey {
 
         case id
@@ -45,18 +35,8 @@ struct UserRecord: Codable, SVFetchableRecord, SVPersistableRecord {
         case imageLocalPath = "image_local_path"
         case imageUrl = "image_url"
 
-        case syncStatus = "sync_status"
-
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-
-        case serverVersion = "server_version"
-        case syncedAt = "synced_at"
-
-        case syncOperationID = "sync_operation_id"
-        case syncOperation = "sync_operation"
-        case syncRetryCount = "sync_retry_count"
-        case syncError = "sync_error"
     }
 }
 
@@ -71,19 +51,10 @@ extension UserRecord {
         static let dateOfBirth = SVColumnName("date_of_birth")
         static let imageLocalPath = SVColumnName("image_local_path")
         static let imageUrl = SVColumnName("image_url")
-
-        static let syncStatus = SVColumnName("sync_status")
-
+        
         static let createdAt = SVColumnName("created_at")
         static let updatedAt = SVColumnName("updated_at")
 
-        static let serverVersion = SVColumnName("server_version")
-        static let syncedAt = SVColumnName("synced_at")
-
-        static let syncOperationID = SVColumnName("sync_operation_id")
-        static let syncOperation = SVColumnName("sync_operation")
-        static let syncRetryCount = SVColumnName("sync_retry_count")
-        static let syncError = SVColumnName("sync_error")
     }
 }
 
@@ -99,17 +70,9 @@ extension UserRecord {
         static let imageLocalPath = SVColumn("image_local_path")
         static let imageUrl = SVColumn("image_url")
 
-        static let syncStatus = SVColumn("sync_status")
 
         static let createdAt = SVColumn("created_at")
         static let updatedAt = SVColumn("updated_at")
 
-        static let serverVersion = SVColumn("server_version")
-        static let syncedAt = SVColumn("synced_at")
-
-        static let syncOperationID = SVColumn("sync_operation_id")
-        static let syncOperation = SVColumn("sync_operation")
-        static let syncRetryCount = SVColumn("sync_retry_count")
-        static let syncError = SVColumn("sync_error")
     }
 }

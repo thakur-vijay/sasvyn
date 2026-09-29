@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import SVSyncKit
 
 enum UserRecordMapper {
 
     nonisolated static func map(
         _ record: UserRecord,
+        _ metadata: SyncMetadata?
     ) -> User {
         var localImageUrl: URL?
         if let imageLocalPath = record.imageLocalPath, !imageLocalPath.isEmpty{
@@ -25,7 +27,7 @@ enum UserRecordMapper {
             dateOfBirth: record.dateOfBirth,
             imageLocalUrl: localImageUrl,
             imageUrl: record.imageUrl,
-            serverVersion: record.serverVersion,
+            serverVersion: metadata?.serverVersion ?? .zero,
             updatedAt: record.updatedAt
         )
     }

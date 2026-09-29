@@ -1,9 +1,10 @@
 //
 //  SyncStatus.swift
-//  SVNetwork
+//  SVSyncKit
 //
-//  Created by Vijay Thakur on 23/09/26.
+//  Created by Vijay Thakur on 29/09/26.
 //
+
 
 import Foundation
 
@@ -12,4 +13,5 @@ public enum SyncStatus: String, Codable, Hashable, Sendable {
     case syncing
     case synced
     case failed
+    case idle
 }

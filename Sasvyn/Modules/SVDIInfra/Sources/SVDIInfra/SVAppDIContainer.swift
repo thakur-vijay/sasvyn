@@ -74,7 +74,10 @@ public final class SVAppDIContainer {
     }()
     
     lazy var socialLinksDIContianer: SocialLinksDIContainer = {
-        SocialLinksDIContainer(database: databaseContainer.appDatabase)
+        SocialLinksDIContainer(
+            database: databaseContainer.appDatabase,
+            networkClient: networkContainer.client
+        )
     }()
     
     lazy var spotlightDIContainer: SpotlightDIContainer = {

@@ -17,4 +17,8 @@ public enum SyncError: Error, Sendable {
     case cancelled
     case retryLimitExceeded
     case pendingChangeNotFound
+    case metadataNotFound
+    case operationIDNotFound
+    case alreadySyncing
+
 }

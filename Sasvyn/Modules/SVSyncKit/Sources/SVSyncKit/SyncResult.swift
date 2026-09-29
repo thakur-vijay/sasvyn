@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SyncResult<Entity: SyncableEntity>: Sendable {
+public enum SyncResult<Entity: Sendable>: Sendable {
     case noChange
     case downloaded(Entity)
     case uploaded(Entity)

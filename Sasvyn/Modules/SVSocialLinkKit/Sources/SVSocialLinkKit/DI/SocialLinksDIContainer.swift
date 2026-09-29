@@ -7,22 +7,32 @@
 
 import SVDatabaseKit
 import ComposableArchitecture
+import NetworkKit
 
 @available(iOS 26.0, macOS 15.0, *)
 public final class SocialLinksDIContainer{
 
     private let database: AppDatabase
+    private let networkClient: any NetworkClientProtocol
 
-    public init(database: AppDatabase) {
+    public init(database: AppDatabase, networkClient: any NetworkClientProtocol) {
         self.database = database
+        self.networkClient = networkClient
     }
 
-    private lazy var dataSource: SocialLinksLocalDataSource = {
+    private lazy var localDataSource: SocialLinksLocalDataSource = {
         SocialLinksLocalDataSource(database: database)
+    }()
+    
+    private lazy var remoteDataSource: SocialLinksRemoteDataSource = {
+        SocialLinksRemoteDataSource(client: networkClient)
     }()
 
     private lazy var repository: SocialLinksRepository = {
-        DefaultSocialLinksRepository(dataSource: dataSource)
+        DefaultSocialLinksRepository(
+            localDataSource: localDataSource,
+            remoteDataSource: remoteDataSource
+        )
     }()
     
     private lazy var fetchSocialLinksUseCase: FetchSocialLinksUseCase = {

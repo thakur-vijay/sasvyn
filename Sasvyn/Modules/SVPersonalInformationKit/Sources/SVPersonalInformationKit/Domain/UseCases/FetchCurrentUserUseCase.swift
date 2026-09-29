@@ -14,7 +14,7 @@ public struct FetchCurrentUserUseCase: Sendable {
         self.repository = repository
     }
     
-    func execute()async throws-> User {
-        try await repository.fetchCurrentUser()
+    func execute()-> AsyncStream<User> {
+       repository.fetchCurrentUser()
     }
 }

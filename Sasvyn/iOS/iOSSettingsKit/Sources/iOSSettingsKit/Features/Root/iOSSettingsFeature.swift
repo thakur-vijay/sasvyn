@@ -126,18 +126,13 @@ public struct iOSSettingsFeature {
                 state.alert = nil
                 return .none
             case .onAppear:
-//                guard !state.isCurrentUserFetched else { return .none }
                 return .run {[usersClient] send in
-                    do {
-                        let user = try await usersClient.fetchCurrentUser()
+                    for await user in usersClient.fetchCurrentUser(){
                         await send(.onCurrentUserFetched(user), animation: .smooth)
-                    }catch {
-                        print(error.localizedDescription)
                     }
                 }
             case .onCurrentUserFetched(let user):
                 state.currentUser = user
-//                state.isCurrentUserFetched = true
                 return .none
             }
         }

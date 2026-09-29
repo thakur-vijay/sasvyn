@@ -18,7 +18,7 @@ struct SocialLinkRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     let type: String
     
     let url: String
-        
+            
     let createdAt: Date
     
     let updatedAt: Date
@@ -26,7 +26,7 @@ struct SocialLinkRecord: Codable, SVFetchableRecord, SVPersistableRecord{
     enum CodingKeys: String, CodingKey {
         
         case id, type, url
-                
+                        
         case createdAt = "created_at"
         
         case updatedAt = "updated_at"
@@ -42,7 +42,7 @@ extension SocialLinkRecord {
         static let type = SVColumnName("type")
         
         static let url = SVColumnName("url")
-                
+                        
         static let createdAt = SVColumnName("created_at")
         
         static let updatedAt = SVColumnName("updated_at")
@@ -58,7 +58,7 @@ extension SocialLinkRecord {
         static let type = SVColumn("type")
         
         static let url = SVColumn("url")
-                
+                        
         static let createdAt = SVColumn("created_at")
         
         static let updatedAt = SVColumn("updated_at")

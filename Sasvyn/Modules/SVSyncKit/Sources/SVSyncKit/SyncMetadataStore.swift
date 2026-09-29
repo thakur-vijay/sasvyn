@@ -7,18 +7,43 @@
 
 import Foundation
 
-public protocol SyncMetadataStore<ID>: Sendable {
-    associatedtype ID: Hashable & Sendable & Codable
+public protocol SyncMetadataStore: Sendable {
 
     func metadata(
-        id: ID
-    ) async throws -> SyncMetadata<ID>?
+        id: String
+    ) async throws -> SyncMetadata?
 
     func saveMetadata(
-        _ metadata: SyncMetadata<ID>
+        _ metadata: SyncMetadata
     ) async throws
 
     func deleteMetadata(
-        id: ID
+        id: String
+    ) async throws
+
+    func fetchPendingMetadata()
+        async throws -> [SyncMetadata]
+
+    func markPending(
+        id: String,
+        operation: SyncOperation
+    ) async throws
+
+    func markSyncing(
+        id: String
+    ) async throws
+
+    func markSynced(
+        id: String,
+        version: Int64
+    ) async throws
+
+    func markFailed(
+        id: String,
+        error: String
+    ) async throws
+
+    func incrementRetryCount(
+        id: String
     ) async throws
 }

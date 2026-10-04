@@ -134,7 +134,7 @@ enum AppIconValidator {
 
             let temporaryURL = FileManager.default.temporaryDirectory
                 .appendingPathComponent(
-                    UUID().uuidString,
+                    IDGenerator.uuid(),
                     isDirectory: false
                 )
                 .appendingPathExtension("png")

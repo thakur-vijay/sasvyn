@@ -11,6 +11,8 @@
 		18A1BD693063ADFB002FFDD2 /* macOSRootKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (macos, ); productRef = 18A1BD683063ADFB002FFDD2 /* macOSRootKit */; };
 		18A1BD6B3063AE00002FFDD2 /* SVDIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 18A1BD6A3063AE00002FFDD2 /* SVDIInfra */; };
 		18A1BD6D3063AE09002FFDD2 /* SVShortcutsKit in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 18A1BD6C3063AE09002FFDD2 /* SVShortcutsKit */; };
+		18FA5522306CEE8E00ED5B43 /* Owlse in Frameworks */ = {isa = PBXBuildFile; productRef = 18FA5521306CEE8E00ED5B43 /* Owlse */; };
+		18FA5524306CEE8E00ED5B43 /* OwlseProxy in Frameworks */ = {isa = PBXBuildFile; productRef = 18FA5523306CEE8E00ED5B43 /* OwlseProxy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,8 +129,10 @@
 		1854B94E301BE27000F2E614 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				18FA5524306CEE8E00ED5B43 /* OwlseProxy in Frameworks */,
 				18A1BD6B3063AE00002FFDD2 /* SVDIInfra in Frameworks */,
 				18A1BD673063ADFB002FFDD2 /* iOSRootKit in Frameworks */,
+				18FA5522306CEE8E00ED5B43 /* Owlse in Frameworks */,
 				18A1BD6D3063AE09002FFDD2 /* SVShortcutsKit in Frameworks */,
 				18A1BD693063ADFB002FFDD2 /* macOSRootKit in Frameworks */,
 			);
@@ -197,6 +201,8 @@
 				18A1BD683063ADFB002FFDD2 /* macOSRootKit */,
 				18A1BD6A3063AE00002FFDD2 /* SVDIInfra */,
 				18A1BD6C3063AE09002FFDD2 /* SVShortcutsKit */,
+				18FA5521306CEE8E00ED5B43 /* Owlse */,
+				18FA5523306CEE8E00ED5B43 /* OwlseProxy */,
 			);
 			productName = Sasvyn;
 			productReference = 1854B951301BE27000F2E614 /* Sasvyn.app */;
@@ -276,6 +282,9 @@
 			);
 			mainGroup = 1854B948301BE27000F2E614;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				18FA5520306CEE8E00ED5B43 /* XCRemoteSwiftPackageReference "owlse" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1854B952301BE27000F2E614 /* Products */;
 			projectDirPath = "";
@@ -473,6 +482,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sasvyn/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Streams debug logs to Owlse.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Sasvyn wants access to your photo library to select photos for creating mockups and for profile picture.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -527,6 +537,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sasvyn/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Streams debug logs to Owlse.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Sasvyn wants access to your photo library to select photos for creating mockups and for profile picture.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -701,6 +712,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		18FA5520306CEE8E00ED5B43 /* XCRemoteSwiftPackageReference "owlse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/debuging-life/owlse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		18A1BD663063ADFB002FFDD2 /* iOSRootKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -717,6 +739,16 @@
 		18A1BD6C3063AE09002FFDD2 /* SVShortcutsKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SVShortcutsKit;
+		};
+		18FA5521306CEE8E00ED5B43 /* Owlse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18FA5520306CEE8E00ED5B43 /* XCRemoteSwiftPackageReference "owlse" */;
+			productName = Owlse;
+		};
+		18FA5523306CEE8E00ED5B43 /* OwlseProxy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18FA5520306CEE8E00ED5B43 /* XCRemoteSwiftPackageReference "owlse" */;
+			productName = OwlseProxy;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

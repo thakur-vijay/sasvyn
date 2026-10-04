@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import SVFoundation
 
 public struct SyncOperationID: Hashable, Sendable, Codable {
 
     public let value: String
 
     public init(
-        value: String = UUID().uuidString
+        value: String = IDGenerator.uuid()
     ) {
         self.value = value
     }

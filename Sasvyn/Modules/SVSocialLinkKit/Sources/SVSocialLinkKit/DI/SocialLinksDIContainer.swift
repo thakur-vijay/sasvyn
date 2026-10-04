@@ -8,6 +8,7 @@
 import SVDatabaseKit
 import ComposableArchitecture
 import NetworkKit
+import SVSyncKit
 
 @available(iOS 26.0, macOS 15.0, *)
 public final class SocialLinksDIContainer{
@@ -27,11 +28,20 @@ public final class SocialLinksDIContainer{
     private lazy var remoteDataSource: SocialLinksRemoteDataSource = {
         SocialLinksRemoteDataSource(client: networkClient)
     }()
+    
+    private lazy var syncEngine: any SyncEngine<SocialLink> = {
+        DefaultSyncEngine(
+            localStore: localDataSource,
+            remoteStore: remoteDataSource,
+            conflictResolver: DefaultSyncConflictResolver<SocialLink>(strategy: .remoteWins),
+        )
+    }()
 
     private lazy var repository: SocialLinksRepository = {
         DefaultSocialLinksRepository(
             localDataSource: localDataSource,
-            remoteDataSource: remoteDataSource
+            remoteDataSource: remoteDataSource,
+            syncEngine: syncEngine
         )
     }()
     

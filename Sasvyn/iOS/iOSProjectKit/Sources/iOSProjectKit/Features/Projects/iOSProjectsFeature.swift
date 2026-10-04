@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import SVProjectKit
 import Foundation
-import FoundationModels
+import SVFoundation
 
 @Reducer
 public struct iOSProjectsFeature {
@@ -23,10 +23,7 @@ public struct iOSProjectsFeature {
         public var projectToDelete: Project? = nil
         public var path = StackState<Path.State>()
         public init(){
-            let session = LanguageModelSession()
-            session.streamResponse(to: "")
-            
-            
+ 
         }
         
         struct Transcription {
@@ -84,7 +81,7 @@ public struct iOSProjectsFeature {
                 state.path.append(.detail(iOSProjectDetailFeature.State(mode: mode, id: project.id)))
                 return .none
             case .createProjectTapped:
-                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .create, id: UUID().uuidString)))
+                state.path.append(.detail(iOSProjectDetailFeature.State(mode: .create, id: IDGenerator.uuid())))
                 return .none
             case .binding(_):
                 return .none

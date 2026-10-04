@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_owlse._tcp</string>
+	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
@@ -14,27 +18,11 @@
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>folder</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>My Projects</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.sasvyn.projects</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
 			<string>rectangle.on.rectangle</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Create Mockup</string>
 			<key>UIApplicationShortcutItemType</key>
 			<string>com.sasvyn.create-mockup</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>square.and.arrow.up</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Export Portfolio</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.sasvyn.export-portfolio</string>
 		</dict>
 	</array>
 </dict>

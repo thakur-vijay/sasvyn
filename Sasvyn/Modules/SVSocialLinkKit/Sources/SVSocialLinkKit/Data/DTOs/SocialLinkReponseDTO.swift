@@ -15,4 +15,5 @@ internal struct SocialLinkReponseDTO: Codable, Sendable, Hashable{
     let url: String
     let createdAt: Date
     let updatedAt: Date
+    let syncVersion: Int64
 }

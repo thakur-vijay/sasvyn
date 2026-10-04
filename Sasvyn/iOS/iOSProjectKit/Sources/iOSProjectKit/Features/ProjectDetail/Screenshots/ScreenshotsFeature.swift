@@ -10,6 +10,7 @@ import SVMockupKit
 import iOSMockupKit
 import Foundation
 import SVProjectKit
+import SVFoundation
 
 @Reducer
 public struct ScreenshotsFeature {
@@ -112,7 +113,7 @@ public struct ScreenshotsFeature {
                 let exisitingCount = state.screenshots.count
                 let newScreenshots = newMockups.enumerated().map { result in
                     ProjectScreenshot(
-                        id: UUID().uuidString,
+                        id: IDGenerator.uuid(),
                         mockupID: result.element.id,
                         device: result.element.device,
                         imageURL: result.element.url,

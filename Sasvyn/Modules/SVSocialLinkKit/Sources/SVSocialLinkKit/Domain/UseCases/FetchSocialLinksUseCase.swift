@@ -14,7 +14,7 @@ public struct FetchSocialLinksUseCase: Sendable {
         self.repository = repository
     }
     
-    func execute()async throws->[SocialLink] {
-        try await repository.fetch()
+    func execute()-> AsyncStream<[SocialLink]>{
+        repository.fetch()
     }
 }

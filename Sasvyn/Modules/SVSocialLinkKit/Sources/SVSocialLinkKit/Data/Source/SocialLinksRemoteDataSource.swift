@@ -8,31 +8,55 @@
 import Foundation
 import NetworkKit
 import SVNetwork
+import SVSyncKit
 
-final class SocialLinksRemoteDataSource: Sendable{
+final class SocialLinksRemoteDataSource: SyncRemoteStore, Sendable{
+
+    
     private let client: any NetworkClientProtocol
     
     init(client: any NetworkClientProtocol) {
         self.client = client
     }
     
-    func fetch() async throws-> ListResponseDTO<SocialLinkReponseDTO>{
+    func fetch() async throws-> [SocialLink]{
         let endpoint = FetchSocialLinksEndpoint()
-        return try await client.request(endpoint)
+        let result = try await client.request(endpoint)
+        return result.data.compactMap { SocialLinkDTOMapper.map($0) }
     }
     
-    func add(_ body: CreateSocialLinkDTO) async throws {
-        let endpoint = CreateSocialLinkEndpoint(body)
-        try await client.request(endpoint)
+    func fetch(id: String) async throws -> SocialLink? {
+        do {
+            let endpoint = FetchSocialLinkEndpoint(id)
+            let result = try await client.request(endpoint)
+            return SocialLinkDTOMapper.map(result.data)
+        }catch NetworkError.notFound{
+            return nil
+        }catch {
+            throw error
+        }
     }
     
-    func update(_ id: String, body: UpdateSocialLinkDTO) async throws {
-        let endpoint = UpdateSocialLinkEndpoint(id, body: body)
-        try await client.request(endpoint)
+    func create(_ entity: SocialLink, idempotencyKey: String) async throws-> SocialLink{
+        let body = CreateSocialLinkDTO(
+            id: entity.id,
+            type: entity.type?.rawValue ?? "",
+            url: entity.url?.absoluteString ?? ""
+        )
+        let endpoint = CreateSocialLinkEndpoint(body, idempotencyKey: idempotencyKey)
+        let result = try await client.request(endpoint)
+        return SocialLinkDTOMapper.map(result.data)
     }
     
-    func delete(_ id: String) async throws {
-        let endpoint = DeleteSocialLinkEndpoint(id)
+    func update(_ entity: SocialLink, idempotencyKey: String) async throws-> SocialLink{
+        let body = UpdateSocialLinkDTO(type: entity.type?.rawValue ?? "", url: entity.url?.absoluteString ?? "")
+        let endpoint = UpdateSocialLinkEndpoint(entity.id, body: body, idempotencyKey: idempotencyKey)
+        let result = try await client.request(endpoint)
+        return SocialLinkDTOMapper.map(result.data)
+    }
+    
+    func delete(id: String, idempotencyKey: String) async throws {
+        let endpoint = DeleteSocialLinkEndpoint(id, idempotencyKey: idempotencyKey)
         try await client.request(endpoint)
     }
 }

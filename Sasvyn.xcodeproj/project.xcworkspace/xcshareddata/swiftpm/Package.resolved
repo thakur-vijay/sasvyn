@@ -1,5 +1,5 @@
 {
-  "originHash" : "f837dc0b148043e7dc18f03f852246ad7f7335be66a642688d12a554447b7669",
+  "originHash" : "7d3b268833e69373bf0a209ccbbab918890bd2afe1eda77a97c74121c4e93a5f",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/thakur-vijay/NetworkKit.git",
       "state" : {
-        "revision" : "ab9f21826ebadcd52dfbfb3a380443ad79ff1bc7",
-        "version" : "1.1.5"
+        "revision" : "0ccc3233c7378c6dee2490fc5ea4d92fe7f840c8",
+        "version" : "1.1.6"
       }
     },
     {
@@ -53,6 +53,15 @@
       "state" : {
         "revision" : "30f7a7e72e0607d304fbf69c799474bd5fb6d1ce",
         "version" : "13.2.0"
+      }
+    },
+    {
+      "identity" : "owlse",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/debuging-life/owlse",
+      "state" : {
+        "revision" : "49bb121e96eb29eb8d34c0cfe9d53b8a47b2bbb6",
+        "version" : "1.0.0"
       }
     },
     {

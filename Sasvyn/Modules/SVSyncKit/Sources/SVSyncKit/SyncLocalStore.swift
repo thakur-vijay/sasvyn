@@ -12,8 +12,10 @@ where
     Entity.ID == String
 {
     associatedtype Entity: SyncableEntity
+    
+    func fetch() async throws -> [LocalEntitySnapshot<Entity>]
 
-    func fetch(id: Entity.ID) async throws -> Entity?
+    func fetch(id: Entity.ID) async throws -> LocalEntitySnapshot<Entity>?
 
     func create(_ entity: Entity) async throws
 

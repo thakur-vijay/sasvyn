@@ -11,12 +11,24 @@ import SVNetwork
 
 internal struct DeleteSocialLinkEndpoint: Endpoint {
     typealias Response = MessageResponseDTO
-    
+
     let path: String
-    
+
     let method: HTTPMethod = .delete
-        
-    init(_ id: String) {
+
+    let headers: [HTTPHeader]
+
+    init(
+        _ id: String,
+        idempotencyKey: String
+    ) {
         self.path = "/socialLinks/\(id)"
+        self.headers = [
+            .init(
+                name: "Idempotency-Key",
+                value: idempotencyKey
+            )
+        ]
     }
 }
+

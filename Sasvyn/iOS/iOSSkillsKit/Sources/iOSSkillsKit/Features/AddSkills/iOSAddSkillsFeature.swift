@@ -9,6 +9,7 @@ import ComposableArchitecture
 import SVSkillsKit
 import Foundation
 import SVSpotlightKit
+import SVFoundation
 
 @Reducer
 public struct iOSAddSkillsFeature {
@@ -80,7 +81,7 @@ public struct iOSAddSkillsFeature {
 
                 let newSkills = state.skillNames.map {
                     Skill(
-                        id: UUID().uuidString,
+                        id: IDGenerator.uuid(),
                         skill: $0,
                         category: category
                     )

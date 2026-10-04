@@ -20,13 +20,16 @@ public protocol SyncMetadataStore: Sendable {
     func deleteMetadata(
         id: String
     ) async throws
+    
+    func fetchMetadata() async throws -> [SyncMetadata]
 
     func fetchPendingMetadata()
         async throws -> [SyncMetadata]
 
     func markPending(
         id: String,
-        operation: SyncOperation
+        operation: SyncOperation,
+        operationID: String
     ) async throws
 
     func markSyncing(

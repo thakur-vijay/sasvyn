@@ -9,6 +9,7 @@ import ComposableArchitecture
 import SVProjectKit
 import iOSProjectKit
 import Foundation
+import SVFoundation
 
 @Reducer
 public struct RecentProjectsFeature {
@@ -72,7 +73,7 @@ public struct RecentProjectsFeature {
             case .binding(_):
                 return .none
             case .addProjectTapped:
-                return .send(.delegate(.openProjectDetail(.create, UUID().uuidString)))
+                return .send(.delegate(.openProjectDetail(.create, IDGenerator.uuid())))
             case let .projectTapped(mode, id):
                 return .send(.delegate(.openProjectDetail(mode, id)))
             case .deleteProjectTapped(let project):

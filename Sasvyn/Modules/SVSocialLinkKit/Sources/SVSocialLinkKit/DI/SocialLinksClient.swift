@@ -10,7 +10,7 @@ import Foundation
 
 public struct SocialLinksClient: Sendable{
     public var fetch:
-    @Sendable () async throws -> [SocialLink]
+    @Sendable () -> AsyncStream<[SocialLink]>
     
     public var delete:
     @Sendable (_ id: String) async throws -> Void
@@ -32,7 +32,7 @@ extension SocialLinksClient {
         deleteSocialLinkUseCase: DeleteSocialLinkUseCase
     ) -> Self {
         Self {
-            try await fetchSocialLinksUseCase.execute()
+            fetchSocialLinksUseCase.execute()
         } delete: { id in
             try await deleteSocialLinkUseCase.execute(id)
         } add: { link in
@@ -59,7 +59,10 @@ extension SocialLinksClient: DependencyKey {
 extension SocialLinksClient: TestDependencyKey {
 
     public static let testValue = Self {
-        return []
+        return AsyncStream { c in
+            c.yield([])
+            c.finish()
+        }
     } delete: { id in
         
     } add: { link in

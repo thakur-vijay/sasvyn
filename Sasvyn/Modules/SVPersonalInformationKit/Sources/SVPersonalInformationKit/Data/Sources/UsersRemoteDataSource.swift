@@ -19,6 +19,10 @@ internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
         self.imageUploader = imageUploader
     }
     
+    func fetch() async throws -> [User] {
+        return []
+    }
+    
     func fetch(_ id: String) async throws-> DataResponseDTO<UserDTO>{
         let endpoint = FetchUserEndpoint(id: id)
         return try await request { try await client.request(endpoint) }

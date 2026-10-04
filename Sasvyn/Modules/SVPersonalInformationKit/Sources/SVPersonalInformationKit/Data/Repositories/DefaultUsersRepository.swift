@@ -38,8 +38,8 @@ public final class DefaultUsersRepository: UsersRepository {
                     return
                 }
 
-                if let user = try? await localDataSource.fetch(id: userId) {
-                    continuation.yield(user)
+                if let data = try? await localDataSource.fetch(id: userId){
+                    continuation.yield(data.entity)
 
                     do {
                         let result = try await syncEngine.sync(id: userId)
@@ -89,7 +89,8 @@ public final class DefaultUsersRepository: UsersRepository {
         try await localDataSource.update(user)
         try await syncEngine.enqueue(
             id: user.id,
-            operation: .update
+            operation: .update,
+            entityType: .user
         )
         _ = try await syncEngine.sync(id: user.id)
     }
@@ -103,7 +104,8 @@ public final class DefaultUsersRepository: UsersRepository {
 
         try await syncEngine.enqueue(
             id: user.id,
-            operation: .update
+            operation: .update,
+            entityType: .user
         )
 
         _ = try await syncEngine.sync(id: user.id)

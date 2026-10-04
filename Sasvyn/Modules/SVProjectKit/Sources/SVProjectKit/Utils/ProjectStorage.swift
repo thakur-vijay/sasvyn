@@ -48,7 +48,7 @@ public enum ProjectStorage {
     ) throws -> URL {
         try projectDirectory(id: projectID)
             .appendingPathComponent(
-                "app-icon-\(UUID().uuidString)",
+                "app-icon-\(IDGenerator.uuid())",
                 isDirectory: false
             )
             .appendingPathExtension("png")

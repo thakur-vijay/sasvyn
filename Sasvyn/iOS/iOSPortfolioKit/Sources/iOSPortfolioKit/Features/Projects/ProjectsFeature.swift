@@ -9,6 +9,7 @@ import ComposableArchitecture
 import iOSProjectKit
 import SVProjectKit
 import Foundation
+import SVFoundation
 
 @Reducer
 public struct ProjectsFeature {
@@ -70,7 +71,7 @@ public struct ProjectsFeature {
                 state.projects = projects
                 return .none
             case .onCreateProjectTap:
-                state.destination = .projectDetail(.init(mode: .create, id: UUID().uuidString, viewMode: .sheet))
+                state.destination = .projectDetail(.init(mode: .create, id: IDGenerator.uuid(), viewMode: .sheet))
                 return .none
             case .onAddProjectsTap:
                 return .none

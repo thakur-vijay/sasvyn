@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import SVSocialLinkKit
 import Foundation
+import SVFoundation
 
 @Reducer
 public struct iOSSocialLinksFeature {
@@ -64,11 +65,8 @@ public struct iOSSocialLinksFeature {
                 return .none
             case .onTask:
                 return .run { [client] send in
-                    do {
-                        let links = try await client.fetch()
+                    for await links in client.fetch(){
                         await send(.linksLoaded(links))
-                    }catch {
-                        print(error.localizedDescription)
                     }
                 }
             case .addTapped:
@@ -76,7 +74,9 @@ public struct iOSSocialLinksFeature {
                     .init(
                         mode: .create,
                         link: .init(
-                            id: UUID().uuidString
+                            id: IDGenerator.uuid(),
+                            syncVersion: 1,
+                            updatedAt: .now
                         )
                     )
                 )

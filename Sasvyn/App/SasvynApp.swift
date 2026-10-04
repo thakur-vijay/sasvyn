@@ -8,6 +8,8 @@
 import SwiftUI
 import ComposableArchitecture
 import SVDIInfra
+import Owlse
+import OwlseProxy
 #if os(iOS)
 import UIKit
 import iOSRootKit
@@ -35,6 +37,15 @@ private let rootDIContainer: macOSRootDIContainer
 #endif
     
     init() {
+        NetworkLogger.enableProxy()
+
+#if DEBUG
+        // Stream logs to the Owlse desktop app: register the
+        // default store with the remote logger and auto-connect
+        // to the first server found on the local network.
+        RemoteLogger.shared.initialize(store: .shared)
+        RemoteLogger.shared.isAutomaticConnectionEnabled = true
+#endif
 #if os(iOS)
         self.rootDIContainer = iOSRootDIContainer(appDIContainer: appDIContainer)
 #elseif os(macOS)
@@ -60,3 +71,4 @@ private let rootDIContainer: macOSRootDIContainer
         
     }
 }
+

@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Foundation
 import SVEducationKit
+import SVFoundation
 
 @Reducer
 public struct iOSEducationsFeature {
@@ -65,7 +66,7 @@ public struct iOSEducationsFeature {
                 state.destination = .educationForm(
                     .init(
                         education: .init(
-                            id: UUID().uuidString
+                            id: IDGenerator.uuid()
                         ),
                         mode: .create
                     )

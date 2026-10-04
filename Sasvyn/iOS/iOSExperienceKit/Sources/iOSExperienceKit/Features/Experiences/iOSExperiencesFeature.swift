@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Foundation
 import SVExperienceKit
+import SVFoundation
 
 @Reducer
 public struct iOSExperiencesFeature {
@@ -73,7 +74,7 @@ public struct iOSExperiencesFeature {
             case .closeTapped:
                 return .none
             case .addTapped:
-                state.destination = .experienceForm(.init(experience: .init(id: UUID().uuidString), mode: .create))
+                state.destination = .experienceForm(.init(experience: .init(id: IDGenerator.uuid()), mode: .create))
                 return .none
             case .editTapped(let experience):
                 state.destination = .experienceForm(.init(experience: experience, mode: .edit))

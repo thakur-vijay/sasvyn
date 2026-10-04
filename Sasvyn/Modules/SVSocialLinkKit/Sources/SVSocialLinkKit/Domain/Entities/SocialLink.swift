@@ -7,19 +7,26 @@
 
 
 import Foundation
+import SVSyncKit
 
-public struct SocialLink: Identifiable, Hashable, Codable, Sendable {
+public struct SocialLink: Identifiable, Hashable, Codable, Sendable, SyncableEntity{
     public let id: String
     public var type: LinkType?
     public var url: URL?
+    public let syncVersion: Int64
+    public let updatedAt: Date
 
     public init(
         id: String,
         type: LinkType? = nil,
         url: URL? = nil,
+        syncVersion: Int64,
+        updatedAt: Date
     ) {
         self.id = id
         self.type = type
         self.url = url
+        self.syncVersion = syncVersion
+        self.updatedAt = updatedAt
     }
 }

@@ -38,6 +38,30 @@ public struct SyncMetadataRecord: Codable, SVFetchableRecord, SVPersistableRecor
         case syncRetryCount = "sync_retry_count"
         case syncError = "sync_error"
     }
+    
+    public init(
+        id: String,
+        entityType: String,
+        entityID: String,
+        syncStatus: SyncStatus,
+        serverVersion: Int64,
+        syncedAt: Date?,
+        syncOperationID: String?,
+        syncOperation: String?,
+        syncRetryCount: Int,
+        syncError: String?
+    ) {
+        self.id = id
+        self.entityType = entityType
+        self.entityID = entityID
+        self.syncStatus = syncStatus
+        self.serverVersion = serverVersion
+        self.syncedAt = syncedAt
+        self.syncOperationID = syncOperationID
+        self.syncOperation = syncOperation
+        self.syncRetryCount = syncRetryCount
+        self.syncError = syncError
+    }
 }
 
 public extension SyncMetadataRecord {

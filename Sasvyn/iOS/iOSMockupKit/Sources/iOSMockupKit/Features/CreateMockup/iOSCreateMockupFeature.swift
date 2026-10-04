@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import SVMockupKit
 import _PhotosUI_SwiftUI
+import SVFoundation
 
 @Reducer
 public struct iOSCreateMockupFeature {
@@ -112,7 +113,7 @@ public struct iOSCreateMockupFeature {
                                     return nil
                                 }
                                 return Mockup(
-                                    id: UUID().uuidString,
+                                    id: IDGenerator.uuid(),
                                     device: selectedDevice,
                                     imageData: data,
                                     imageResize: .fill
@@ -252,7 +253,7 @@ public struct iOSCreateMockupFeature {
                     .mockupsReady(
                         images.map {
                             Mockup(
-                                id: UUID().uuidString,
+                                id: IDGenerator.uuid(),
                                 device: selectedDevice,
                                 imageData: $0,
                                 imageResize: .fill

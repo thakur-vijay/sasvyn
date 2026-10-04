@@ -7,6 +7,7 @@
 
 import Foundation
 import SVSkillsKit
+import SVFoundation
 
 public struct Project: Identifiable, Hashable, Sendable{
     public let id: String
@@ -21,7 +22,7 @@ public struct Project: Identifiable, Hashable, Sendable{
     public var description: String
     
     public init(
-        id: String = UUID().uuidString,
+        id: String = IDGenerator.uuid(),
         icon: URL? = nil,
         name: String = "",
         category: AppCategory? = nil,

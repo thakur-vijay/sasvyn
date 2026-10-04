@@ -51,7 +51,7 @@ public struct ExperienceFormFeature {
                 //                state.experience.responsibilities[index] = value
                 //                return .none
             case .addResponsibilityTapped:
-                let emptyResponsibility = ExperienceResponsibility(id: UUID().uuidString, experienceID: state.experience.id, responsibility: "")
+                let emptyResponsibility = ExperienceResponsibility(id: IDGenerator.uuid(), experienceID: state.experience.id, responsibility: "")
                 state.experience.responsibilities.append(emptyResponsibility)
                 return .none
             case .deleteResponsibility(let offsets):

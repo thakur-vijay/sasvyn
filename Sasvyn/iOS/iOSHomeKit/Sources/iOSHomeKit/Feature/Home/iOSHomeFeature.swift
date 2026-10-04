@@ -12,6 +12,7 @@ import iOSProjectKit
 import iOSMockupKit
 import Foundation
 import iOSPortfolioKit
+import SVFoundation
 
 @Reducer
 public struct iOSHomeFeature {
@@ -74,7 +75,7 @@ public struct iOSHomeFeature {
                 case .createMockup:
                     state.destination = .createMockup(.init())
                 case .addProject:
-                    state.destination = .projectDetail(.init(mode: .create, id: UUID().uuidString, viewMode: .sheet))
+                    state.destination = .projectDetail(.init(mode: .create, id: IDGenerator.uuid(), viewMode: .sheet))
                 case .editAbout:
                     break
                 }

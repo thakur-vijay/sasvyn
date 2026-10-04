@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import SVLanguageKit
 import Foundation
+import SVFoundation
 
 @Reducer
 public struct iOSLanguagesFeature {
@@ -80,7 +81,7 @@ public struct iOSLanguagesFeature {
                 state.destination = .languageForm(
                     .init(
                         spokenLanguage: .init(
-                            id: UUID().uuidString
+                            id: IDGenerator.uuid()
                         ),
                         mode: .create
                     )

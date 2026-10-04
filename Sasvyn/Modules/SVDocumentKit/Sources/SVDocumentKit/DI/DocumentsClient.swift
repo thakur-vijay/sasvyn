@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import SVFoundation
 
 public struct DocumentsClient: Sendable{
     public var fetch:
@@ -37,7 +38,7 @@ extension DocumentsClient {
         let documentsDirectory = try DocumentStorage.documentsDirectory()
 
         let destinationURL = documentsDirectory
-            .appendingPathComponent(UUID().uuidString)
+            .appendingPathComponent(IDGenerator.uuid())
             .appendingPathExtension(url.pathExtension)
 
         try FileManager.default.copyItem(
@@ -53,7 +54,7 @@ extension DocumentsClient {
         )
 
         return Document(
-            id: UUID().uuidString,
+            id: IDGenerator.uuid(),
             url: destinationURL,
             name: url.lastPathComponent,
 //            createdAt: values.contentModificationDate ?? Date(),

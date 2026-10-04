@@ -8,10 +8,12 @@
 import Foundation
 
 public struct CreateSocialLinkDTO: Encodable {
+    public let id: String
     public let type: String
     public let url: String
     
-    public init(type: String, url: String) {
+    public init(id: String, type: String, url: String) {
+        self.id = id
         self.type = type
         self.url = url
     }

@@ -9,6 +9,8 @@ import Foundation
 
 public protocol SyncRemoteStore<Entity>: Sendable {
     associatedtype Entity: SyncableEntity
+    
+    func fetch() async throws -> [Entity]
 
     func fetch(id: Entity.ID) async throws -> Entity?
 

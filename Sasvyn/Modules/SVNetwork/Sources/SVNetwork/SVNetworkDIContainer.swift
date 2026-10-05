@@ -78,3 +78,12 @@ public final class SVNetworkDIContainer {
         return decoder
     }()
 }
+
+public extension HTTPHeader {
+    static func idempotencyKey(_ key: String) -> HTTPHeader {
+        .init(
+            name: "Idempotency-Key",
+            value: key
+        )
+    }
+}

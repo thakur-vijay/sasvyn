@@ -6,18 +6,18 @@
 //
 
 import Foundation
+import SVSyncKit
 
 public enum SkillRecordMapper {
 
-   public nonisolated static func map(_ record: SkillRecord) -> Skill? {
-
-       guard let category = SkillCategory(rawValue: record.category) else {
-
-            return nil
-
-        }
-
-       return Skill(id: record.id, skill: record.skill, category: category)
+    public nonisolated static func map(_ record: SkillRecord, metadata: SyncMetadata?) -> Skill {
+        return Skill(
+            id: record.id,
+            skill: record.skill,
+            category: SkillCategory(rawValue: record.category) ?? .languages,
+            syncVersion: metadata?.serverVersion ?? 0,
+            updatedAt: record.updatedAt
+        )
     }
 
 }

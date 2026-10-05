@@ -56,7 +56,7 @@ public final class DefaultProjectsRepository: ProjectsRepository {
         let (projectRecord, skillsRecord, screenshotsRecord) = try await dataSource.fetch(id: id)
         let projectsDirectory = try ProjectStorage.projectsDirectory()
         var project = ProjectRecordMapper.map(projectRecord, projectsDirectory: projectsDirectory)
-        let skills = skillsRecord.compactMap { SkillRecordMapper.map($0) }
+        let skills = skillsRecord.compactMap { SkillRecordMapper.map($0, metadata: nil) }
         project?.techStack = skills
         let screenshots = screenshotsRecord.compactMap { ProjectScreenshotRecordMapper.map($0, projectsDirectory: projectsDirectory)}
         project?.screenshots = screenshots

@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+internal struct CreateSkillDTO: Encodable {
+    let id: String
+    let skill: String
+    let category: String
+}

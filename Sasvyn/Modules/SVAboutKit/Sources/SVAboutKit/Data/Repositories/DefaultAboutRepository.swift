@@ -19,6 +19,7 @@ public final class DefaultAboutRepository: AboutRepository {
         guard let record = try await dataSource.fetch(userId) else {
             throw URLError(.fileDoesNotExist)
         }
+        print(record.content)
         return AboutRecordMapper.map(record)
     }
     

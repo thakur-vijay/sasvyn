@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+internal struct UpdateSkillDTO: Encodable {
+    let skill: String
+    let category: String
+}

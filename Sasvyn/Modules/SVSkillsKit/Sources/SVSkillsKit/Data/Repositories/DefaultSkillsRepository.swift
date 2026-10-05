@@ -26,7 +26,9 @@ public final class DefaultSkillsRepository: SkillsRepository {
 
                 return SkillMainModel(
                     category: category,
-                    skills: records.compactMap(SkillRecordMapper.map)
+                    skills: records.map({ record in
+                        SkillRecordMapper.map(record, metadata: nil)
+                    })
                 )
             }
             .sorted { $0.category.order < $1.category.order }

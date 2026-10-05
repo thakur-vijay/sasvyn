@@ -83,7 +83,9 @@ public struct iOSAddSkillsFeature {
                     Skill(
                         id: IDGenerator.uuid(),
                         skill: $0,
-                        category: category
+                        category: category,
+                        syncVersion: 1,
+                        updatedAt: .now
                     )
                 }
 

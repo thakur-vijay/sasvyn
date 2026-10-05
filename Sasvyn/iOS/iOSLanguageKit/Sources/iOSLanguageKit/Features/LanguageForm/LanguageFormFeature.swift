@@ -23,10 +23,13 @@ public struct LanguageFormFeature {
         public var spokenLanguage: SpokenLanguage
         public let mode: LanguageFormMode
         
-        public init(spokenLanguage: SpokenLanguage, mode: LanguageFormMode) {
+        public init(spokenLanguage: SpokenLanguage, mode: LanguageFormMode, languageCodes: Set<String>) {
             self.spokenLanguage = spokenLanguage
             self.mode = mode
+            self.languageCodes = languageCodes
         }
+        
+        var languageCodes: Set<String>
         
         @Presents
         public var destination: Destination.State?
@@ -58,7 +61,9 @@ public struct LanguageFormFeature {
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
-        Reduce { state, action in
+        Reduce {
+            state,
+            action in
             switch action {
             case .binding(_):
                 return .none
@@ -66,9 +71,14 @@ public struct LanguageFormFeature {
                 return .send(.delegate(.close))
             case .saveTapped:
                 let spokenLanguage = state.spokenLanguage
+                let mode = state.mode
                 return .run { [client] send in
                     do {
-                        try await client.save(spokenLanguage)
+                        if mode == .create {
+                            try await client.add(spokenLanguage)
+                        }else {
+                            try await client.update(spokenLanguage)
+                        }
                         await send(.delegate(.update(spokenLanguage)))
                     }catch {
                         print(error.localizedDescription)
@@ -87,7 +97,12 @@ public struct LanguageFormFeature {
             case .destination(_):
                 return .none
             case .selectLanguageTapped:
-                state.destination = .languagePicker(.init(selection: state.spokenLanguage.languageCode))
+                state.destination = .languagePicker(
+                    .init(
+                        selection: state.spokenLanguage.languageCode,
+                        languageCodes: state.languageCodes
+                    )
+                )
                 return .none
             case .proficiencyTapped(let proficiency):
                 state.spokenLanguage.proficiency = proficiency

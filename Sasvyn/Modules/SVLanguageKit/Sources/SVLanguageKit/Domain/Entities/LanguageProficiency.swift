@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum LanguageProficiency: Int, CaseIterable, Codable, Hashable, Sendable {
+public enum LanguageProficiency: Int16, CaseIterable, Codable, Hashable, Sendable {
     case elementary = 1
     case limitedWorking = 2
     case professionalWorking = 3

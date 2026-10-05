@@ -6,3 +6,14 @@
 //
 
 import Foundation
+@preconcurrency import NetworkKit
+import SVNetwork
+
+internal struct FetchLanguagesEndpoint: Endpoint {
+    typealias Response = ListResponseDTO<LanguageResponseDTO>
+
+    let path: String = "/languages"
+
+    let method: HTTPMethod = .get
+
+}

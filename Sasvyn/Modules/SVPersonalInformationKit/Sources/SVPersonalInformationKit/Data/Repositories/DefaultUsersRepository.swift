@@ -72,7 +72,6 @@ public final class DefaultUsersRepository: UsersRepository {
         try await syncEngine.enqueue(
             id: user.id,
             operation: .update,
-            entityType: .user
         )
         _ = try await syncEngine.sync(id: user.id)
     }
@@ -87,7 +86,6 @@ public final class DefaultUsersRepository: UsersRepository {
         try await syncEngine.enqueue(
             id: user.id,
             operation: .update,
-            entityType: .user
         )
 
         _ = try await syncEngine.sync(id: user.id)

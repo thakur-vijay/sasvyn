@@ -20,9 +20,12 @@ public struct iOSLanguagePickerFeature {
         public var search: String = ""
         public var filteredLanguages: [Language] = []
         public var selection: String?
-        public init(selection: String? = nil){
+        public init(selection: String? = nil, languageCodes: Set<String>){
             self.selection = selection
+            self.languageCodes = languageCodes
         }
+        
+        public var languageCodes: Set<String>
     }
     
     public enum Action: BindableAction{
@@ -58,7 +61,9 @@ public struct iOSLanguagePickerFeature {
                     }
                 }
             case .onLanguagesLoaded(let languages):
-                state.languages = languages
+                state.languages = languages.filter({ language in
+                    !state.languageCodes.contains(language.code)
+                })
                 state.filteredLanguages = languages
                 return .none
             case .onSearchChanged:

@@ -60,7 +60,7 @@ internal final class DefaultSocialLinksRepository: SocialLinksRepository {
     
     func add(_ link: SocialLink) async throws {
         try await localDataSource.create(link)
-        try await syncEngine.enqueue(id: link.id, operation: .create, entityType: .socialLink)
+        try await syncEngine.enqueue(id: link.id, operation: .create)
         Task {
             try? await syncEngine.sync(id: link.id)
         }
@@ -68,7 +68,7 @@ internal final class DefaultSocialLinksRepository: SocialLinksRepository {
     
     func update(_ link: SocialLink) async throws {
         try await localDataSource.update(link)
-        try await syncEngine.enqueue(id: link.id, operation: .update, entityType: .socialLink)
+        try await syncEngine.enqueue(id: link.id, operation: .update)
         Task {
             try? await syncEngine.sync(id: link.id)
         }
@@ -76,7 +76,7 @@ internal final class DefaultSocialLinksRepository: SocialLinksRepository {
     
     func delete(_ id: String) async throws {
         try await localDataSource.delete(id: id)
-        try await syncEngine.enqueue(id: id, operation: .delete, entityType: .socialLink)
+        try await syncEngine.enqueue(id: id, operation: .delete)
         Task {
             try? await syncEngine.sync(id: id)
         }

@@ -1,401 +1,391 @@
 # Sasvyn
 
-A modular SwiftUI workspace for building, managing, presenting, and synchronizing a personal portfolio.
+**A modular SwiftUI portfolio workspace for collecting, editing, and presenting professional work.**
 
-<p align="center">
-  <img alt="Swift" src="https://img.shields.io/badge/Swift-6.4-F05138?logo=swift&logoColor=white" />
-  <img alt="SwiftUI" src="https://img.shields.io/badge/SwiftUI-6.4-007AFF?logo=swift&logoColor=white" />
-  <img alt="iOS" src="https://img.shields.io/badge/iOS-26-111827?logo=apple&logoColor=white" />
-  <img alt="macOS" src="https://img.shields.io/badge/macOS-26-111827?logo=apple&logoColor=white" />
-  <img alt="Swift Package Manager" src="https://img.shields.io/badge/Swift%20Package%20Manager-6.4-FFAC45?logo=swift&logoColor=white" />
-</p>
+Sasvyn brings portfolio content - projects, experience, education, skills, languages, documents, mockups, profile information, and social links - into an Apple-platform application. The repository is organized as a Swift Package Manager monorepo, with shared domain and infrastructure packages composed into iOS and macOS app roots.
 
-<p align="center">
-  <a href="#product-areas">Explore the product</a> ·
-  <a href="#architecture">Understand the architecture</a> ·
-  <a href="#getting-started">Run locally</a>
-</p>
-
-<table>
-  <tr>
-    <td align="center" width="25%">
-      <strong>Portfolio-first</strong><br>
-      <sub>Projects, experience, education, skills, and more</sub>
-    </td>
-    <td align="center" width="25%">
-      <strong>Native by design</strong><br>
-      <sub>SwiftUI experiences for iOS and macOS</sub>
-    </td>
-    <td align="center" width="25%">
-      <strong>Modular core</strong><br>
-      <sub>Small packages with focused responsibilities</sub>
-    </td>
-    <td align="center" width="25%">
-      <strong>Sync-ready</strong><br>
-      <sub>Local persistence and resilient synchronization</sub>
-    </td>
-  </tr>
-</table>
-
-Sasvyn is an Apple-platform application for organizing the information that makes up a professional portfolio: projects, experience, education, skills, languages, documents, mockups, personal information, and social links. It is implemented as a Swift Package Manager-based modular monorepo and assembled into a SwiftUI application for iOS and macOS.
-
-The repository is designed around small domain packages, platform-specific feature packages, reusable UI infrastructure, dependency injection, local persistence, remote networking, and a generic synchronization engine.
+> **Project maturity:** The repository contains substantial iOS features and reusable shared infrastructure. The macOS composition is present, but its authentication and feature surface are still scaffolding. Synchronization infrastructure exists, but not every local data domain is synchronized.
 
 ## Contents
 
-- [Product Areas](#product-areas)
+- [Highlights](#highlights)
+- [Design references](#design-references)
+- [Product areas](#product-areas)
 - [Architecture](#architecture)
-- [Repository Layout](#repository-layout)
-- [Package Catalog](#package-catalog)
-- [Application Lifecycle](#application-lifecycle)
-- [Data and Persistence](#data-and-persistence)
-- [Networking and Synchronization](#networking-and-synchronization)
-- [Platform Integrations](#platform-integrations)
+- [Repository layout](#repository-layout)
+- [Package catalog](#package-catalog)
+- [Application lifecycle](#application-lifecycle)
+- [Data, persistence, and sync](#data-persistence-and-sync)
+- [Apple platform integrations](#apple-platform-integrations)
 - [Requirements](#requirements)
-- [Getting Started](#getting-started)
-- [Building](#building)
-- [Testing](#testing)
-- [Automation](#automation)
-- [Configuration and Signing](#configuration-and-signing)
-- [Project Status](#project-status)
+- [Getting started](#getting-started)
+- [Build and test](#build-and-test)
+- [Fastlane](#fastlane)
+- [Configuration and signing](#configuration-and-signing)
+- [Current limitations](#current-limitations)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Product Areas
+## Highlights
 
-Sasvyn brings several portfolio workflows together in one application:
+- **Portfolio-focused:** Organize projects, work history, education, skills, languages, documents, mockups, profile details, and social links.
+- **Native presentation:** SwiftUI application roots for iOS and macOS, with the current feature surface primarily implemented in iOS packages.
+- **Modular by responsibility:** Shared domain and infrastructure packages are separated from platform-specific feature packages.
+- **Local data first:** GRDB-backed persistence and package-owned file-storage helpers keep domain data and assets organized.
+- **Sync foundations:** A reusable synchronization engine provides reconciliation, conflict resolution, retry policy, pending-change, and metadata abstractions.
+- **System entry points:** iOS quick actions, App Intents/Shortcuts, and Core Spotlight can route into app features.
 
-- **Home**: dashboard content, recent projects, quick actions, and portfolio creation entry points.
-- **Portfolio**: featured portfolio presentation with project and experience sections.
-- **Projects**: project metadata, descriptions, roles, app information, screenshots, skills, and screenshot ordering.
-- **Experience**: work history, responsibilities, dates, and editing flows.
-- **Education**: education records, grades, and education forms.
-- **Skills**: categorized skills, grouped presentation, and skill editing.
-- **Languages**: spoken languages, proficiency, selection, and editing.
-- **Documents**: document categories, local files, document cards, and PDF previews.
-- **Mockups**: device selection, image placement, presentation modes, and export-ready mockups.
-- **Personal information**: name, date of birth, profile image, and synchronized account information.
-- **Social links**: typed links for services such as GitHub, LinkedIn, Instagram, YouTube, X, Medium, Behance, Dribbble, and websites.
-- **Settings**: appearance preferences and personal-information settings.
+## Design references
+
+The repository includes early visual explorations. These are design references, **not screenshots of the current application**, and some of the screens or controls shown may not be implemented.
+
+<details>
+<summary>View the portfolio dashboard and portfolio-list concepts</summary>
+
+<p align="center">
+  <img src="Designs/image.png" alt="Early portfolio dashboard design concept, not a screenshot of the current application" width="320" />
+  <img src="Designs/portfolios.png" alt="Early portfolio-list design concept, not a screenshot of the current application" width="320" />
+</p>
+
+</details>
+
+## Product areas
+
+| Area | Current capabilities |
+| --- | --- |
+| Home | Dashboard, recent projects, and portfolio creation entry points. |
+| Portfolio | Portfolio presentation with project and experience sections. |
+| Projects | Project overview, description, role, app information, screenshots, screenshot ordering, and technology stack. |
+| Experience | Work history, responsibilities, dates, and edit forms. |
+| Education | Education records, grades, lists, and forms. |
+| Skills | Skills and categories, grouped presentation, add flows, and chips. |
+| Languages | Language selection, proficiency, lists, cards, and edit forms. |
+| Documents | Document categories, local files, document cards, and PDF previews. |
+| Mockups | Device selection, image placement, presentation modes, previews, and export-related behavior. |
+| Personal information | Profile details, name and birth-date editing, and profile-image handling. |
+| Social links | Typed links and add/edit flows for common social and portfolio services. |
+| Settings | Appearance preferences, tint selection, and personal-information destinations. |
 
 ## Architecture
 
-The project separates reusable domain behavior from platform presentation. Shared modules own data and business rules; iOS and macOS packages compose those capabilities into user-facing features.
+The application uses **The Composable Architecture (TCA)** for feature state, actions, reducers, navigation, and dependency access. Shared packages own domain behavior and infrastructure; platform packages compose those capabilities into views and app flows.
 
 ```mermaid
 flowchart TD
-		App[SwiftUI App<br/>SasvynApp] --> DI[Application DI<br/>SVDIInfra]
-		DI --> RootI[iOSRootKit]
-		DI --> RootM[macOSRootKit]
-		RootI --> Main[iOS feature packages]
-		RootM --> MainM[macOSMainKit]
-		Main --> TCA[Composable Architecture<br/>Features and Views]
-		TCA --> Domain[Shared domain kits]
-		Domain --> Repositories[Repositories and use cases]
-		Repositories --> Database[SVDatabaseKit<br/>GRDB persistence]
-		Repositories --> Network[SVNetwork<br/>HTTP and auth]
-		Domain --> Sync[SVSyncKit<br/>conflict and retry handling]
-		TCA --> Design[SVDesignSystem]
-		App --> Integrations[Shortcuts, Spotlight, App Intents]
+    App["Sasvyn SwiftUI app"] --> AppDI["SVAppDIContainer"]
+    AppDI --> IOSRoot["iOSRootKit"]
+    AppDI --> MacRoot["macOSRootKit"]
+    IOSRoot --> IOSFeatures["iOS feature packages"]
+    MacRoot --> MacFeatures["macOS main/auth packages"]
+    IOSFeatures --> Shared["Shared domain and UI packages"]
+    MacFeatures --> Shared
+    Shared --> Domain["Entities, repositories, use cases"]
+    Domain --> Storage["SVDatabaseKit / GRDB"]
+    Domain --> Network["SVNetwork / remote sources"]
+    Domain --> Sync["SVSyncKit"]
+    IOSFeatures --> Design["SVDesignSystem"]
+    App --> System["App Intents, Spotlight, scene actions"]
 ```
 
-### Architectural layers
+### Typical package boundaries
 
-Most shared domain packages follow the same boundaries:
+Domain packages commonly group code by responsibility:
 
 ```text
 Domain/
-	Entities       Value types and domain models
-	Repositories   Repository contracts
-	UseCases       Application operations
+  Entities/       Domain value types
+  Repositories/   Repository contracts
+  UseCases/       Application operations
 Data/
-	Sources        Local and remote data sources
-	Repositories   Concrete repository implementations
-	DTOs           Network request and response models
+  Sources/        Local and/or remote data sources
+  Repositories/   Repository implementations
+  DTOs/           Network request and response models
+  Endpoints/      HTTP endpoint definitions
 Database/
-	Records        Persisted database records
-	Mappers        Record-to-domain conversion
-	Migrations     Schema creation and evolution
+  Records/        Persisted record types
+  Mappers/        Record/domain conversion
+  Migrations/     Schema creation and evolution
 DI/
-	Clients        TCA dependency clients
-	Containers     Dependency composition
-Presentation/   Shared reusable views where applicable
+  Clients/        TCA dependency clients
+  Containers/     Dependency registration and composition
+Presentation/     Reusable views, where applicable
 ```
 
-The presentation packages use The Composable Architecture (TCA) for feature state, actions, reducers, navigation, and dependency access. Swift 6 language mode and `ApproachableConcurrency` are used throughout the package graph where configured.
+The exact folder set varies by package; not every module implements every layer. Swift Package manifests declare Swift tools version **6.4**. The app target itself currently sets Swift language version 5 and enables approachable concurrency/default main-actor isolation; individual packages may opt into Swift 6 language mode.
 
-## Repository Layout
+## Repository layout
 
 ```text
 .
-├── Sasvyn.xcodeproj/             Xcode application project and shared scheme
-├── Sasvyn/                       Application target and local Swift packages
-│   ├── App/                      SwiftUI, UIKit/AppKit, and scene entry points
-│   ├── Modules/                  Shared domain, infrastructure, and UI packages
-│   ├── iOS/                      iOS feature and composition packages
-│   └── macOS/                    macOS feature and composition packages
-├── SasvynTests/                  Application unit-test target
-├── SasvynUITests/                Application UI-test target
-├── SasvynShareExtension/         Share-extension localization scaffold
-├── fastlane/                     Build lanes and signing configuration
-├── Gemfile                       Ruby dependency definition for fastlane
-├── ExportOptions.plist           Development export settings
-└── README.md                     Project documentation
+|-- Designs/                          Early visual explorations
+|-- Sasvyn.xcodeproj/                 Xcode project and shared scheme
+|   \-- xcshareddata/xcschemes/       Shared Sasvyn scheme
+|-- Sasvyn/
+|   |-- App/                          SwiftUI, app delegate, and scene delegate
+|   |-- Assets.xcassets/              App-level assets
+|   |-- Modules/                      Shared domain, infrastructure, and UI packages
+|   |-- iOS/                          iOS feature and composition packages
+|   \-- macOS/                        macOS root, main, and auth packages
+|-- SasvynTests/                      Xcode unit-test target
+|-- SasvynUITests/                    Xcode UI-test target
+|-- SasvynShareExtension/             Share-extension localization scaffold
+|-- fastlane/                         Simulator and iPhone build lanes
+|-- Gemfile                           Fastlane dependency
+|-- ExportOptions.plist               Development export settings
+|-- LICENSE                           MIT License
+\-- README.md
 ```
 
-Each package normally contains a `Package.swift`, a `Sources` directory, a `Tests` directory, and a package-specific `Package.resolved` when external dependency resolution is committed for that package.
+The Xcode project currently defines the `Sasvyn`, `SasvynTests`, and `SasvynUITests` targets. `SasvynShareExtension` is a localization scaffold, not a configured Xcode target. Shared Swift package pins are stored under `Sasvyn.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
 
-## Package Catalog
+## Package catalog
 
-### Shared modules: `Sasvyn/Modules`
+There are currently **22 shared packages**, **18 iOS packages**, and **3 macOS packages**.
+
+### Shared packages - `Sasvyn/Modules`
 
 | Package | Responsibility |
 | --- | --- |
-| `AuthKit` | Apple Sign In authentication, auth session state, auth client, repository, and authentication use cases. |
-| `SVAboutKit` | About/profile content, local persistence, repository, CRUD use cases, migration, and dependency registration. |
-| `SVDatabaseKit` | GRDB-backed database abstraction, migrations, records, CRUD operations, filters, sorting, observation, database values, and schema builders. |
-| `SVDesignSystem` | Shared SwiftUI controls and visual primitives including buttons, chips, lists, sections, date pickers, text editors, image viewers, web views, LaTeX rendering, colors, fonts, symbols, spacing, and empty states. |
-| `SVDIInfra` | Application-level dependency composition through `SVAppDIContainer` and `SVDatabaseContainer`. |
-| `SVDocumentKit` | Document entities and categories, local file storage, persistence, repository, dependency registration, and document use cases. |
-| `SVEducationKit` | Education records, grade types, persistence, repository, dependency registration, and education CRUD use cases. |
-| `SVExperienceKit` | Work experience and responsibilities, persistence, repository, dependency registration, and experience CRUD use cases. |
-| `SVFoundation` | Shared extensions, date formats, file-storage helpers, property wrappers, and `QuickAppAction`. |
-| `SVHomeKit` | Home-domain repository abstractions and shared home-domain support. |
-| `SVLanguageKit` | Language and proficiency models, bundled language JSON loading, persistence, repository, dependency registration, and language use cases. |
-| `SVMockupKit` | Device mockup domain, device models, image mapping and storage, Photos integration, persistence, export quality, render modes, preview UI, and mockup use cases. |
-| `SVNetwork` | HTTP client infrastructure, environment resolution, token storage, refresh-token and upload endpoints, image uploads, response DTOs, and synchronization status. |
-| `SVPersonalInformationKit` | User profile domain, local and remote data sources, DTOs, endpoints, image storage, persistence, dependency registration, and synchronization integration. |
+| `AuthKit` | Apple Sign In authentication, auth session state, repository, client, and use cases. |
+| `SVAboutKit` | About/profile content, local persistence, repository, migration, and use cases. |
+| `SVDatabaseKit` | GRDB-backed database abstraction, migrations, records, CRUD, filtering, sorting, and observation. |
+| `SVDesignSystem` | Shared SwiftUI controls, visual primitives, colors, fonts, symbols, spacing, and empty states. |
+| `SVDIInfra` | App-level dependency composition and database/network/domain container wiring. |
+| `SVDocumentKit` | Document entities/categories, local file storage, persistence, and document use cases. |
+| `SVEducationKit` | Education records, grade types, persistence, repository, and CRUD use cases. |
+| `SVExperienceKit` | Work experience and responsibilities, persistence, repository, and CRUD use cases. |
+| `SVFoundation` | Shared extensions, date formats, file-storage helpers, property wrappers, and quick-action types. |
+| `SVHomeKit` | Shared home-domain support and repository abstractions. |
+| `SVLanguageKit` | Language/proficiency models, bundled language data, persistence, repository, and language use cases. |
+| `SVMockupKit` | Mockup/device models, image storage, Photos integration, rendering modes, preview UI, and export support. |
+| `SVNetwork` | HTTP environment resolution, auth/token wiring, refresh and upload support, DTOs, and network status. |
+| `SVPersonalInformationKit` | User profile domain, local/remote sources, endpoints, persistence, image handling, and sync metadata integration. |
 | `SVPortfolioKit` | Reusable portfolio cards and chip presentation components. |
-| `SVProjectKit` | Project, category, screenshot, and project-skill models; persistence; storage and configuration; migrations; repository; and project-related use cases. |
+| `SVProjectKit` | Projects, categories, screenshots, skills, persistence, storage, migrations, and use cases. |
 | `SVRemoteImage` | SwiftUI remote-image loading and caching abstraction. |
-| `SVShortcutsKit` | App Shortcuts provider plus project and mockup creation intents. |
-| `SVSkillsKit` | Skills and categories, grouped skill models, persistence, repository, dependency registration, migrations, and skill use cases. |
-| `SVSocialLinkKit` | Social-link models, link types, persistence, repository, dependency registration, CRUD use cases, and service-specific icon views. |
-| `SVSpotlightKit` | Spotlight destinations and items, indexing client, dependency registration, and destination mapping. |
-| `SVSyncKit` | Generic actor-isolated synchronization engine with local/remote stores, metadata, pending changes, conflict resolution, retry policies, missing-remote strategies, state tracking, and sync errors. |
+| `SVShortcutsKit` | App Shortcuts provider and project/mockup creation intents. |
+| `SVSkillsKit` | Skills, categories, grouped models, persistence, migrations, and use cases. |
+| `SVSocialLinkKit` | Social-link models/types, persistence, repository, CRUD use cases, and service icons. |
+| `SVSpotlightKit` | Spotlight items/destinations, indexing client, and destination mapping. |
+| `SVSyncKit` | Generic sync engine, local/remote store contracts, metadata, pending changes, conflict resolution, and retries. |
 
-### iOS feature packages: `Sasvyn/iOS`
-
-The iOS packages are SwiftUI/TCA presentation modules. Each exposes feature state and views while depending on the shared domain kits it presents.
+### iOS packages - `Sasvyn/iOS`
 
 | Package | Responsibility |
 | --- | --- |
-| `iOSAboutKit` | About screen and rich editable profile content. |
-| `iOSAppearanceKit` | Appearance mode and tint selection settings. |
-| `iOSAuthKit` | Sign-in feature, authentication screen, app logo assets, and rich-text link presentation. |
-| `iOSDocumentsKit` | Document list, categories, document cards, and PDF thumbnail views. |
-| `iOSEducationKit` | Education list, education cards, and education form flows. |
-| `iOSExperienceKit` | Experience list, experience cards, and experience form flows. |
-| `iOSHomeKit` | Home dashboard, recent projects, quick actions, and portfolio creation sections. |
-| `iOSLanguageKit` | Language list, language picker, language cards, and language form flows. |
-| `iOSLibraryKit` | Library destinations and aggregation of skills, education, documents, mockups, languages, social links, experience, and About. |
-| `iOSMainKit` | Main tab and navigation container. |
-| `iOSMockupKit` | Mockup list, creation flow, device picker, presentation modes, and image content modes. |
-| `iOSPersonalInformationKit` | Personal-information screen, name editor, and date-of-birth editor. |
-| `iOSPortfolioKit` | Portfolio root, project and experience sections, and featured portfolio cards. |
-| `iOSProjectKit` | Project list and detailed editing for overview, description, role, app information, screenshots, screenshot ordering, and technology stack. |
-| `iOSRootKit` | Top-level iOS root feature, root view, root dependency container, and authentication/main-flow switching. |
-| `iOSSettingsKit` | Settings root and settings destinations including personal information and appearance. |
-| `iOSSkillsKit` | Skills list, add-skills sheet, skill modes, and skill chips. |
-| `iOSSocialLinkKit` | Social-link list and add/edit form flows. |
+| `iOSAboutKit` | About screen and editable profile content. |
+| `iOSAppearanceKit` | Appearance mode and tint selection. |
+| `iOSAuthKit` | Sign-in feature and authentication screen. |
+| `iOSDocumentsKit` | Document list, categories, cards, and PDF thumbnail views. |
+| `iOSEducationKit` | Education list, cards, and forms. |
+| `iOSExperienceKit` | Experience list, cards, and forms. |
+| `iOSHomeKit` | Dashboard, recent projects, and quick-action entry points. |
+| `iOSLanguageKit` | Language list, picker, cards, and forms. |
+| `iOSLibraryKit` | Library destinations aggregating profile and portfolio-related areas. |
+| `iOSMainKit` | Main tab and navigation composition. |
+| `iOSMockupKit` | Mockup list, creation, device picker, and presentation modes. |
+| `iOSPersonalInformationKit` | Personal-information screen and profile editors. |
+| `iOSPortfolioKit` | Portfolio root, project/experience sections, and featured cards. |
+| `iOSProjectKit` | Project list and project editing flows. |
+| `iOSRootKit` | iOS root feature, dependency container, and auth/main-flow switching. |
+| `iOSSettingsKit` | Settings root and destinations. |
+| `iOSSkillsKit` | Skills list, add flow, modes, and chips. |
+| `iOSSocialLinkKit` | Social-link list and add/edit forms. |
 
-### macOS feature packages: `Sasvyn/macOS`
+### macOS packages - `Sasvyn/macOS`
 
 | Package | Responsibility |
 | --- | --- |
 | `macOSAuthKit` | macOS authentication package scaffold. |
 | `macOSMainKit` | macOS main feature and view. |
-| `macOSRootKit` | macOS root feature and view, dependency composition, and main-flow assembly. |
+| `macOSRootKit` | macOS root feature, dependency composition, and main-flow assembly. |
 
-## Application Lifecycle
+## Application lifecycle
 
-The application entry point is `Sasvyn/App/SasvynApp.swift`.
+The entry point is [`SasvynApp.swift`](Sasvyn/App/SasvynApp.swift).
 
 1. `SasvynApp` creates the shared `SVAppDIContainer`.
-2. Conditional compilation selects `iOSRootDIContainer` or `macOSRootDIContainer`.
-3. The platform root builds the initial view and feature hierarchy.
-4. The root container is made available to the platform app delegate for external actions.
-5. The SwiftUI window uses a default size of `1200 x 800` and content-driven minimum sizing.
+2. Compile-time platform selection constructs `iOSRootDIContainer` or `macOSRootDIContainer`.
+3. The selected root container creates the initial view and feature hierarchy.
+4. The root container is exposed to the app delegate for supported external actions.
+5. The SwiftUI window is configured with a default size of 1200 x 800 and content-driven minimum sizing.
 
-`AppDelegate.swift` provides the platform-specific UIKit or AppKit delegate. On iOS, `SceneDelegate.swift` receives quick actions, Spotlight activities, and App Intents, converts them to `QuickAppAction` or Spotlight destinations, and dispatches them into the root TCA store.
+On iOS, [`SceneDelegate.swift`](Sasvyn/App/SceneDelegate.swift) receives quick actions, Spotlight activities, and App Intents, then dispatches recognized actions into the root feature. Unknown quick-action identifiers are ignored.
 
-## Data and Persistence
+## Data, persistence, and sync
 
-Sasvyn uses `SVDatabaseKit` as the shared persistence abstraction over GRDB. Domain packages keep their database concerns local to the package that owns the domain:
+`SVDatabaseKit` provides the shared persistence abstraction over GRDB. Domain packages own their records and migrations, map persisted values to domain entities, and expose operations through repository/use-case and TCA dependency layers. Local documents, project screenshots, profile images, and mockup assets use file-storage helpers rather than being treated as ordinary database values.
 
-- database records represent persisted storage;
-- migrations create and evolve tables;
-- mappers convert records into domain entities;
-- repositories coordinate local sources and use cases;
-- TCA dependency clients expose those operations to feature reducers.
+`SVSyncKit` defines reusable synchronization contracts:
 
-The personal-information schema also stores synchronization metadata such as server version, last synchronization time, pending operation identifiers, retry count, operation type, and the most recent synchronization error.
-
-Documents, images, project screenshots, and mockup assets use file-storage helpers and package-owned storage configuration where required. The application group entitlement is available as `group.com.sasvyn.shared` for shared container access.
-
-## Networking and Synchronization
-
-`SVNetwork` centralizes HTTP concerns, environment resolution, authentication tokens, refresh behavior, uploads, image uploads, response DTOs, and network synchronization status.
-
-`SVSyncKit` provides the reusable synchronization contract:
-
-- `SyncableEntity` identifies Codable, Sendable entities with a sync version and update timestamp.
-- `SyncLocalStore` defines local entity, metadata, and pending-change operations.
-- `SyncRemoteStore` defines remote fetch, create, update, and delete operations.
-- `DefaultSyncEngine` coordinates one synchronization request per entity and suppresses duplicate concurrent requests.
-- `SyncConflictResolver` handles same-version or otherwise conflicting local and remote changes.
+- `SyncableEntity` supplies an entity identity, sync version, and update timestamp.
+- `SyncLocalStore` and `SyncRemoteStore` abstract local and remote operations.
+- `DefaultSyncEngine` reconciles local and remote state, coordinates per-entity requests, and supports bulk and pending-change synchronization.
+- `SyncConflictResolver` decides how conflicting versions are resolved.
 - `SyncRetryPolicy`, `SyncRetryStrategy`, and `SyncSleeper` control retry classification and backoff.
-- `SyncMissingRemoteStrategy` defines behavior when an entity exists locally but not remotely.
-- `SyncStateStore` and `SyncMetadataStore` expose synchronization state and metadata persistence.
-- `SyncOperationContext`, `SyncOperationID`, and `SyncPendingChange` preserve idempotent operation context across retries.
+- `SyncMissingRemoteStrategy`, `SyncMetadataStore`, and sync-state types handle missing entities and persisted sync status.
+- Operation IDs and pending-change context support idempotent retries.
 
-The user profile is currently the primary domain integrated with this engine. Local changes are persisted as pending work, remote network failures are classified for retry, and synchronization state is reflected in the user record.
+Personal information is the most complete feature-level integration of local and remote profile data with synchronization metadata. The engine is reusable, but it should not be assumed that every domain package currently syncs.
 
-## Platform Integrations
+## Apple platform integrations
 
-### Quick Actions
+### Quick actions
 
-The application declares four iOS home-screen quick actions in `Sasvyn/Info.plist`:
-
-- New Project
-- My Projects
-- Create Mockup
-- Export Portfolio
-
-`SceneDelegate` maps those identifiers to `QuickAppAction` values and sends them to the root feature.
+The current iOS `Info.plist` declares two home-screen quick actions: **New Project** and **Create Mockup**. Scene handling maps known action identifiers to root actions.
 
 ### App Intents and Shortcuts
 
-`SVShortcutsKit` registers project and mockup creation intents. The scene delegate handles those intents when the application launches or is already running and routes them to the same root action system used by quick actions.
+`SVShortcutsKit` declares project-creation and mockup-creation intents and exposes them through an App Shortcuts provider. Scene launch and active-scene handling route the recognized intents to the same root action system.
 
 ### Core Spotlight
 
-`SVSpotlightKit` defines indexed items and destinations. Spotlight activities are decoded by `SceneDelegate`, mapped to a destination, and dispatched to the root feature for navigation.
+`SVSpotlightKit` defines searchable items and destinations. Spotlight activities are decoded by the iOS scene delegate and dispatched to the root feature for navigation.
 
-### Appearance
+### Appearance and media
 
-The iOS appearance package supports appearance mode and app tint selection. The application also configures the iOS navigation back indicator using the accent color at startup.
+The iOS appearance feature provides appearance and tint choices. Photo-library access is declared for selecting images for mockups and profile pictures. The app also includes device mockup assets and shared image/viewer components.
 
 ## Requirements
 
-The package manifests currently specify:
+- A macOS development machine with Xcode and Apple-platform SDKs compatible with the project.
+- Swift tools version **6.4** for the package manifests.
+- iOS **26** and macOS **26** deployment support for the app/shared package configurations.
+- The Xcode test targets currently specify deployment targets of **27.0**; an eligible newer simulator/runtime may be needed to run those targets.
+- Ruby and Bundler are needed only for the Fastlane workflows.
+- A configured Apple development team and signing setup are needed for signed device builds.
 
-- Xcode with Swift Package Manager support for Swift tools version **6.4**.
-- iOS **26** SDK and deployment target for iOS packages.
-- macOS **26** SDK and deployment target for shared/macOS packages where declared.
-- macOS for development, because the repository is an Xcode project for Apple platforms.
-- Ruby and Bundler for the Fastlane workflows.
-- An Apple development team and signing configuration for device builds.
+The app target currently supports iOS, iOS Simulator, and macOS in the Xcode project. Its current iOS device family is iPhone (`TARGETED_DEVICE_FAMILY = 1`); do not infer iPad support from the presence of iOS packages alone.
 
-The Xcode project uses bundle identifier `com.thakurvijay.sasvyn` and automatic Apple Development signing metadata. Replace project signing values with your own team configuration when working in another Apple Developer account.
+## Getting started
 
-## Getting Started
+```bash
+git clone https://github.com/thakur-vijay/sasvyn.git
+cd sasvyn
+open Sasvyn.xcodeproj
+```
 
-1. Clone the repository and open the project:
+In Xcode:
 
-	 ```bash
-	 git clone <repository-url>
-	 cd Sasvyn
-	 open Sasvyn.xcodeproj
-	 ```
+1. Select the shared **Sasvyn** scheme.
+2. Select an installed iOS Simulator, eligible iOS device, or macOS destination.
+3. Let Xcode resolve the Swift packages.
+4. For device runs, select a development team in Signing & Capabilities.
 
-2. Select the shared `Sasvyn` scheme in Xcode.
+The local packages are declared through the Xcode project and their own manifests. For a package-level change, run package commands from that package directory; for app integration, build from the root Xcode project.
 
-3. Choose an iOS simulator, an iOS device, or a macOS destination supported by the current project configuration.
+## Build and test
 
-4. Allow Xcode to resolve the Swift package dependencies. Package dependencies are declared in the individual manifests under `Sasvyn/Modules`, `Sasvyn/iOS`, and `Sasvyn/macOS`; committed `Package.resolved` files preserve selected versions where present.
-
-5. Configure the development team and signing settings for local device installation.
-
-The repository contains local path dependencies, so package development should normally be performed from the root Xcode project or from the individual package directory that owns the change.
-
-## Building
-
-### Xcode
-
-Open `Sasvyn.xcodeproj`, select the `Sasvyn` scheme, choose a destination, and use **Build** or **Run** from Xcode.
-
-### Command line
-
-The project contains one shared application scheme. A typical simulator build is:
+### Discover destinations
 
 ```bash
 xcodebuild \
-	-project Sasvyn.xcodeproj \
-	-scheme Sasvyn \
-	-destination 'platform=iOS Simulator,name=iPhone 14 Plus' \
-	build
+  -project Sasvyn.xcodeproj \
+  -scheme Sasvyn \
+  -showdestinations
 ```
 
-Use an available simulator name from Xcode when the configured destination is not installed locally. Device builds require valid signing credentials and a connected or otherwise eligible destination.
+### Build the app
 
-## Testing
+Replace the example simulator with one reported by `-showdestinations`:
 
-### Xcode project tests
+```bash
+xcodebuild \
+  -project Sasvyn.xcodeproj \
+  -scheme Sasvyn \
+  -destination 'platform=iOS Simulator,name=iPhone 14 Plus' \
+  build
+```
 
-Run the `SasvynTests` and `SasvynUITests` targets from Xcode, or use the test action for the shared scheme.
+For a macOS build, use `-destination 'platform=macOS'`. A device build requires valid signing credentials:
 
-### Swift package tests
+```bash
+xcodebuild \
+  -project Sasvyn.xcodeproj \
+  -scheme Sasvyn \
+  -destination 'generic/platform=iOS' \
+  build
+```
 
-Run tests from an individual package directory:
+### Run Xcode tests
+
+The shared scheme includes `SasvynTests` and `SasvynUITests`. Choose a simulator compatible with the test targets' current deployment target:
+
+```bash
+xcodebuild \
+  -project Sasvyn.xcodeproj \
+  -scheme Sasvyn \
+  -destination 'platform=iOS Simulator,name=iPhone 14 Plus' \
+  test
+```
+
+### Run a package test suite
 
 ```bash
 cd Sasvyn/Modules/SVSyncKit
 swift test
 ```
 
-The same pattern applies to any package with a `Tests` directory, for example:
+The same command works in other package directories that declare tests, for example `Sasvyn/Modules/SVExperienceKit`.
 
-```bash
-cd Sasvyn/Modules/SVExperienceKit
-swift test
-```
+### Test coverage notes
 
-The strongest current package-level coverage is in `SVSyncKit`, including downloads when the server is newer, uploads when local data is newer, conflict resolution, pending local changes, duplicate-request suppression, retry behavior, and missing remote entities. `SVExperienceKit` also includes a focused experience behavior test. Many other package and application tests are still generated placeholder tests and should be expanded as features mature.
+- `SVSyncKit` has focused tests for server-newer downloads, local-newer uploads, same-version conflict resolution, pending local changes, duplicate-request suppression, retries, and missing remote entities.
+- `SVExperienceKit` tests that a currently active experience clears its end date.
+- The app unit-test file and UI-test file are still Xcode-generated scaffolding; they do not yet provide broad product behavior coverage. Several package test targets are also placeholders.
 
-## Automation
+## Fastlane
 
-Fastlane is configured through the root `Gemfile` and `fastlane/Fastfile`.
-
-Install the Ruby dependency:
+The root `Gemfile` declares Fastlane. Install it and run one of the build-only lanes:
 
 ```bash
 bundle install
-```
-
-Available lanes:
-
-```bash
 bundle exec fastlane ios simulator
 bundle exec fastlane ios iphone
 ```
 
-`simulator` cleans and builds for the configured iPhone 14 Plus simulator. `iphone` cleans and builds for a generic iOS device. These lanes require Xcode command-line tools and an appropriate local signing environment.
+`simulator` cleans and builds using the configured **iPhone 14 Plus** simulator destination. `iphone` cleans and builds for `generic/platform=iOS`. These lanes do not archive, distribute, or upload a release. [`ExportOptions.plist`](ExportOptions.plist) currently describes a development export.
 
-`ExportOptions.plist` currently describes a development export. Distribution or App Store workflows require a separate signing and export configuration.
+## Configuration and signing
 
-## Configuration and Signing
-
-Important project configuration files include:
-
-| File | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `Sasvyn/Info.plist` | Bundle metadata and iOS home-screen quick actions. |
-| `Sasvyn/Sasvyn.entitlements` | Shared application group entitlement. |
-| `ExportOptions.plist` | Development export method and export settings. |
-| `Sasvyn.xcodeproj/project.pbxproj` | Application targets, package products, build settings, and resources. |
-| `Sasvyn.xcodeproj/xcshareddata/xcschemes/` | Shared Xcode scheme configuration. |
-| `Gemfile` | Fastlane Ruby dependency. |
-| `fastlane/Appfile` | Fastlane application identity configuration. |
-| `fastlane/Fastfile` | Build lanes for simulator and iPhone workflows. |
+| `Sasvyn/Info.plist` | App metadata and the two declared iOS home-screen quick actions. |
+| `Sasvyn/Sasvyn.entitlements` | Apple Sign In entitlement. |
+| `Sasvyn.xcodeproj/project.pbxproj` | App/test targets, package products, deployment settings, and signing settings. |
+| `Sasvyn.xcodeproj/xcshareddata/xcschemes/Sasvyn.xcscheme` | Shared build, launch, and test scheme. |
+| `Sasvyn.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved` | Resolved Swift package versions. |
+| `Gemfile` | Ruby dependency declaration for Fastlane. |
+| `fastlane/Appfile` | Fastlane app identity settings. |
+| `fastlane/Fastfile` | Simulator and generic iPhone build lanes. |
+| `ExportOptions.plist` | Development export configuration. |
 
-Never commit personal signing credentials, private tokens, production secrets, or machine-specific provisioning material. Network environment and authentication values should be supplied through the project’s supported configuration and secure local development environment.
+The app target currently uses automatic signing and a project-configured development team. The configured app bundle identifier is `com.artist.yattsTest`; review both values and select your own team/identifier before using the project in another Apple Developer account. Do not commit personal credentials, private tokens, provisioning profiles, or machine-specific signing material.
 
-## Project Status
+The network container currently selects the development environment in code. The environment resolver maps the declared environment cases to the same configured API base URL today; treat staging/production separation as unfinished until that configuration is deliberately changed and verified.
 
-Sasvyn is an actively modularized application. The repository already contains the domain, persistence, network, UI, synchronization, Spotlight, and shortcut foundations described above. The current implementation is still evolving:
+## Current limitations
 
-- macOS authentication is currently a package scaffold.
-- The share-extension directory currently contains localization scaffolding and is not represented as an application target in the project structure.
-- Test targets exist across the package graph, but broad behavioral coverage is still in progress.
-- Build and deployment settings currently target the project’s Swift tools and Apple SDK versions; update them together when changing platform support.
+- The macOS root/main packages exist, but `macOSAuthKit` is a scaffold and the macOS feature surface is not equivalent to iOS.
+- `SasvynShareExtension` contains localization scaffolding only; it is not an Xcode target.
+- Most product data is persisted locally; a generic sync engine does not mean every repository synchronizes remotely.
+- Broad app and UI behavior test coverage is still in progress.
+- App/test deployment settings differ: the app is set to iOS/macOS 26, while Xcode test targets are set to 27.0.
+- The development, staging, production, and custom network enum cases do not currently resolve to separate API hosts.
 
-When adding a new domain, prefer the existing package pattern: define domain entities and repository contracts, implement local and remote data sources, add database records and migrations, expose dependencies through a client/container, then add platform-specific TCA features and views. Keep shared business behavior in `Sasvyn/Modules` and platform presentation in `Sasvyn/iOS` or `Sasvyn/macOS`.
+## Contributing
+
+When adding or changing a domain feature:
+
+1. Keep domain entities, repository contracts, and use cases in the relevant shared package under `Sasvyn/Modules`.
+2. Implement local/remote sources, DTOs, records, migrations, and mapping in the owning package as needed.
+3. Register dependencies through the package client/container and app-level composition.
+4. Put platform-specific reducers, views, and navigation in `Sasvyn/iOS` or `Sasvyn/macOS`.
+5. Add focused package tests for domain and persistence behavior; add app/UI coverage for user-visible workflows.
+6. Update this README when package responsibilities, platform support, setup, or automation change.
+
+Keep changes scoped to the package that owns the behavior and verify them with that package's tests plus an app build when integration is affected.
+
+## License
+
+Sasvyn is distributed under the [MIT License](LICENSE).

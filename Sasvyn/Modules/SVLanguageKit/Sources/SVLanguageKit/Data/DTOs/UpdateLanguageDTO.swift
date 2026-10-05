@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+internal struct UpdateLanguageDTO: Encodable {
+    let languageCode: String
+    let language: String
+    let proficiency: Int16
+}

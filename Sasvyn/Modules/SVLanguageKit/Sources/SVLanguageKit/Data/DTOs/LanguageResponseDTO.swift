@@ -12,8 +12,21 @@ internal struct LanguageResponseDTO: Codable, Sendable, Hashable{
     let userId: String
     let languageCode: String
     let language: String
-    let proficiency: String
+    let proficiency: Int16
     let syncVersion: Int64
     let createdAt: Date
     let updatedAt: Date
+}
+
+internal extension LanguageResponseDTO {
+    func toDomain()-> SpokenLanguage{
+        .init(
+            id: id,
+            languageCode: languageCode,
+            language: language,
+            proficiency: LanguageProficiency(rawValue: proficiency) ?? .elementary,
+            syncVersion: syncVersion,
+            updatedAt: updatedAt
+        )
+    }
 }

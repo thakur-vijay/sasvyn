@@ -18,7 +18,7 @@ enum SpokenLanguageRecordMapper {
             id: record.id,
             languageCode: record.languageCode,
             language: record.language,
-            proficiency: LanguageProficiency(rawValue: record.proficiency) ?? .elementary,
+            proficiency: LanguageProficiency(rawValue: Int16(record.proficiency)) ?? .elementary,
             syncVersion: metadata?.serverVersion ?? 0,
             updatedAt: record.updatedAt
         )

@@ -14,7 +14,7 @@ public struct FetchSpokenLanguagesUseCase: Sendable {
         self.repository = repository
     }
     
-    func execute()async throws->[SpokenLanguage] {
-        try await repository.fetch()
+    func execute()-> AsyncStream<[SpokenLanguage]>{
+        repository.fetch()
     }
 }

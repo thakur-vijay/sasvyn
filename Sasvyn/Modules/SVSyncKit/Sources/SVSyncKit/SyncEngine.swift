@@ -20,7 +20,6 @@ public protocol SyncEngine<Entity>: Sendable {
     func enqueue(
         id: Entity.ID,
         operation: SyncOperation,
-        entityType: SyncEntityType
     ) async throws
 
     func syncPendingChanges() async throws
@@ -339,7 +338,6 @@ where
     public func enqueue(
         id: Entity.ID,
         operation: SyncOperation,
-        entityType: SyncEntityType
     ) async throws {
         let operationID = IDGenerator.uuid()
         if (try await metadataStore.metadata(id: id)) != nil {
@@ -354,7 +352,7 @@ where
             try await metadataStore.saveMetadata(
                 .init(
                     id: id,
-                    entityType: entityType.rawValue,
+                    entityType: Entity.entityType.rawValue,
                     state: .pending,
                     serverVersion: 0,
                     lastSyncedAt: nil,

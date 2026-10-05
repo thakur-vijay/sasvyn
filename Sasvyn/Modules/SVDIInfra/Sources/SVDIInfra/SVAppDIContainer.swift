@@ -71,7 +71,11 @@ public final class SVAppDIContainer {
     }()
     
     lazy var languagesDIContainer: LanguagesDIContainer = {
-        LanguagesDIContainer(database: databaseContainer.appDatabase)
+        LanguagesDIContainer(
+            database: databaseContainer.appDatabase,
+            networkClient: networkContainer.client,
+            metadataStore: metadataStore
+        )
     }()
     
     lazy var metadataStore: any SyncMetadataStore = {

@@ -7,42 +7,49 @@
 
 import SVDatabaseKit
 import ComposableArchitecture
+import NetworkKit
+import SVSyncKit
 
 @available(iOS 26.0, macOS 15.0, *)
 public final class LanguagesDIContainer{
 
     private let database: AppDatabase
-
-    public init(database: AppDatabase) {
+    private let networkClient: any NetworkClientProtocol
+    private let metadataStore: any SyncMetadataStore
+    
+    public init(
+        database: AppDatabase,
+        networkClient: any NetworkClientProtocol,
+        metadataStore: any SyncMetadataStore
+    ) {
         self.database = database
+        self.networkClient = networkClient
+        self.metadataStore = metadataStore
     }
 
-    private lazy var dataSource: LanguagesLocalDataSource = {
+    private lazy var localDataSource: LanguagesLocalDataSource = {
         LanguagesLocalDataSource(database: database)
     }()
     
-    private final class TestRepo: LanguagesRepository {
-        func loadLanguagesJSON() async throws -> [Language] {
-            return []
-        }
-        
-        func fetch() async throws -> [SpokenLanguage] {
-            return []
-        }
-        
-        func save(_ language: SpokenLanguage) async throws {
-            
-        }
-        
-        func delete(_ id: String) async throws {
-            
-        }
-        
-        
-    }
-
+    private lazy var remoteDataSource: LanguagesRemoteDataSource = {
+        LanguagesRemoteDataSource(client: networkClient)
+    }()
+    
+    private lazy var syncEngine: any SyncEngine<SpokenLanguage> = {
+        DefaultSyncEngine(
+            localStore: localDataSource,
+            remoteStore: remoteDataSource,
+            metadataStore: metadataStore,
+            conflictResolver: DefaultSyncConflictResolver(strategy: .remoteWins),
+        )
+    }()
+    
     private lazy var repository: LanguagesRepository = {
-        TestRepo()
+        DefaultLanguagesRepository(
+            localDataSource: localDataSource,
+            remoteDataSource: remoteDataSource,
+            syncEngine: syncEngine
+        )
     }()
     
     private lazy var loadLanguagesJSONUseCase: LoadLanguagesJSONUseCase = {
@@ -53,8 +60,12 @@ public final class LanguagesDIContainer{
         FetchSpokenLanguagesUseCase(repository: repository)
     }()
     
-    private lazy var saveSpokenLanguageUseCase: SaveSpokenLanguageUseCase = {
-        SaveSpokenLanguageUseCase(repository: repository)
+    private lazy var addSpokenLanguageUseCase: AddSpokenLanguageUseCase = {
+        AddSpokenLanguageUseCase(repository: repository)
+    }()
+    
+    private lazy var updateSpokenLanguageUseCase: UpdateSpokenLanguageUseCase = {
+        UpdateSpokenLanguageUseCase(repository: repository)
     }()
 
     private lazy var deleteSpokenLanguageUseCase: DeleteSpokenLanguageUseCase = {
@@ -65,7 +76,8 @@ public final class LanguagesDIContainer{
         LanguagesClient.live(
             loadLanguagesJSONUseCase: loadLanguagesJSONUseCase,
             fetchSpokenLanguagesUseCase: fetchSpokenLanguagesUseCase,
-            saveSpokenLanguageUseCase: saveSpokenLanguageUseCase,
+            addSpokenLanguageUseCase: addSpokenLanguageUseCase,
+            updateSpokenLanguageUseCase: updateSpokenLanguageUseCase,
             deleteSpokenLanguageUseCase: deleteSpokenLanguageUseCase
         )
     }()

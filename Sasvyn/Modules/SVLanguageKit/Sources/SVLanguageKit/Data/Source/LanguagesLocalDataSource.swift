@@ -10,7 +10,7 @@ import SVDatabaseKit
 import SVSyncKit
 import SVFoundation
 
-final class LanguagesLocalDataSource: SyncLocalStore, @unchecked Sendable {
+internal final class LanguagesLocalDataSource: SyncLocalStore, @unchecked Sendable {
 
     private let database: AppDatabase
     
@@ -128,7 +128,7 @@ final class LanguagesLocalDataSource: SyncLocalStore, @unchecked Sendable {
                 id: entity.id,
                 languageCode: entity.languageCode,
                 language: entity.language,
-                proficiency: entity.proficiency.rawValue,
+                proficiency: Int(entity.proficiency.rawValue),
                 createdAt: .now,
                 updatedAt: .now
             )
@@ -143,7 +143,7 @@ final class LanguagesLocalDataSource: SyncLocalStore, @unchecked Sendable {
                 table: SpokenLanguageRecord.databaseTableName,
                 values: [
                     SpokenLanguageRecord.ColumnNames.language: .text(entity.language),
-                    SpokenLanguageRecord.ColumnNames.proficiency: .integer(entity.proficiency.rawValue),
+                    SpokenLanguageRecord.ColumnNames.proficiency: .integer(Int(entity.proficiency.rawValue)),
                     SpokenLanguageRecord.ColumnNames.updatedAt: .date(.now),
                 ],
                 whereColumn: SpokenLanguageRecord.ColumnNames.languageCode,

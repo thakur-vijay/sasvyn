@@ -78,17 +78,21 @@ public struct iOSLanguagesFeature {
             case .destination(_):
                 return .none
             case .addLanguageTapped:
+                let languageCodes = state.languages.map { $0.languageCode }
                 state.destination = .languageForm(
                     .init(
                         spokenLanguage: .init(
                             id: IDGenerator.uuid()
                         ),
-                        mode: .create
+                        mode: .create,
+                        languageCodes: .init(languageCodes)
                     )
                 )
                 return .none
             case .editLanguageTapped(let language):
-                state.destination = .languageForm(.init(spokenLanguage: language, mode: .edit))
+                state.destination = .languageForm(
+                    .init(spokenLanguage: language, mode: .edit, languageCodes: .init())
+                )
                 return .none
             case .deleteLanguageTapped(let language):
                 state.languageToDelete = language
@@ -134,11 +138,8 @@ public struct iOSLanguagesFeature {
                 return .none
             case .onTask:
                 return .run {[client] send in
-                    do {
-                        let languages = try await client.fetch()
+                    for await languages in client.fetch(){
                         await send(.languagesLoaded(languages))
-                    }catch {
-                        print(error.localizedDescription)
                     }
                 }
             case .languagesLoaded(let languages):

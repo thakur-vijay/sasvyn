@@ -13,12 +13,15 @@ public struct LanguagesClient: Sendable{
     @Sendable () async throws -> [Language]
     
     public var fetch:
-    @Sendable () async throws -> [SpokenLanguage]
+    @Sendable () -> AsyncStream<[SpokenLanguage]>
     
     public var delete:
     @Sendable (_ id: String) async throws -> Void
     
-    public var save:
+    public var add:
+    @Sendable (_ language: SpokenLanguage) async throws -> Void
+    
+    public var update:
     @Sendable (_ language: SpokenLanguage) async throws -> Void
     
 }
@@ -28,17 +31,20 @@ extension LanguagesClient {
     static func live(
         loadLanguagesJSONUseCase: LoadLanguagesJSONUseCase,
         fetchSpokenLanguagesUseCase: FetchSpokenLanguagesUseCase,
-        saveSpokenLanguageUseCase: SaveSpokenLanguageUseCase,
+        addSpokenLanguageUseCase: AddSpokenLanguageUseCase,
+        updateSpokenLanguageUseCase: UpdateSpokenLanguageUseCase,
         deleteSpokenLanguageUseCase: DeleteSpokenLanguageUseCase
     ) -> Self {
         Self {
             try await loadLanguagesJSONUseCase.execute()
         } fetch: {
-            try await fetchSpokenLanguagesUseCase.execute()
+            fetchSpokenLanguagesUseCase.execute()
         } delete: { id in
             try await deleteSpokenLanguageUseCase.execute(id)
-        } save: { language in
-            try await saveSpokenLanguageUseCase.execute(language)
+        } add: { language in
+            try await addSpokenLanguageUseCase.execute(language)
+        } update: { language in
+            try await updateSpokenLanguageUseCase.execute(language)
         }
     }
 }
@@ -51,7 +57,9 @@ extension LanguagesClient: DependencyKey {
         fatalError("Unimplemented")
     } delete: { id in
         fatalError("Unimplemented")
-    } save: { education in
+    } add: { language in
+        fatalError("Unimplemented")
+    } update: { language in
         fatalError("Unimplemented")
     }
 }
@@ -61,10 +69,15 @@ extension LanguagesClient: TestDependencyKey {
     public static let testValue = Self {
         return []
     } fetch: {
-        return []
+        return .init { continuation in
+            continuation.yield([])
+            continuation.finish()
+        }
     } delete: { id in
         
-    } save: { education in
+    } add: { language in
+        
+    } update: { language in
         
     }
 

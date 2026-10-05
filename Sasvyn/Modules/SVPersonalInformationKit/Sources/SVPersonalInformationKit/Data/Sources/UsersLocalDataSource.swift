@@ -18,169 +18,6 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
     init(database: AppDatabase) {
         self.database = database
     }
-
-    func metadata(id: String) async throws -> SyncMetadata?{
-        try await database.read { db in
-            guard let record = try db.fetchOne(
-                SyncMetadataRecord.self,
-                filters: [.equals(
-                    SyncMetadataRecord.ColumnNames.entityID,
-                    .text(id)
-                )]
-            ) else { throw URLError(.dataNotAllowed)}
-            print("🗄️ DB METADATA RECORD VERSION:", record.serverVersion)
-            print("🗄️ DB METADATA STATUS:", record.syncStatus)
-            print("🗄️ DB METADATA ID:", record.entityID)
-            print("🆔 DB OPERATION ID:", record.syncOperationID as Any)
-            print("⚙️ DB OPERATION:", record.syncOperation as Any)
-            print("📊 DB STATUS:", record.syncStatus as Any)
-            return SyncMetadataRecordMapper.map(record)
-        }
-    }
-
-    func saveMetadata(_ metadata: SyncMetadata) async throws {
-        let status: SyncStatus
-
-        switch metadata.state {
-        case .pending:
-            status = .pending
-        case .syncing:
-            status = .syncing
-        case .failed:
-            status = .failed
-        case .synced:
-            status = .synced
-        case .idle:
-            status = .idle
-        }
-
-        try await database.write { db in
-
-            let record = SyncMetadataRecord(
-                id: IDGenerator.uuid(),
-                entityType: metadata.entityType,
-                entityID: metadata.id,
-                syncStatus: status,
-                serverVersion: metadata.serverVersion,
-                syncedAt: metadata.lastSyncedAt,
-                syncOperationID: metadata.operationID,
-                syncOperation: metadata.operation,
-                syncRetryCount: metadata.retryCount,
-                syncError: metadata.lastError
-            )
-
-            try db.insert(record)
-        }
-    }
-
-    func deleteMetadata(id: String) async throws {
-        try await database.write { db in
-            try db.delete(
-                SyncMetadataRecord.self,
-                where: .equals(
-                    SyncMetadataRecord.ColumnNames.entityID,
-                    .text(
-                        id
-                    )
-                )
-            )
-        }
-    }
-    
-    func fetchMetadata() async throws -> [SyncMetadata] {
-        return []
-    }
-    
-    func fetchPendingMetadata() async throws -> [SyncMetadata] {
-        try await database.read { db in
-           let records = try db.fetchAll(
-                SyncMetadataRecord.self,
-                filters: [.equals(
-                    SyncMetadataRecord.ColumnNames.syncStatus,
-                    .text(SyncStatus.pending.rawValue)
-                )],
-            )
-            return records.map { SyncMetadataRecordMapper.map($0)}
-        }
-    }
-    
-    func markPending(
-        id: String,
-        operation: SyncOperation,
-        operationID: String
-    ) async throws {
-
-        try await database.write { db in
-            try db.update(
-                table: SyncMetadataRecord.databaseTableName,
-                values: [
-                    SyncMetadataRecord.ColumnNames.syncStatus:
-                        .text(SyncStatus.pending.rawValue),
-                    SyncMetadataRecord.ColumnNames.syncOperationID: .text(operationID),
-                    SyncMetadataRecord.ColumnNames.syncOperation:
-                        .text(operation.rawValue),
-                    SyncMetadataRecord.ColumnNames.syncError:
-                        .null
-                ],
-                whereColumn:
-                    SyncMetadataRecord.ColumnNames.entityID,
-                equals:
-                    .text(id)
-            )
-        }
-    }
-    
-    func markFailed(id: String, error: String) async throws {
-        try await database.write { db in
-            try db.update(
-                table: SyncMetadataRecord.databaseTableName,
-                values: [
-                    SyncMetadataRecord.ColumnNames.syncError: .text(error),
-                    SyncMetadataRecord.ColumnNames.syncStatus: .text(SyncStatus.failed.rawValue),
-                ],
-                whereColumn: SyncMetadataRecord.ColumnNames.entityID,
-                equals: .text(id)
-            )
-        }
-    }
-    
-    func markSyncing(id: String) async throws {
-        try await database.write { db in
-            try db.update(
-                table: SyncMetadataRecord.databaseTableName,
-                values: [SyncMetadataRecord.ColumnNames.syncStatus: .text(SyncStatus.syncing.rawValue)],
-                whereColumn: SyncMetadataRecord.ColumnNames.entityID,
-                equals: .text(id)
-            )
-        }
-    }
-    
-    func markSynced(id: String, version: Int64) async throws {
-        try await database.write { db in
-            try db.update(
-                table: SyncMetadataRecord.databaseTableName,
-                values: [
-                    SyncMetadataRecord.ColumnNames.syncStatus: .text(SyncStatus.synced.rawValue),
-                    SyncMetadataRecord.ColumnNames.serverVersion: .integer(Int(version))
-                ],
-                whereColumn: SyncMetadataRecord.ColumnNames.entityID,
-                equals: .text(id)
-            )
-            print("💾 MARK SYNCED VERSION:", version)
-        }
-    }
-
-    func incrementRetryCount(id: String) async throws {
-        guard let record = try await metadata(id: id) else { return }
-        try await database.write { db in
-            try db.update(
-                table: SyncMetadataRecord.databaseTableName,
-                values: [SyncMetadataRecord.ColumnNames.syncRetryCount: .integer(record.retryCount + 1)],
-                whereColumn: UserRecord.ColumnNames.id,
-                equals: .text(id)
-            )
-        }
-    }
     
     func fetchRecord(id: String) async throws -> UserRecord? {
         return try await database.read { database in
@@ -201,10 +38,91 @@ final class UsersLocalDataSource: SyncLocalStore, @unchecked Sendable{
     }
     
     func fetch(id: String) async throws -> LocalEntitySnapshot<User>? {
-        guard let record = try await fetchRecord(id: id) else { return nil }
-        guard let metadata = try await metadata(id: id) else { return nil }
-        
-        return LocalEntitySnapshot(entity: UserRecordMapper.map(record, metadata), metadata: metadata)
+        try await database.read { database in
+            guard let record = try database.fetchOne(
+                UserWithMetadataRecord.self,
+                sql: """
+                SELECT
+                    u.id               AS user_id,
+                    u.apple_id         AS user_apple_id,
+                    u.full_name        AS user_full_name,
+                    u.email            AS user_email,
+                    u.date_of_birth    AS user_date_of_birth,
+                    u.image_local_path AS user_image_local_path,
+                    u.image_url        AS user_image_url,
+                    u.created_at       AS user_created_at,
+                    u.updated_at       AS user_updated_at,
+
+                    sm.id                AS metadata_id,
+                    sm.entity_type       AS entity_type,
+                    sm.entity_id         AS entity_id,
+                    sm.sync_status       AS sync_status,
+                    sm.server_version    AS server_version,
+                    sm.synced_at         AS synced_at,
+                    sm.sync_operation_id AS sync_operation_id,
+                    sm.sync_operation    AS sync_operation,
+                    sm.sync_retry_count  AS sync_retry_count,
+                    sm.sync_error        AS sync_error
+
+                FROM users u
+
+                LEFT JOIN sync_metadata sm
+                    ON sm.entity_id = u.id
+                    AND sm.entity_type = ?
+
+                WHERE u.id = ?
+                """,
+                arguments: [
+                    .text(SyncEntityType.user.rawValue),
+                    .text(id)
+                ]
+            ) else {
+                return nil
+            }
+
+            let userRecord = UserRecord(
+                id: record.userID,
+                appleId: record.userAppleID,
+                fullName: record.userFullName,
+                email: record.userEmail,
+                dateOfBirth: record.userDateOfBirth,
+                imageLocalPath: record.userImageLocalPath,
+                imageUrl: record.userImageURL,
+                createdAt: record.userCreatedAt,
+                updatedAt: record.userUpdatedAt
+            )
+            
+            let metadata: SyncMetadata? = {
+                guard let metadataID = record.metadataID,
+                      let entityType = record.entityType,
+                      let entityID = record.entityID,
+                      let syncStatus = record.syncStatus,
+                      let serverVersion = record.serverVersion
+                else {
+                    return nil
+                }
+
+                let metadataRecord = SyncMetadataRecord(
+                    id: metadataID,
+                    entityType: entityType,
+                    entityID: entityID,
+                    syncStatus: syncStatus,
+                    serverVersion: serverVersion,
+                    syncedAt: record.syncedAt,
+                    syncOperationID: record.syncOperationID,
+                    syncOperation: record.syncOperation,
+                    syncRetryCount: record.syncRetryCount ?? 0,
+                    syncError: record.syncError
+                )
+
+                return SyncMetadataRecordMapper.map(metadataRecord)
+            }()
+
+            return LocalEntitySnapshot(
+                entity: UserRecordMapper.map(userRecord, metadata),
+                metadata: metadata
+            )
+        }
     }
     
     func create(_ entity: User) async throws {

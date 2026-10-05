@@ -10,6 +10,8 @@ import Foundation
 import SVSyncKit
 
 public struct SocialLink: Identifiable, Hashable, Codable, Sendable, SyncableEntity{
+    public static let entityType: SVSyncKit.SyncEntityType = .socialLink
+    
     public let id: String
     public var type: LinkType?
     public var url: URL?

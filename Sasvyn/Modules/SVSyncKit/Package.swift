@@ -15,6 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../SVDatabaseKit"),
+        .package(path: "../SVFoundation"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -22,7 +23,8 @@ let package = Package(
         .target(
             name: "SVSyncKit",
             dependencies: [
-                .product(name: "SVDatabaseKit", package: "SVDatabaseKit")
+                .product(name: "SVDatabaseKit", package: "SVDatabaseKit"),
+                .product(name: "SVFoundation", package: "SVFoundation")
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

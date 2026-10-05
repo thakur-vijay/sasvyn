@@ -9,6 +9,8 @@ import Foundation
 import SVSyncKit
 
 public struct User: Identifiable, Hashable, Codable, Sendable, SyncableEntity {
+    public static let entityType: SVSyncKit.SyncEntityType = .user
+    
     public let id: String
     public let appleId: String
     public var fullName: String

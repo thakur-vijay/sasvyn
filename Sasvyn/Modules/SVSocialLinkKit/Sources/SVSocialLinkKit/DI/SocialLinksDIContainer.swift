@@ -15,10 +15,16 @@ public final class SocialLinksDIContainer{
 
     private let database: AppDatabase
     private let networkClient: any NetworkClientProtocol
+    private let metadataStore: any SyncMetadataStore
 
-    public init(database: AppDatabase, networkClient: any NetworkClientProtocol) {
+    public init(
+        database: AppDatabase,
+        networkClient: any NetworkClientProtocol,
+        metadataStore: any SyncMetadataStore
+    ) {
         self.database = database
         self.networkClient = networkClient
+        self.metadataStore = metadataStore
     }
 
     private lazy var localDataSource: SocialLinksLocalDataSource = {
@@ -33,6 +39,7 @@ public final class SocialLinksDIContainer{
         DefaultSyncEngine(
             localStore: localDataSource,
             remoteStore: remoteDataSource,
+            metadataStore: metadataStore,
             conflictResolver: DefaultSyncConflictResolver<SocialLink>(strategy: .remoteWins),
         )
     }()

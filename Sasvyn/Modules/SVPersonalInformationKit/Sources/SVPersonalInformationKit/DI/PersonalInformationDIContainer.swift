@@ -18,17 +18,20 @@ public final class PersonalInformationDIContainer{
     private let networkClient: any NetworkClientProtocol
     private let tokenStore: any TokenStore
     private let imageUploader: any ImageUploader
+    private let metadataStore: any SyncMetadataStore
 
     public init(
         database: AppDatabase,
         networkClient: any NetworkClientProtocol,
         tokenStore: any TokenStore,
-        imageUploader: any ImageUploader
+        imageUploader: any ImageUploader,
+        metadataStore: any SyncMetadataStore
     ) {
         self.database = database
         self.networkClient = networkClient
         self.tokenStore = tokenStore
         self.imageUploader = imageUploader
+        self.metadataStore = metadataStore
     }
 
     private lazy var localDataSource: UsersLocalDataSource = {
@@ -46,6 +49,7 @@ public final class PersonalInformationDIContainer{
         DefaultSyncEngine(
             localStore: localDataSource,
             remoteStore: remoteDataSource,
+            metadataStore: metadataStore,
             conflictResolver: DefaultSyncConflictResolver<User>(strategy: .remoteWins)
         )
     }()

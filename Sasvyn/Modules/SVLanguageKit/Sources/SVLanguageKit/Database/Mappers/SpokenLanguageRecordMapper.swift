@@ -6,18 +6,21 @@
 //
 
 import Foundation
+import SVSyncKit
 
 enum SpokenLanguageRecordMapper {
 
     nonisolated static func map(
         _ record: SpokenLanguageRecord,
-    ) -> SpokenLanguage? {
-        guard let proficiency = LanguageProficiency(rawValue: record.proficiency) else { return nil}
+        metadata: SyncMetadata?
+    ) -> SpokenLanguage {
         return SpokenLanguage(
             id: record.id,
             languageCode: record.languageCode,
             language: record.language,
-            proficiency: proficiency
+            proficiency: LanguageProficiency(rawValue: record.proficiency) ?? .elementary,
+            syncVersion: metadata?.serverVersion ?? 0,
+            updatedAt: record.updatedAt
         )
     }
 }

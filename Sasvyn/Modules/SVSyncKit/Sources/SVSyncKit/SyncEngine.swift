@@ -42,6 +42,7 @@ where
 
     private let localStore: Local
     private let remoteStore: Remote
+    private let metadataStore: any SyncMetadataStore
     private let conflictResolver: Resolver
     private let retryPolicy: SyncRetryPolicy
     private let retryStrategy: any SyncRetryStrategy
@@ -53,6 +54,7 @@ where
     public init(
         localStore: Local,
         remoteStore: Remote,
+        metadataStore: any SyncMetadataStore,
         conflictResolver: Resolver,
         retryPolicy: SyncRetryPolicy = SyncRetryPolicy(),
         retryStrategy: any SyncRetryStrategy = DefaultSyncRetryStrategy(),
@@ -61,6 +63,7 @@ where
     ) {
         self.localStore = localStore
         self.remoteStore = remoteStore
+        self.metadataStore = metadataStore
         self.conflictResolver = conflictResolver
         self.retryPolicy = retryPolicy
         self.retryStrategy = retryStrategy
@@ -79,7 +82,7 @@ where
         let remote = try await remoteStore.fetch()
         print("☁️ REMOTE COUNT:", remote.count)
 
-        let pendingMetadata = try await localStore.fetchPendingMetadata()
+        let pendingMetadata = try await metadataStore.fetchPendingMetadata(Entity.entityType)
         print("🟡 PENDING METADATA COUNT:", pendingMetadata.count)
 
         let localByID = Dictionary(
@@ -181,7 +184,7 @@ where
             return result
         } catch {
             dump(error)
-            try? await localStore.markFailed(id: id, error: error.localizedDescription)
+            try? await metadataStore.markFailed(id: id, error: error.localizedDescription)
             activeSyncs[id] = nil
             throw error
         }
@@ -190,7 +193,7 @@ where
     private func performSync(id: Entity.ID) async throws -> SyncResult<Entity> {
         try Task.checkCancellation()
         let local = try await localStore.fetch(id: id)
-        let metadata = try await localStore.metadata(id: id)
+        let metadata = try await metadataStore.metadata(id: id)
         let remote = try await executeWithRetry {
             try await remoteStore.fetch(id: id)
         }
@@ -234,7 +237,7 @@ where
 
                 print("🗑️ REMOTE DELETE SUCCESS")
 
-                try await localStore.deleteMetadata(id: remote.id)
+                try await metadataStore.deleteMetadata(id: remote.id)
 
                 print("🗑️ METADATA DELETE SUCCESS")
 
@@ -245,7 +248,7 @@ where
 
             try await localStore.create(remote)
 
-            try await localStore.markSynced(
+            try await metadataStore.markSynced(
                 id: remote.id,
                 version: remote.syncVersion
             )
@@ -291,7 +294,7 @@ where
                 print("🗑️ DELETE ALREADY SATISFIED REMOTELY")
 
                 try await localStore.delete(id: local.id)
-                try await localStore.deleteMetadata(id: local.id)
+                try await metadataStore.deleteMetadata(id: local.id)
 
                 return .noChange
 
@@ -339,16 +342,16 @@ where
         entityType: SyncEntityType
     ) async throws {
         let operationID = IDGenerator.uuid()
-        if (try await localStore.metadata(id: id)) != nil {
+        if (try await metadataStore.metadata(id: id)) != nil {
             print("metadata found", id)
-            try await localStore.markPending(
+            try await metadataStore.markPending(
                 id: id,
                 operation: operation,
                 operationID: operationID
             )
         } else {
             print("Saving metadata", id)
-            try await localStore.saveMetadata(
+            try await metadataStore.saveMetadata(
                 .init(
                     id: id,
                     entityType: entityType.rawValue,
@@ -366,7 +369,7 @@ where
 
     public func syncPendingChanges() async throws {
 
-        let pending = try await localStore.fetchPendingMetadata()
+        let pending = try await metadataStore.fetchPendingMetadata(Entity.entityType)
         var firstError: Error?
 
         for change in pending {
@@ -376,7 +379,7 @@ where
             } catch is CancellationError {
                 throw SyncError.cancelled
             } catch {
-                try? await localStore.incrementRetryCount(id: change.id)
+                try? await metadataStore.incrementRetryCount(id: change.id)
                 firstError = firstError ?? error
             }
         }
@@ -404,7 +407,7 @@ where
 
             try await localStore.update(uploaded)
 
-            try await localStore.markSynced(
+            try await metadataStore.markSynced(
                 id: uploaded.id,
                 version: uploaded.syncVersion
             )
@@ -435,7 +438,7 @@ where
 
             print("🟢 LOCAL UPDATE SUCCESS")
 
-            try await localStore.markSynced(
+            try await metadataStore.markSynced(
                 id: uploaded.id,
                 version: uploaded.syncVersion
             )
@@ -470,7 +473,7 @@ where
 
             print("🟢 LOCAL UPDATE SUCCESS (FAILED RETRY)")
 
-            try await localStore.markSynced(
+            try await metadataStore.markSynced(
                 id: uploaded.id,
                 version: uploaded.syncVersion
             )
@@ -489,7 +492,7 @@ where
         if remote.syncVersion > local.syncVersion {
             print("Updating local")
             try await localStore.update(remote)
-            try await localStore.markSynced(
+            try await metadataStore.markSynced(
                 id: remote.id,
                 version: remote.syncVersion
             )
@@ -510,7 +513,7 @@ where
         if resolved == remote {
             print("Resolved is remote")
             try await localStore.update(remote)
-            try await localStore.markSynced(
+            try await metadataStore.markSynced(
                 id: remote.id,
                 version: remote.syncVersion
             )
@@ -531,7 +534,7 @@ where
 
         print("Updating local")
         try await localStore.update(uploaded)
-        try await localStore.markSynced(
+        try await metadataStore.markSynced(
             id: uploaded.id,
             version: uploaded.syncVersion
         )
@@ -540,7 +543,7 @@ where
     }
 
     private func operationKey(for id: Entity.ID) async throws -> String {
-        guard let metadata = try await localStore.metadata(id: id) else {
+        guard let metadata = try await metadataStore.metadata(id: id) else {
             throw SyncError.metadataNotFound
         }
 

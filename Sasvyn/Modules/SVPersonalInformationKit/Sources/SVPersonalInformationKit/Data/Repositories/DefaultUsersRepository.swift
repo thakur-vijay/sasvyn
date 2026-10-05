@@ -32,55 +32,37 @@ public final class DefaultUsersRepository: UsersRepository {
     
     public func fetchCurrentUser() -> AsyncStream<User> {
         AsyncStream { continuation in
-            Task {
+            let task = Task {
                 guard let userId = tokenStore.userId else {
                     continuation.finish()
                     return
                 }
 
-                if let data = try? await localDataSource.fetch(id: userId){
+                if let data = try? await localDataSource.fetch(id: userId) {
                     continuation.yield(data.entity)
-
-                    do {
-                        let result = try await syncEngine.sync(id: userId)
-
-                        switch result {
-                        case .noChange:
-                            print("There is no change")
-                            break
-
-                        case .downloaded(let user),
-                             .uploaded(let user),
-                             .conflictResolved(let user):
-                            continuation.yield(user)
-                        }
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-
-                    continuation.finish()
-                    return
                 }
 
                 do {
-                    let response = try await remoteDataSource.fetch(userId)
-                    let user = response.data.toDomain()
+                    let result = try await syncEngine.sync(id: userId)
 
-                    try await localDataSource.create(user)
-                    try await localDataSource.saveMetadata(
-                        .init(
-                            id: user.id,
-                            entityType: "user",
-                            state: .synced(version: user.syncVersion),
-                            serverVersion: user.serverVersion,
-                            lastSyncedAt: .now
-                        )
-                    )
+                    switch result {
+                    case .noChange:
+                        break
 
-                    continuation.yield(user)
+                    case .downloaded(let user),
+                         .uploaded(let user),
+                         .conflictResolved(let user):
+                        continuation.yield(user)
+                    }
                 } catch {
-                    continuation.finish()
+                    print(error.localizedDescription)
                 }
+
+                continuation.finish()
+            }
+
+            continuation.onTermination = { @Sendable _ in
+                task.cancel()
             }
         }
     }

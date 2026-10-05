@@ -7,10 +7,7 @@
 
 import Foundation
 
-public protocol SyncLocalStore<Entity>: SyncMetadataStore, Sendable
-where
-    Entity.ID == String
-{
+public protocol SyncLocalStore<Entity>: Sendable where Entity.ID == String {
     associatedtype Entity: SyncableEntity
     
     func fetch() async throws -> [LocalEntitySnapshot<Entity>]

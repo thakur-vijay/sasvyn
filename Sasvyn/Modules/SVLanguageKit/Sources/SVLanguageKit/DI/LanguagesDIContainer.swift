@@ -20,9 +20,29 @@ public final class LanguagesDIContainer{
     private lazy var dataSource: LanguagesLocalDataSource = {
         LanguagesLocalDataSource(database: database)
     }()
+    
+    private final class TestRepo: LanguagesRepository {
+        func loadLanguagesJSON() async throws -> [Language] {
+            return []
+        }
+        
+        func fetch() async throws -> [SpokenLanguage] {
+            return []
+        }
+        
+        func save(_ language: SpokenLanguage) async throws {
+            
+        }
+        
+        func delete(_ id: String) async throws {
+            
+        }
+        
+        
+    }
 
     private lazy var repository: LanguagesRepository = {
-        DefaultLanguagesRepository(dataSource: dataSource)
+        TestRepo()
     }()
     
     private lazy var loadLanguagesJSONUseCase: LoadLanguagesJSONUseCase = {

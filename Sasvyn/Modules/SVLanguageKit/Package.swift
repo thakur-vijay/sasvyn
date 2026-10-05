@@ -20,6 +20,7 @@ let package = Package(
         ),
         .package(path: "../SVDatabaseKit"),
         .package(path: "../SVFoundation"),
+        .package(path: "../SVSyncKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,6 +34,7 @@ let package = Package(
                 ),
                 .product(name: "SVDatabaseKit", package: "SVDatabaseKit"),
                 .product(name: "SVFoundation", package: "SVFoundation"),
+                .product(name: "SVSyncKit", package: "SVSyncKit"),
             ],
             resources: [
                 .process("Resources")

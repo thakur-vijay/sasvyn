@@ -21,6 +21,7 @@ import NetworkKit
 import AuthKit
 import SVPersonalInformationKit
 import SVNetwork
+import SVSyncKit
 
 public final class SVAppDIContainer {
     
@@ -73,10 +74,15 @@ public final class SVAppDIContainer {
         LanguagesDIContainer(database: databaseContainer.appDatabase)
     }()
     
+    lazy var metadataStore: any SyncMetadataStore = {
+        DefaultSyncMetadataStore(database: databaseContainer.appDatabase)
+    }()
+    
     lazy var socialLinksDIContianer: SocialLinksDIContainer = {
         SocialLinksDIContainer(
             database: databaseContainer.appDatabase,
-            networkClient: networkContainer.client
+            networkClient: networkContainer.client,
+            metadataStore: metadataStore
         )
     }()
     
@@ -93,7 +99,8 @@ public final class SVAppDIContainer {
             database: databaseContainer.appDatabase,
             networkClient: networkContainer.client,
             tokenStore: networkContainer.tokenStore,
-            imageUploader: networkContainer.imageUploader
+            imageUploader: networkContainer.imageUploader,
+            metadataStore: metadataStore
         )
     }()
     

@@ -7,7 +7,16 @@
 
 import Foundation
 
-public protocol SyncableEntity: Sendable, Codable, Hashable, Identifiable where ID: Hashable & Sendable & Codable {
+public protocol SyncableEntity:
+    Sendable,
+    Codable,
+    Hashable,
+    Identifiable
+where
+    ID: Hashable & Sendable & Codable
+{
+    static var entityType: SyncEntityType { get }
+
     var id: ID { get }
     var syncVersion: Int64 { get }
     var updatedAt: Date { get }

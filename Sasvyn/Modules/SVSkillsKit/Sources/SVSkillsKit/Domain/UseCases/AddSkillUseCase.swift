@@ -14,7 +14,7 @@ public struct AddSkillUseCase: Sendable {
         self.repository = repository
     }
     
-    func execute(skills: [Skill])async throws {
-        try await repository.add(skills: skills)
+    func execute(_ skill: Skill)async throws {
+        try await repository.add(skill: skill)
     }
 }

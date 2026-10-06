@@ -22,6 +22,14 @@ public struct iOSAddSkillsSheet: View {
             List {
                 SearchAndAddSkillView()
                 CategoryPicker()
+                SVButton(
+                    "Add",
+                    systemImage: SVSymbols.Add.plain.name,
+                    width: .flexible,
+                    shape: .capsule) {
+                        store.send(.addSkillTapped)
+                    }
+                    .clearListStyle()
                 SkillsView()
             }
             .toolbar {
@@ -40,34 +48,15 @@ public struct iOSAddSkillsSheet: View {
     @ViewBuilder
     func SearchAndAddSkillView()-> some View {
         Section {
-            VStack(spacing: 12) {
-                HStack(spacing: 12) {
-                    TextField("", text: $store.skillName, prompt: Text("Enter skill name"))
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                    Button("Add") {
-                        store.send(.addSkillTapped)
-                    }
-                    .disabledWithOpacity(store.skillName.isEmptyString)
+            SVEditableText(
+                description: $store.skillName,
+                placeholder: "Enter skill name",
+                isExpandable: false,
+                collapsedLineLimit: 1,
+                characterLimit: 50,
+                isEditable: true) {
+                    
                 }
-                
-                if !store.skillNames.isEmpty {
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 12) {
-                            ForEach(store.skillNames, id: \.self) { skill in
-                                SkillChip(skill: skill, background: .black, isDeleteHidden: false){
-                                    store.send(.deleteSkillNameTapped(skill))
-                                }
-                                .tag(skill)
-                            }
-                        }
-                        .scrollTargetLayout()
-                    }
-                    .scrollIndicators(.hidden)
-                    .scrollTargetBehavior(.viewAligned)
-                    .scrollPosition(id: $store.skillNameScrollPosition)
-                }
-            }
         } header: {
             Text("Add Skills")
         } footer: {
@@ -88,12 +77,6 @@ public struct iOSAddSkillsSheet: View {
             .tint(.primary)
         } header: {
             Text("Select Category")
-        } footer: {
-            Button("Add"){
-                store.send(.addSkillsTapped)
-            }
-            .frame(maxWidth: .infinity)
-            .buttonStyle(.borderedProminent)
         }
     }
     

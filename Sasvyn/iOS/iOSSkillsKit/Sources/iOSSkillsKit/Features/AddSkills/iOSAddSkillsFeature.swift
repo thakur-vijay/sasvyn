@@ -22,10 +22,8 @@ public struct iOSAddSkillsFeature {
     
     @ObservableState
     public struct State: Equatable {
-        public var skillNames: [String] = []
         public var skills: [Skill] = []
         public var skillName: String = ""
-        public var skillNameScrollPosition: String?
         public var skillCategory: SkillCategory? = .languages
         public var isSkillCategoryPickerPresented: Bool = false
         public init(){
@@ -38,11 +36,9 @@ public struct iOSAddSkillsFeature {
         case onTask
         case closeTapped
         case addSkillTapped
-        case addSkillsTapped
         case categorySelected
-        case skillsAdded(_ category: SkillCategory, _ skills: [Skill])
-        case skillsFailedToAdd
-        case deleteSkillNameTapped(String)
+        case skillAdded(Skill)
+        case skillFailedToAdd
         case deleteSkillTapped(Skill)
         case skillDeleted(Skill)
         case skillFailedToDelete
@@ -50,7 +46,7 @@ public struct iOSAddSkillsFeature {
         
         public enum Delegate {
             case close
-            case skillsAdded(_ category: SkillCategory, _ skills: [Skill])
+            case skillAdded(Skill)
             case skillDeleted(Skill)
         }
     }
@@ -72,54 +68,38 @@ public struct iOSAddSkillsFeature {
             case .closeTapped:
                 return .send(.delegate(.close))
             case .addSkillTapped:
-                state.skillNames.append(state.skillName)
-                state.skillNameScrollPosition = state.skillNames.last
-                state.skillName.removeAll()
-                return .none
-            case .addSkillsTapped:
                 let category = state.skillCategory ?? .languages
-
-                let newSkills = state.skillNames.map {
-                    Skill(
-                        id: IDGenerator.uuid(),
-                        skill: $0,
-                        category: category,
-                        syncVersion: 1,
-                        updatedAt: .now
-                    )
-                }
-
-                let spotlightItems = newSkills.map {
-                    SVSpotlightItem(
-                        destination: .skill(id: $0.id),
-                        title: $0.skill,
-                        description: category.title,
-                        keywords: [$0.skill, category.rawValue],
-                        domainIdentifier: "skills"
-                    )
-                }
-
-                state.skills.append(contentsOf: newSkills)
-
-                return .run { [client, spotlightClient] send in
+                let skillName = state.skillName
+                let skill = Skill(
+                    id: IDGenerator.uuid(),
+                    skill: skillName,
+                    category: category,
+                    syncVersion: 1,
+                    updatedAt: .now
+                )
+                let spotlightItem =  SVSpotlightItem(
+                    destination: .skill(id: skill.id),
+                    title: skill.skill,
+                    description: category.title,
+                    keywords: [skill.skill, category.rawValue],
+                    domainIdentifier: "skills"
+                )
+                return .run {[client, spotlightClient] send in
                     do {
-                        try await client.add(newSkills)
-                        try await spotlightClient.indexMany(spotlightItems)
-
-                        await send(.skillsAdded(category, newSkills))
-                    } catch {
-                        await send(.skillsFailedToAdd)
+                        try await client.add(skill)
+                        try await spotlightClient.index(spotlightItem)
+                        await send(.skillAdded(skill))
+                    }catch {
+                        await send(.skillFailedToAdd)
                     }
                 }
             case .categorySelected:
                 return .none
-            case .deleteSkillNameTapped(let skillName):
-                state.skillNames.removeAll { $0.isEqual(skillName)}
-                return .none
             case .deleteSkillTapped(let skill):
-                return .run { [client] send in
+                return .run { [client, spotlightClient] send in
                     do {
                         try await client.delete(skill.id)
+                        try await spotlightClient.delete(skill.id)
                         await send(.skillDeleted(skill))
                     }catch {
                         await send(.skillFailedToDelete)
@@ -129,10 +109,11 @@ public struct iOSAddSkillsFeature {
                 return .none
             case .binding(_):
                 return .none
-            case .skillsAdded(let category, let skills):
-                state.skillNames.removeAll()
-                return .send(.delegate(.skillsAdded(category, skills)))
-            case .skillsFailedToAdd:
+            case .skillAdded(let skill):
+                state.skillName.removeAll()
+                state.skills.append(skill)
+                return .send(.delegate(.skillAdded(skill)))
+            case .skillFailedToAdd:
                 return .none
             case .skillDeleted(let skill):
                 state.skills.removeAll { $0.id == skill.id}

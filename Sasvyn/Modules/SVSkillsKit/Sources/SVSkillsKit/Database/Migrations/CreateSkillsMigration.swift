@@ -19,5 +19,11 @@ struct CreateSkillsMigration: DatabaseMigration {
             table.datetime("created_at").notNull()
             table.datetime("updated_at").notNull()
         }
+
+        try db.createUniqueIndex(
+            "idx_skills_skill_unique",
+            on: "skills",
+            expression: "LOWER(skill)"
+        )
     }
 }

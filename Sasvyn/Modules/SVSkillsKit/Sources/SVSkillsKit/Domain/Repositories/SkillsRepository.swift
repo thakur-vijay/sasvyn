@@ -9,7 +9,8 @@ import Foundation
 
 public protocol SkillsRepository: Sendable {
     
-    func fetch()async throws -> [SkillMainModel]
-    func add(skills: [Skill]) async throws
+    func fetch()-> AsyncStream<[SkillMainModel]>
+    func add(skill: Skill) async throws
+    func update(skill: Skill) async throws
     func delete(id: String) async throws
 }

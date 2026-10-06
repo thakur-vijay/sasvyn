@@ -7,12 +7,16 @@
 
 import ComposableArchitecture
 import SVSkillsKit
+import SVRealtimeKit
 
 @Reducer
 public struct iOSSkillsFeature {
     
     @Dependency(\.skillsClient)
     private var client
+    
+    @Dependency(\.realtimeClient)
+    private var realtimeClient
     
     @ObservableState
     public struct State: Equatable {
@@ -75,9 +79,14 @@ public struct iOSSkillsFeature {
         Reduce { state, action in
             switch action {
             case .onTask:
-                return .run {[client] send in
-                    let groups = try await client.fetch()
-                    await send(.skillsLoaded(groups))
+                return .run {[client, realtimeClient] send in
+                    for await groups in client.fetch() {
+                        await send(.skillsLoaded(groups))
+                    }
+                    
+                    for await message in realtimeClient.messages() {
+                        dump(message)
+                    }
                 }
             case .addSkillsTapped:
                 state.destination = .addSkills(iOSAddSkillsFeature.State())
@@ -87,11 +96,11 @@ public struct iOSSkillsFeature {
             case .destination(.presented(.addSkills(.delegate(.close)))):
                 state.destination = nil
                 return .none
-            case .destination(.presented(.addSkills(.delegate(.skillsAdded(let category, let skills))))):
-                if let index = state.skillGroups.firstIndex(where: { $0.category == category }){
-                    state.skillGroups[index].skills.append(contentsOf: skills)
+            case .destination(.presented(.addSkills(.delegate(.skillAdded(let skill))))):
+                if let index = state.skillGroups.firstIndex(where: { $0.category == skill.category }){
+                    state.skillGroups[index].skills.append(skill)
                 }else {
-                    let newGroup = SkillMainModel(category: category, skills: skills)
+                    let newGroup = SkillMainModel(category: skill.category, skills: [skill])
                     state.skillGroups.append(newGroup)
                 }
                 return .send(.skillsUpdated)

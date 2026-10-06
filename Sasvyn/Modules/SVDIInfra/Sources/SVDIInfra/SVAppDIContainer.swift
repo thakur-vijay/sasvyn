@@ -22,6 +22,7 @@ import AuthKit
 import SVPersonalInformationKit
 import SVNetwork
 import SVSyncKit
+import SVRealtimeKit
 
 public final class SVAppDIContainer {
     
@@ -47,7 +48,11 @@ public final class SVAppDIContainer {
     }()
     
     lazy var skillsDIContainer: SkillsDIContainer = {
-        SkillsDIContainer(database: databaseContainer.appDatabase)
+        SkillsDIContainer(
+            database: databaseContainer.appDatabase,
+            networkClient: networkContainer.client,
+            metadataStore: metadataStore
+        )
     }()
     
     lazy var documentsDIContainer: DocumentsDIContainer = {
@@ -108,6 +113,13 @@ public final class SVAppDIContainer {
         )
     }()
     
+    lazy var realtimeDIContainer: RealtimeDIContainer = {
+        RealtimeDIContainer(
+            url: .init(string: "wss://api.vijaythakur.online/api/v1/ws")!,
+            authManager: networkContainer.authManager
+        )
+    }()
+    
     public func addDependencies(_ to: inout DependencyValues) {
         skillsDIContainer.register(&to)
         documentsDIContainer.register(&to)
@@ -121,5 +133,6 @@ public final class SVAppDIContainer {
         aboutDIContainer.register(&to)
         authDIContainer.register(&to)
         personalInformationDIContainer.register(&to)
+        realtimeDIContainer.register(&to)
     }
 }

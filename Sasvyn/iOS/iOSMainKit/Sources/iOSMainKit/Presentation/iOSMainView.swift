@@ -57,6 +57,9 @@ public struct iOSMainView: View {
                 )
             }
         }
+        .task {
+            await store.send(.onAppear).finish()
+        }
 //        .tint(.primary)
     }
 }

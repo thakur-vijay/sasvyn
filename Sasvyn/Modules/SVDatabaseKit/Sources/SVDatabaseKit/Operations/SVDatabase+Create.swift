@@ -22,4 +22,17 @@ public extension SVDatabase {
             body(builder)
         }
     }
+    
+    func createUniqueIndex(
+        _ name: String,
+        on table: String,
+        expression: String
+    ) throws {
+        try db.execute(
+            sql: """
+            CREATE UNIQUE INDEX IF NOT EXISTS \(name)
+            ON \(table) (\(expression))
+            """
+        )
+    }
 }

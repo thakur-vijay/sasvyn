@@ -46,6 +46,14 @@ public struct SkillRecord: Codable, Sendable, SVFetchableRecord, SVPersistableRe
 public extension SkillRecord {
     nonisolated enum ColumnNames {
         static public let id = SVColumnName("id")
+        
+        static let skill = SVColumnName("skill")
+
+        static let category = SVColumnName("category")
+        
+        static let createdAt = SVColumnName("created_at")
+        
+        static let updatedAt = SVColumnName("updated_at")
     }
 }
 

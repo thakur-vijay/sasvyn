@@ -9,13 +9,16 @@ import ComposableArchitecture
 
 public struct SkillsClient: Sendable{
     public var fetch:
-        @Sendable () async throws -> [SkillMainModel]
+        @Sendable () -> AsyncStream<[SkillMainModel]>
 
     public var delete:
     @Sendable (_ id: String) async throws -> Void
 
     public var add:
-    @Sendable (_ skills: [Skill]) async throws -> Void
+    @Sendable (_ skill: Skill) async throws -> Void
+    
+    public var update:
+    @Sendable (_ skill: Skill) async throws -> Void
 }
 
 extension SkillsClient {
@@ -23,15 +26,18 @@ extension SkillsClient {
     static func live(
         fetchSkillsUseCase: FetchSkillsUseCase,
         addSkillUseCase: AddSkillUseCase,
+        updateSkillUseCase: UpdateSkillUseCase,
         deleteSkillUseCase: DeleteSkillUseCase,
     ) -> Self {
 
         Self {
-            try await fetchSkillsUseCase.execute()
+            fetchSkillsUseCase.execute()
         } delete: { id in
             try await deleteSkillUseCase.execute(id: id)
-        } add: { skills in
-            try await addSkillUseCase.execute(skills: skills)
+        } add: { skill in
+            try await addSkillUseCase.execute(skill)
+        } update: { skill in
+            try await updateSkillUseCase.execute(skill)
         }
 
     }
@@ -43,7 +49,9 @@ extension SkillsClient: DependencyKey {
         fatalError("Unimplemented")
     } delete: { id in
         fatalError("Unimplemented")
-    } add: { skills in
+    } add: { skill in
+        fatalError("Unimplemented")
+    } update: { skill in
         fatalError("Unimplemented")
     }
 }
@@ -51,10 +59,15 @@ extension SkillsClient: DependencyKey {
 extension SkillsClient: TestDependencyKey {
 
     public static let testValue = Self {
-        return []
+        return .init { continuation in
+            continuation.yield([])
+            continuation.finish()
+        }
     } delete: { id in
         
-    } add: { skills in
+    } add: { skill in
+        
+    } update: { skill in
         
     }
 

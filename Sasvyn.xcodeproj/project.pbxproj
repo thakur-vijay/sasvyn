@@ -90,6 +90,7 @@
 				Modules/SVPersonalInformationKit,
 				Modules/SVPortfolioKit,
 				Modules/SVProjectKit,
+				Modules/SVRealtimeKit,
 				Modules/SVRemoteImage,
 				Modules/SVShortcutsKit,
 				Modules/SVSkillsKit,

@@ -12,9 +12,13 @@ import iOSLibraryKit
 import iOSSettingsKit
 import SVFoundation
 import SVSpotlightKit
+import SVRealtimeKit
 
 @Reducer
 public struct iOSMainFeature {
+    
+    @Dependency(\.realtimeClient)
+    private var realtimeClient
     
     @ObservableState
     public struct State: Equatable {
@@ -37,6 +41,7 @@ public struct iOSMainFeature {
         case settings(iOSSettingsFeature.Action)
         case quickAppAction(QuickAppAction)
         case spotlightAction(SVSpotlightDestination)
+        case onAppear
         
         case delegate(Delegate)
         
@@ -68,6 +73,10 @@ public struct iOSMainFeature {
         
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                return .run {[realtimeClient] send in
+                    try await realtimeClient.connect()
+                }
             case .settings(.delegate(.logoutSucceeded)):
                 return .send(.delegate(.logoutSucceeded))
             case .binding(_):

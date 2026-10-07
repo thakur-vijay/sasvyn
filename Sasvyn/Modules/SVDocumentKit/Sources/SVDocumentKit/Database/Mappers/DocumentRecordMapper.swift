@@ -14,24 +14,18 @@ enum DocumentRecordMapper {
         _ record: DocumentRecord,
         metadata: SyncMetadata?,
         documentsDirectory: URL
-    ) -> Document? {
-
-        guard let category = DocumentCategory(
-            rawValue: record.category
-        ) else {
-            return nil
-        }
-
+    ) -> Document {
         let url = documentsDirectory
             .appendingPathComponent(record.path)
 
         return Document(
             id: record.id,
-            url: url,
+            localUrl: url,
+            url: nil,
             name: record.name,
             createdAt: record.createdAt,
             fileSize: record.fileSize,
-            category: category,
+            category: DocumentCategory(rawValue: record.category) ?? .other,
             syncVersion: metadata?.serverVersion ?? 1,
             updatedAt: record.updatedAt
         )

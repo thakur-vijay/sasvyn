@@ -57,7 +57,12 @@ public final class SVAppDIContainer {
     }()
     
     lazy var documentsDIContainer: DocumentsDIContainer = {
-        DocumentsDIContainer(database: databaseContainer.appDatabase)
+        DocumentsDIContainer(
+            database: databaseContainer.appDatabase,
+            metadataStore: metadataStore,
+            networkClient: networkContainer.client,
+            fileUploader: networkContainer.fileUploader
+        )
     }()
       
     lazy var projectsDIContainer: ProjectsDIContainer = {

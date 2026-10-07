@@ -14,7 +14,7 @@ public struct FetchDocumentsUseCase: Sendable {
         self.repository = repository
     }
     
-    func execute(category: DocumentCategory?)async throws->[Document] {
-        try await repository.fetch(category: category)
+    func execute(category: DocumentCategory?)-> AsyncStream<[Document]>{
+        repository.fetch(category: category)
     }
 }

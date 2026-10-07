@@ -28,12 +28,13 @@ public struct iOSDocumentsView: View {
                 ),
                 spacing: 20
             ) {
-                ForEach(store.documents) { document in
-                    DocumentCard(document: document) {
-                        store.send(.documentQuickLook(document))
-                    } onDelete: {
-                        store.send(.deleteDocumentTapped(document))
-                    }
+                ForEach(
+                    store.scope(
+                        state: \.documentCards,
+                        action: \.documentCard
+                    )
+                ) { cardStore in
+                    DocumentCard(store: cardStore)
                 }
             }
             .padding()

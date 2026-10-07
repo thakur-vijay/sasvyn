@@ -19,5 +19,5 @@ public struct CreateUploadDTO: Codable, Hashable, Sendable {
 
 public struct UploadDTO: Codable, Hashable, Sendable {
     public let uploadUrl: String
-    public let imgKey: String
+    public let key: String
 }

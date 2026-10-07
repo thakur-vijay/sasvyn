@@ -9,7 +9,7 @@ import Foundation
 
 public protocol DocumentsRepository: Sendable {
     
-    func fetch(category: DocumentCategory?)async throws -> [Document]
+    func fetch(category: DocumentCategory?)-> AsyncStream<[Document]>
     func add(document: Document) async throws
     func delete(id: String) async throws
 }

@@ -25,6 +25,7 @@ public struct iOSDocumentsFeature {
         public var selectedDocumentCategory: DocumentCategory?
         public var pickedDocumentCategory: DocumentCategory?
         public var documents: [Document] = []
+        public var documentCards: IdentifiedArrayOf<DocumentCardFeature.State> = []
         public init(){}
         
         @Presents
@@ -53,6 +54,7 @@ public struct iOSDocumentsFeature {
         case documentCategorySelected(DocumentCategory?)
         case onDocumentCategoryPickerDismiss
         case addDocument(DocumentCategory)
+        case documentCard(IdentifiedActionOf<DocumentCardFeature>)
         
         public enum Alert {
             case deleteConfirmed
@@ -80,6 +82,11 @@ public struct iOSDocumentsFeature {
                 }
             case .documentsLoaded(let documents):
                 state.documents = documents
+                state.documentCards = IdentifiedArray(
+                    uniqueElements: documents.map {
+                        DocumentCardFeature.State(document: $0)
+                    }
+                )
                 return .none
             case .onDocumentImport(let result):
                 switch result {
@@ -114,6 +121,9 @@ public struct iOSDocumentsFeature {
                 return .none
             case .documentSaved(let document):
                 state.documents.append(document)
+                state.documentCards.append(
+                    DocumentCardFeature.State(document: document)
+                )
                 return .none
             case .deleteDocumentTapped(let document):
                 state.documentToDelete = document
@@ -160,6 +170,7 @@ public struct iOSDocumentsFeature {
                 return .none
             case .documentDeleted(let document):
                 state.documents.removeAll { $0.id == document.id }
+                state.documentCards.remove(id: document.id)
                 return .none
             case .documentDeleteFailed:
                 return .none
@@ -185,8 +196,13 @@ public struct iOSDocumentsFeature {
                 }else {
                     return .send(.documentImportFailed)
                 }
+            case .documentCard(_):
+                return .none
             }
         }
         .ifLet(\.$alert, action: \.alert)
+        .forEach(\.documentCards, action: \.documentCard){
+            DocumentCardFeature()
+        }
     }
 }

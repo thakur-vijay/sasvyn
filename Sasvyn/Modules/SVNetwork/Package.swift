@@ -26,7 +26,8 @@ let package = Package(
         .target(
             name: "SVNetwork",
             dependencies: [
-                .product(name: "NetworkKit", package: "NetworkKit")
+                .product(name: "NetworkKit", package: "NetworkKit"),
+                .product(name: "SVFoundation", package: "SVFoundation"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

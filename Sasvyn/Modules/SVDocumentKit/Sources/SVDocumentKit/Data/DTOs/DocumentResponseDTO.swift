@@ -23,6 +23,7 @@ internal extension DocumentResponseDTO {
     func toDomain()-> Document {
         .init(
             id: id,
+            localUrl: nil,
             url: .init(string: url),
             name: name,
             createdAt: createdAt,

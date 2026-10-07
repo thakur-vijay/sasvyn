@@ -80,4 +80,8 @@ final class DocumentsRemoteDataSource: SyncRemoteStore{
         let endpoint = DeleteDocumentEndpoint(id, idempotencyKey: idempotencyKey)
         try await client.request(endpoint)
     }
+    
+    func fetchDocumentData(_ entity: Document) async throws {
+        guard let endpoint = entity.url else { throw URLError(.badURL) }
+    }
 }

@@ -1,3 +1,14 @@
+//
+//  DocumentWithMetadataRecord.swift
+//  SVDocumentKit
+//
+//  Created by Vijay Thakur on 07/10/26.
+//
+
+import Foundation
+import SVDatabaseKit
+import SVSyncKit
+
 struct DocumentWithMetadataRecord: Codable, FetchableRecord {
 
     let documentID: String

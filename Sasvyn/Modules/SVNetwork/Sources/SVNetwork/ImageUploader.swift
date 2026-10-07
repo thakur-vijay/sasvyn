@@ -39,7 +39,7 @@ public final class DefaultFileUploader: FileUploader, Sendable {
         let response = try await client.request(endpoint)
 
         let uploadURL = response.data.uploadUrl
-        let imageKey = response.data.imgKey
+        let key = response.data.key
 
         // 2. Upload actual file
         let fileData = try Data(contentsOf: fileURL)
@@ -65,7 +65,7 @@ public final class DefaultFileUploader: FileUploader, Sendable {
             throw ImageUploaderError.uploadFailed
         }
 
-        return imageKey
+        return key
     }
 }
 

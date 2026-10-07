@@ -11,6 +11,7 @@ import SVSyncKit
 public struct Document: Identifiable, Hashable, Sendable, SyncableEntity{
     public static let entityType: SVSyncKit.SyncEntityType = .document
     public let id: String
+    public let localUrl: URL?
     public let url: URL?
     public let name: String
     public let createdAt: Date
@@ -21,6 +22,7 @@ public struct Document: Identifiable, Hashable, Sendable, SyncableEntity{
     
     public init(
         id: String,
+        localUrl: URL?,
         url: URL?,
         name: String,
         createdAt: Date,
@@ -30,6 +32,7 @@ public struct Document: Identifiable, Hashable, Sendable, SyncableEntity{
         updatedAt: Date,
     ) {
         self.id = id
+        self.localUrl = localUrl
         self.url = url
         self.name = name
         self.createdAt = createdAt

@@ -11,7 +11,7 @@ import SVFoundation
 
 public struct DocumentsClient: Sendable{
     public var fetch:
-        @Sendable (_ category: DocumentCategory?) async throws -> [Document]
+        @Sendable (_ category: DocumentCategory?)-> AsyncStream<[Document]>
 
     public var delete:
     @Sendable (_ id: String) async throws -> Void
@@ -55,7 +55,8 @@ extension DocumentsClient {
 
         return Document(
             id: IDGenerator.uuid(),
-            url: destinationURL,
+            localUrl: destinationURL,
+            url: nil,
             name: url.lastPathComponent,
 //            createdAt: values.contentModificationDate ?? Date(),
             createdAt: Date(),
@@ -80,7 +81,7 @@ extension DocumentsClient {
     ) -> Self {
 
         Self { category in
-            try await fetchDocumentsUseCase.execute(category: category)
+            fetchDocumentsUseCase.execute(category: category)
         } delete: { id in
             try await deleteDocumentUseCase.execute(id: id)
         } add: { document in
@@ -110,7 +111,7 @@ extension DocumentsClient: DependencyKey {
 extension DocumentsClient: TestDependencyKey {
 
     public static let testValue = Self { category in
-        return []
+        return AsyncStream { $0.finish() }
     } delete: { id in
         
     } add: { skills in
@@ -118,7 +119,8 @@ extension DocumentsClient: TestDependencyKey {
     } `import`: { url, category in
         Document(
             id: "test-document",
-            url: url,
+            localUrl: url,
+            url: nil,
             name: "Test.pdf",
             createdAt: Date(),
             fileSize: 0,

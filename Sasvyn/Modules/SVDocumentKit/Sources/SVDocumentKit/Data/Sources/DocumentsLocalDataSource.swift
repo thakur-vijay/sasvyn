@@ -31,13 +31,14 @@ final class DocumentsLocalDataSource: @unchecked Sendable{
 
     func create(document: Document) async throws {
         try await database.write { db in
-
+            var path: String = ""
+            if let url = document.url {
+                path = try DocumentStorage.relativePath(for: url)
+            }
             let record = DocumentRecord(
                 id: document.id,
                 name: document.name,
-                path: try DocumentStorage.relativePath(
-                    for: document.url
-                ),
+                path: path,
                 category: document.category.rawValue,
                 fileSize: document.fileSize,
                 createdAt: document.createdAt,

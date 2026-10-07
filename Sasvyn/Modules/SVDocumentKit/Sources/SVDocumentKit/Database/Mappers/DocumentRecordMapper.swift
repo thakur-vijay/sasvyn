@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import SVSyncKit
 
 enum DocumentRecordMapper {
 
     nonisolated static func map(
         _ record: DocumentRecord,
+        metadata: SyncMetadata?,
         documentsDirectory: URL
     ) -> Document? {
 
@@ -29,7 +31,9 @@ enum DocumentRecordMapper {
             name: record.name,
             createdAt: record.createdAt,
             fileSize: record.fileSize,
-            category: category
+            category: category,
+            syncVersion: metadata?.serverVersion ?? 1,
+            updatedAt: record.updatedAt
         )
     }
 }

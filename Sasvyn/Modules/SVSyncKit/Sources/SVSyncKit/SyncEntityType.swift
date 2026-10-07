@@ -13,4 +13,5 @@ public enum SyncEntityType: String, Sendable, Codable {
     case skill
     case language
     case project
+    case document
 }

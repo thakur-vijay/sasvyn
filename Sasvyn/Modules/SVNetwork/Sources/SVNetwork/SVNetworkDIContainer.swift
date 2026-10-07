@@ -37,8 +37,8 @@ public final class SVNetworkDIContainer {
         HTTPClient()
     }()
     
-    public lazy var imageUploader: ImageUploader = {
-        DefaultImageUploader(
+    public lazy var fileUploader: FileUploader = {
+        DefaultFileUploader(
             client: client,
             httpClient: httpClient
         )

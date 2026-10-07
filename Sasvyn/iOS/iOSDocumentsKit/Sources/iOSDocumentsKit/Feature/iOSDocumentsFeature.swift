@@ -31,7 +31,7 @@ public struct iOSDocumentsFeature {
         public var alert: AlertState<Action.Alert>?
         
         public var documentURLS: [URL]{
-            documents.map(\.url)
+            documents.compactMap(\.url)
         }
     }
     

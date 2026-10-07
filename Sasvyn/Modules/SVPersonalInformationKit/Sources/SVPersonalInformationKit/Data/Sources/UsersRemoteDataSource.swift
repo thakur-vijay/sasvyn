@@ -12,11 +12,11 @@ import Foundation
 
 internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
     private let client: NetworkClientProtocol
-    private let imageUploader: any ImageUploader
+    private let fileUploader: any FileUploader
     
-    init(client: NetworkClientProtocol, imageUploader: any ImageUploader) {
+    init(client: NetworkClientProtocol, fileUploader: any FileUploader) {
         self.client = client
-        self.imageUploader = imageUploader
+        self.fileUploader = fileUploader
     }
     
     func fetch() async throws -> [User] {
@@ -54,7 +54,7 @@ internal final class UsersRemoteDataSource: SyncRemoteStore, Sendable{
                 contentType: "image/jpeg"
             )
 
-            imageKey = try await imageUploader.upload(
+            imageKey = try await fileUploader.upload(
                 uploadBody,
                 fileURL: imageLocalUrl
             )

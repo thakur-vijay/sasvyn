@@ -60,7 +60,9 @@ extension DocumentsClient {
 //            createdAt: values.contentModificationDate ?? Date(),
             createdAt: Date(),
             fileSize: Int64(values.fileSize ?? 0),
-            category: category
+            category: category,
+            syncVersion: 1,
+            updatedAt: .now
         )
     }
 }
@@ -120,7 +122,9 @@ extension DocumentsClient: TestDependencyKey {
             name: "Test.pdf",
             createdAt: Date(),
             fileSize: 0,
-            category: .portfolio
+            category: .portfolio,
+            syncVersion: 1,
+            updatedAt: .now
         )
     }
 

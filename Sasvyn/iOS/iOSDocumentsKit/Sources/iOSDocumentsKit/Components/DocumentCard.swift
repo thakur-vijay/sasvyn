@@ -16,21 +16,22 @@ internal struct DocumentCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-
-            PDFThumbnailView(
-                url: document.url,
-                quickLook: quickLook,
-                onDelete: onDelete
-            )
+            if let url = document.url{
+                PDFThumbnailView(
+                    url: url,
+                    quickLook: quickLook,
+                    onDelete: onDelete
+                )
+            }
             
             Text(document.name)
                 .font(.subheadline)
                 .fontWeight(.medium)
-
+            
             Text(document.createdAt.formatted(date: .numeric, time: .omitted))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-
+            
             Text(document.fileSize.formattedFileSize())
                 .font(.caption)
                 .foregroundStyle(.secondary)

@@ -9,14 +9,14 @@
 import Foundation
 import NetworkKit
 
-public protocol ImageUploader: Sendable {
+public protocol FileUploader: Sendable {
     func upload(
         _ body: CreateUploadDTO,
         fileURL: URL
     ) async throws -> String
 }
 
-public final class DefaultImageUploader: ImageUploader, Sendable {
+public final class DefaultFileUploader: FileUploader, Sendable {
 
     private let client: NetworkClientProtocol
     private let httpClient: HTTPDataTask

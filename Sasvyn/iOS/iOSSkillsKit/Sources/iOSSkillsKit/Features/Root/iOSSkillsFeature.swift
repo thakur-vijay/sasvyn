@@ -82,31 +82,18 @@ public struct iOSSkillsFeature {
             switch action {
             case .onTask:
                 return .run {[client, realtimeClient] send in
-                    for await groups in client.fetch() {
-                        await send(.skillsLoaded(groups))
-                    }
-                    
-                    for await message in realtimeClient.messages() {
-                        
-                        print("""
-                        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                        [Realtime] 📩 MESSAGE RECEIVED
-                        Event: \(message.type)
-                        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                        """)
-                        
-                        if let data = try? JSONEncoder().encode(message.data),
-                           let json = String(data: data, encoding: .utf8) {
-                            print("[Realtime] Data:")
-                            print(json)
+                    do {
+                        for await groups in client.fetch() {
+                            await send(.skillsLoaded(groups))
                         }
                         
-                        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-                        
-                        let event = message.type
-                        let skill = try message.data.decode(Skill.self)
-                        
-                        await send(.eventReceived(event, skill))
+                        for await message in realtimeClient.messages() {
+                            let event = message.type
+                            let skill = try message.data.decode(Skill.self)
+                            await send(.eventReceived(event, skill))
+                        }
+                    }catch {
+                        print(error.localizedDescription)
                     }
                 }
             case .addSkillsTapped:

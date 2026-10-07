@@ -17,20 +17,20 @@ public final class PersonalInformationDIContainer{
     private let database: AppDatabase
     private let networkClient: any NetworkClientProtocol
     private let tokenStore: any TokenStore
-    private let imageUploader: any ImageUploader
+    private let fileUploader: any FileUploader
     private let metadataStore: any SyncMetadataStore
 
     public init(
         database: AppDatabase,
         networkClient: any NetworkClientProtocol,
         tokenStore: any TokenStore,
-        imageUploader: any ImageUploader,
+        fileUploader: any FileUploader,
         metadataStore: any SyncMetadataStore
     ) {
         self.database = database
         self.networkClient = networkClient
         self.tokenStore = tokenStore
-        self.imageUploader = imageUploader
+        self.fileUploader = fileUploader
         self.metadataStore = metadataStore
     }
 
@@ -41,7 +41,7 @@ public final class PersonalInformationDIContainer{
     private lazy var remoteDataSource: UsersRemoteDataSource = {
         UsersRemoteDataSource(
             client: networkClient,
-            imageUploader: imageUploader
+            fileUploader: fileUploader
         )
     }()
 

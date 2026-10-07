@@ -18,7 +18,13 @@ public final class DefaultDocumentsRepository: DocumentsRepository {
     public func fetch(category: DocumentCategory?) async throws -> [Document] {
         let allDocuments = try await dataSource.fetch(category: category)
         let directory = try DocumentStorage.documentsDirectory()
-        return allDocuments.compactMap { DocumentRecordMapper.map($0, documentsDirectory: directory)}
+        return allDocuments.compactMap {
+            DocumentRecordMapper.map(
+                $0,
+                metadata: nil,
+                documentsDirectory: directory
+            )
+        }
     }
     
     public func add(document: Document) async throws {

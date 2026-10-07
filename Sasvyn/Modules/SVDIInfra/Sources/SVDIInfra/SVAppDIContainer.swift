@@ -109,7 +109,7 @@ public final class SVAppDIContainer {
             database: databaseContainer.appDatabase,
             networkClient: networkContainer.client,
             tokenStore: networkContainer.tokenStore,
-            imageUploader: networkContainer.imageUploader,
+            fileUploader: networkContainer.fileUploader,
             metadataStore: metadataStore
         )
     }()

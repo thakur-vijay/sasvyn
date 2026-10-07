@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import SVSkillsKit
 import SVRealtimeKit
+import Foundation
 
 @Reducer
 public struct iOSSkillsFeature {
@@ -52,6 +53,7 @@ public struct iOSSkillsFeature {
         case deleteSkillTapped(_ groupIndex: Int, _ skill: Skill)
         case deleteSkillSucceeded(_ groupIndex: Int, _ skill: Skill)
         case deleteSkillFailed
+        case eventReceived(RealtimeEvent, Skill)
         
         case skillTapped(Skill)
         case saveTapped
@@ -85,7 +87,26 @@ public struct iOSSkillsFeature {
                     }
                     
                     for await message in realtimeClient.messages() {
-                        dump(message)
+                        
+                        print("""
+                        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                        [Realtime] 📩 MESSAGE RECEIVED
+                        Event: \(message.type)
+                        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                        """)
+                        
+                        if let data = try? JSONEncoder().encode(message.data),
+                           let json = String(data: data, encoding: .utf8) {
+                            print("[Realtime] Data:")
+                            print(json)
+                        }
+                        
+                        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                        
+                        let event = message.type
+                        let skill = try message.data.decode(Skill.self)
+                        
+                        await send(.eventReceived(event, skill))
                     }
                 }
             case .addSkillsTapped:
@@ -150,6 +171,29 @@ public struct iOSSkillsFeature {
             case .cancelTapped:
                 return .send(.delegate(.cancelTapped))
             case .delegate(_):
+                return .none
+            case .eventReceived(let event, let skill):
+                switch event {
+                case .skillCreated:
+                    if let index = state.skillGroups.firstIndex(where: { $0.category == skill.category }){
+                        state.skillGroups[index].skills.append(skill)
+                    }else {
+                        let newGroup = SkillMainModel(category: skill.category, skills: [skill])
+                        state.skillGroups.append(newGroup)
+                    }
+                    return .send(.skillsUpdated)
+                case .skillUpdated:
+                    break
+                case .skillDeleted:
+                    if let index = state.skillGroups.firstIndex(where: { $0.category == skill.category }){
+                        state.skillGroups[index].skills.removeAll { $0.id == skill.id }
+                        if state.skillGroups[index].skills.isEmpty {
+                            state.skillGroups.remove(at: index)
+                        }
+                    }
+                    return .send(.skillsUpdated)
+                default: break
+                }
                 return .none
             }
         }

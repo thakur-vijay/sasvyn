@@ -9,13 +9,14 @@ import Foundation
 import NetworkKit
 import Security
 
-public final class SVTokenStore: TokenStore, AppleLoginStoring{
+public final class SVTokenStore: TokenStore, AppleLoginStoring, ClientIDStoring{
 
     fileprivate enum Key {
         static let userId = "com.vijaythakur.sasvyn.userId"
         static let accessToken = "com.vijaythakur.sasvyn.accessToken"
         static let refreshToken = "com.vijaythakur.sasvyn.refreshToken"
         static let appleLoginResult = "com.vijaythakur.sasvyn.appleLoginResult"
+        static let clientID = "com.vijaythakur.sasvyn.clientId"
     }
 
     public init() {}
@@ -204,11 +205,28 @@ public struct AppleLoginResult: Codable, Sendable {
     }
 }
 
-//- some: "eyJraWQiOiJHTkNmNEo4M09oIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmFydGlzdC55YXR0c1Rlc3QiLCJleHAiOjE3OTA0Mzk5OTYsImlhdCI6MTc5MDM1MzU5Niwic3ViIjoiMDAwMTI5LjU2YmFjMDI3N2E2ODQyMTFiZDc5YzViNGQwNWM3ODMxLjA2MTQiLCJjX2hhc2giOiJlQ3dHOXJORFpvY1dJOWZGcXBKenh3IiwiZW1haWwiOiJ0aGFrdXJ2aWpheTAwMDZAaWNsb3VkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdXRoX3RpbWUiOjE3OTAzNTM1OTYsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZX0.pMDDxCzBNoxQvOUzdQiU7y1PFnS9E8wtXsYHyOUWEqhqnL95eXXaReSEkPN8TVva8fPVA85w5RwiGsVSbS5BJ_C4Ja9Urk_ZS38lAid9v6Px2GiFAg9EVu54xkoX1kHX_THtvu3-gjqT5r8lKOgYZk18UPl9KqVJnOQF2NZcRX-Cbe9tl04u4Tj91vKscgbxf7eP2V7elKosT86namt7OppDNTx_8o2Z9vLuaylMuPhpCDEhGD0qWe4Ejmav5Vxqs_iRu6p3qCc4sBerJ21aYSwyzF3p4CdMaDH3n_xQwjBcQMb7Uh4tXbc5mZ-p6b9zBrVXoGo-7g5r-l-0P84Z2g"
-//▿ authorizationCode: Optional("ce2dd73cc661349f2865135247ae5ce51.0.prsz.PZ5J-QfnxlkrxL0fyc-Nnw")
-//- some: "ce2dd73cc661349f2865135247ae5ce51.0.prsz.PZ5J-QfnxlkrxL0fyc-Nnw"
-//- appleId: "000129.56bac0277a684211bd79c5b4d05c7831.0614"
-//▿ email: Optional("thakurvijay0006@icloud.com")
-//- some: "thakurvijay0006@icloud.com"
-//▿ fullName: Optional("Vijay Thakur")
-//- some: "Vijay Thakur"
+public protocol ClientIDStoring: AnyObject, Sendable{
+
+    func saveClientID(
+        _ id: String
+    )
+
+    var clientID: String? { get }
+
+    func clearClientID()
+}
+
+public extension ClientIDStoring where Self: SVTokenStore {
+     
+    func saveClientID(_ id: String) {
+        save(id, key: Key.clientID)
+    }
+    
+    var clientID: String? {
+        read(key: Key.clientID)
+    }
+    
+    func clearClientID() {
+        delete(key: Key.clientID)
+    }
+}

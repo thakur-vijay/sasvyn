@@ -75,7 +75,11 @@ public struct iOSMainFeature {
             switch action {
             case .onAppear:
                 return .run {[realtimeClient] send in
-                    try await realtimeClient.connect()
+                    do {
+                        try await realtimeClient.connect()
+                    }catch {
+                        print(error.localizedDescription)
+                    }
                 }
             case .settings(.delegate(.logoutSucceeded)):
                 return .send(.delegate(.logoutSucceeded))

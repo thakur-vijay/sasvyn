@@ -21,7 +21,9 @@ let package = Package(
         .package(
             url: "https://github.com/thakur-vijay/NetworkKit.git",
             from: "1.0.0"
-        )
+        ),
+        .package(path: "./SVNetwork"),
+        .package(path: "./SVFoundation"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,7 +35,9 @@ let package = Package(
                     name: "ComposableArchitecture",
                     package: "swift-composable-architecture"
                 ),
-                .product(name: "NetworkKit", package: "NetworkKit")
+                .product(name: "NetworkKit", package: "NetworkKit"),
+                .product(name: "SVNetwork", package: "SVNetwork"),
+                .product(name: "SVFoundation", package: "SVFoundation"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),

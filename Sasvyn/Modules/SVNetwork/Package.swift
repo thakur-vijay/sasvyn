@@ -17,7 +17,8 @@ let package = Package(
         .package(
             url: "https://github.com/thakur-vijay/NetworkKit.git",
             from: "1.0.0"
-        )
+        ),
+        .package(path: "./SVFoundation")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.

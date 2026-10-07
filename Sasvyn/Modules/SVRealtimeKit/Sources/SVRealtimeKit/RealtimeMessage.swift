@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SVNetwork
+import SVFoundation
 
 public struct RealtimeMessage: Codable, Sendable {
     public let type: RealtimeEvent
@@ -73,5 +75,15 @@ public enum AnyCodable: Codable, Sendable, Equatable, Hashable {
         case let .object(value):
             try container.encode(value)
         }
+    }
+}
+
+public extension AnyCodable {
+    func decode<T: Decodable>(_ type: T.Type) throws -> T {
+        let data = try JSONEncoder().encode(self)
+
+        let decoder = SVJSONDecoder.make()
+        
+        return try decoder.decode(T.self, from: data)
     }
 }

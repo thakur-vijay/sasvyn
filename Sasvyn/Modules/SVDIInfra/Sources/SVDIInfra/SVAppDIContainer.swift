@@ -44,6 +44,7 @@ public final class SVAppDIContainer {
             tokenStore: networkContainer.tokenStore,
             networkClient: networkContainer.client,
             appleLoginSaver: networkContainer.appleLoginSaver,
+            clientIDStore: networkContainer.clientIDStore
         )
     }()
     
@@ -116,7 +117,8 @@ public final class SVAppDIContainer {
     lazy var realtimeDIContainer: RealtimeDIContainer = {
         RealtimeDIContainer(
             url: .init(string: "wss://api.vijaythakur.online/api/v1/ws")!,
-            authManager: networkContainer.authManager
+            authManager: networkContainer.authManager,
+            clientIDStore: networkContainer.clientIDStore
         )
     }()
     

@@ -8,16 +8,24 @@
 import Foundation
 import NetworkKit
 import SVNetwork
+import SVFoundation
 
 internal final class DefaultAuthRepository: AuthRepository {
     private let remoteDataSource: AuthRemoteDataSource
     private let tokenStore: any TokenStore
     private let appleLoginSaver: any AppleLoginStoring
+    private let clientIDStore: any ClientIDStoring
     
-    init(remoteDataSource: AuthRemoteDataSource, tokenStore: any TokenStore, appleLoginSaver: any AppleLoginStoring) {
+    init(
+        remoteDataSource: AuthRemoteDataSource,
+        tokenStore: any TokenStore,
+        appleLoginSaver: any AppleLoginStoring,
+        clientIDStore: any ClientIDStoring
+    ) {
         self.remoteDataSource = remoteDataSource
         self.tokenStore = tokenStore
         self.appleLoginSaver = appleLoginSaver
+        self.clientIDStore = clientIDStore
     }
     
     
@@ -42,10 +50,12 @@ internal final class DefaultAuthRepository: AuthRepository {
         let userId = response.data.user.id
         self.tokenStore.store(accessToken: accessToken, refreshToken: refreshToken)
         self.tokenStore.save(userId: userId)
+        self.clientIDStore.saveClientID(IDGenerator.uuid())
     }
     
     func logout() async throws {
         try await remoteDataSource.logout()
         self.tokenStore.clearTokens()
+        self.clientIDStore.clearClientID()
     }
 }

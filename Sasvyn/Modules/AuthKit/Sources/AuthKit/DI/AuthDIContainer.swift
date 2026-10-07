@@ -17,17 +17,20 @@ public final class AuthDIContainer{
     private let networkClient: any NetworkClientProtocol
     private let tokenStore: any TokenStore
     private let appleLoginSaver: any AppleLoginStoring
+    private let clientIDStore: any ClientIDStoring
 
     public init(
         database: AppDatabase,
         tokenStore: any TokenStore,
         networkClient: any NetworkClientProtocol,
-        appleLoginSaver: any AppleLoginStoring
+        appleLoginSaver: any AppleLoginStoring,
+        clientIDStore: any ClientIDStoring
     ) {
         self.database = database
         self.tokenStore = tokenStore
         self.networkClient = networkClient
         self.appleLoginSaver = appleLoginSaver
+        self.clientIDStore = clientIDStore
     }
 
     private lazy var authRemoteDataSource: AuthRemoteDataSource = {
@@ -38,7 +41,8 @@ public final class AuthDIContainer{
         DefaultAuthRepository(
             remoteDataSource: authRemoteDataSource,
             tokenStore: tokenStore,
-            appleLoginSaver: appleLoginSaver
+            appleLoginSaver: appleLoginSaver,
+            clientIDStore: clientIDStore,
         )
     }()
     

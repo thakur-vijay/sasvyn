@@ -7,6 +7,7 @@
 
 import Foundation
 import NetworkKit
+import SVNetwork
 
 public final class URLSessionRealtimeConnection: RealtimeConnection, @unchecked Sendable {
 
@@ -18,6 +19,7 @@ public final class URLSessionRealtimeConnection: RealtimeConnection, @unchecked 
 
     private let configuration: RealtimeConfiguration
     private let authManager: AuthManager
+    private let cliendIDStore: any ClientIDStoring
 
     private let delegate: WebSocketSessionDelegate
     private let session: URLSession
@@ -43,10 +45,12 @@ public final class URLSessionRealtimeConnection: RealtimeConnection, @unchecked 
     public init(
         configuration: RealtimeConfiguration,
         authManager: AuthManager,
+        cliendIDStore: any ClientIDStoring,
         session: URLSession? = nil
     ) {
         self.configuration = configuration
         self.authManager = authManager
+        self.cliendIDStore = cliendIDStore
 
         let delegate = WebSocketSessionDelegate()
         self.delegate = delegate
@@ -214,6 +218,20 @@ public final class URLSessionRealtimeConnection: RealtimeConnection, @unchecked 
         } else {
 
             print("[Realtime] No access token available")
+        }
+        
+        if let clientID = cliendIDStore.clientID {
+
+            request.setValue(
+                clientID,
+                forHTTPHeaderField: "X-Client-ID"
+            )
+
+            print("[Realtime] X-Client-ID header added")
+
+        } else {
+
+            print("[Realtime] No X-Client-ID available")
         }
 
         let webSocketTask = session.webSocketTask(

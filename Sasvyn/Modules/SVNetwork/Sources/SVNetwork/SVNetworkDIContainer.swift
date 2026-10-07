@@ -7,6 +7,7 @@
 
 import Foundation
 import NetworkKit
+import SVFoundation
 
 public final class SVNetworkDIContainer {
     
@@ -22,6 +23,12 @@ public final class SVNetworkDIContainer {
     public lazy var tokenStore: TokenStore = defaultTokenStore
     
     public lazy var appleLoginSaver: AppleLoginStoring = defaultTokenStore
+    
+    public lazy var clientIDStore: ClientIDStoring = defaultTokenStore
+    
+    private lazy var requestInterceptors: [any RequestInterceptor] = [
+        ClientIDInterceptor(clientIDStore: clientIDStore)
+    ]
     
     private let environment: AppEnvironment = .development
     private let environmentResolver = EnvironmentResolver()
@@ -66,16 +73,14 @@ public final class SVNetworkDIContainer {
             environment: environment,
             resolver: environmentResolver,
             authManager: authManager,
+            requestInterceptors: requestInterceptors,
             logger: logger,
             decoder: jsonDecoder
         )
     }()
 
     private lazy var jsonDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
+        SVJSONDecoder.make()
     }()
 }
 
@@ -86,4 +91,27 @@ public extension HTTPHeader {
             value: key
         )
     }
+}
+
+public final class ClientIDInterceptor: RequestInterceptor {
+
+    private let clientIDStore: ClientIDStoring
+
+    public init(clientIDStore: ClientIDStoring) {
+        self.clientIDStore = clientIDStore
+    }
+    
+    public func adapt(_ request: URLRequest) async throws -> URLRequest {
+        var request = request
+
+        if let clientID = clientIDStore.clientID {
+            request.setValue(
+                clientID,
+                forHTTPHeaderField: "X-Client-ID"
+            )
+        }
+
+        return request
+    }
+    
 }
